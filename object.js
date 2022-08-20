@@ -7,7 +7,15 @@ let object = {
             specs: [
                 owner:
                 permissionLevel:
-                ingredientList
+                ingredientList: [ 
+                    {
+                        ingredient,
+                        unit,
+                        quantity,
+                        cost,
+                        etc.
+                    }
+                ]
 
             ]
 

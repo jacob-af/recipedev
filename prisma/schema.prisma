@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Groups {
+  id                 Int                  @id @default(autoincrement())
+  group_name         String               @db.VarChar(255)
+  date_created       DateTime             @db.Date
+  groups_ingredients Groups_Ingredients[]
+  groups_mods        groups_mods[]
+  groups_specs       groups_specs[]
+  groups_users       groups_users[]
+}
+
+model Groups_Ingredients {
+  group_id      Int
+  ingredient_id Int
+  groups        Groups      @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ingredients   Ingredients @relation(fields: [ingredient_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([group_id, ingredient_id])
+}
+
+model groups_mods {
+  user_id  Int
+  group_id Int
+  groups   Groups @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users    users  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([user_id, group_id])
+}
+
+model groups_specs {
+  group_id Int
+  spec_id  Int
+  groups   Groups @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  specs    specs  @relation(fields: [spec_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([group_id, spec_id])
+}
+
+model groups_users {
+  user_id  Int
+  group_id Int
+  groups   Groups @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users    users  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([user_id, group_id])
+}
+
+model Ingredients {
+  id                 Int                  @id @default(autoincrement())
+  name               String               @db.VarChar(255)
+  amount             Int?
+  unit               String?              @db.VarChar(50)
+  price              Decimal?             @db.Money
+  source             String?              @db.VarChar(50)
+  groups_ingredients Groups_Ingredients[]
+  quantities         quantities[]
+  users_ingredients  users_ingredients[]
+}
+
+model quantities {
+  id            Int          @id @default(autoincrement())
+  spec_id       Int?
+  ingredient_id Int?
+  amount        Float?       @db.Real
+  unit          String?      @db.VarChar(50)
+  ingredients   Ingredients? @relation(fields: [ingredient_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  specs         specs?       @relation(fields: [spec_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model recipes {
+  id         Int     @id @default(autoincrement())
+  name       String  @db.VarChar(255)
+  created_by String  @db.VarChar(255)
+  history    String?
+  specs      specs[]
+}
+
+model specs {
+  id           Int            @id @default(autoincrement())
+  recipe_id    Int?
+  created_by   String         @db.VarChar(255)
+  instructions String?
+  glassware    String?        @db.VarChar(50)
+  ice          String?        @db.VarChar(25)
+  recipes      recipes?       @relation(fields: [recipe_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  groups_specs groups_specs[]
+  quantities   quantities[]
+  users_specs  users_specs[]
+}
+
+model user_data {
+  id              Int     @id @default(autoincrement())
+  user_id         Int?
+  user_bio        String?
+  work_place      String? @db.VarChar(50)
+  profile_picture String? @db.VarChar(255)
+  users           users?  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id                Int                 @id @default(autoincrement())
+  user_name         String              @db.VarChar(255)
+  first_name        String?             @db.VarChar(25)
+  last_name         String?             @db.VarChar(50)
+  date_joined       DateTime            @default(now())
+  email             String              @unique @db.VarChar(100)
+  password          String              @db.VarChar(255)
+  groups_mods       groups_mods[]
+  groups_users      groups_users[]
+  user_data         user_data[]
+  users_ingredients users_ingredients[]
+  users_specs       users_specs[]
+}
+
+model users_ingredients {
+  user_id       Int
+  ingredient_id Int
+  ingredients   Ingredients @relation(fields: [ingredient_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users         users       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([user_id, ingredient_id])
+}
+
+model users_specs {
+  user_id Int
+  spec_id Int
+  specs   specs @relation(fields: [spec_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users   users @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([user_id, spec_id])
+}

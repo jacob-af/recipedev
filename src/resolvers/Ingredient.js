@@ -1,5 +1,5 @@
 function postedBy(parent, args, context) {
-  return context.prisma.recipe
+  return context.prisma.ingredient
     .findUnique({
       where: { id: parent.id }
     })

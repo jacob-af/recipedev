@@ -7,7 +7,7 @@ async function signup(parent, args, context, info) {
   const password = await bcrypt.hash(args.password, 10);
 
   // 2
-  const user = await context.prisma.users.create({
+  const user = await context.prisma.Users.create({
     data: {
       ...args,
       password: password
@@ -26,7 +26,7 @@ async function signup(parent, args, context, info) {
 
 async function login(parent, args, context, info) {
   // 1
-  const user = await context.prisma.user.findUnique({
+  const user = await context.prisma.Users.findUnique({
     where: { email: args.email }
   });
   if (!user) {
@@ -49,21 +49,48 @@ async function login(parent, args, context, info) {
 }
 
 async function addRecipe(parent, args, context, info) {
-  const recipe = await context.prisma.recipes.create({
+  const { userId } = context;
+
+  return await context.prisma.recipe.create({
     data: {
       name: args.name,
-      created_by: args.created_by,
-      history: args.history
+      origin: args.origin,
+      history: args.history,
+      postedBy: { connect: { id: userId } }
     }
   });
+}
 
-  return {
-    recipe
-  };
+async function addSpec(parent, args, context, info) {
+  const { userId } = context;
+
+  return await context.prisma.specs.create({
+    data: {
+      instructions: args.instructions,
+      glassware: args.glassware,
+      ice: args.ice,
+      postedBy: { connect: { id: userId } }
+    }
+  });
+}
+
+async function addIngredient(parent, args, context, info) {
+  const { userId } = context;
+
+  return await context.prisma.ingredient.create({
+    data: {
+      name: args.name,
+      amount: args.amount,
+      price: args.price,
+      source: args.source,
+      postedBy: { connect: { id: userId } }
+    }
+  });
 }
 
 module.exports = {
   signup,
   login,
-  addRecipe
+  addRecipe,
+  addIngredient
 };

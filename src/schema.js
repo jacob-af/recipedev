@@ -13,6 +13,20 @@ const typeDefs = gql`
     user: User
   }
 
+  type BatchPayload {
+    count: Int
+  }
+
+  type CompleteRecipe {
+    recipe: Recipe
+    version: CompleteVersion
+  }
+
+  type CompleteVersion {
+    version: Version
+    specs: [Spec]
+  }
+
   type Group {
     id: ID
     group_name: String
@@ -27,8 +41,17 @@ const typeDefs = gql`
     date_joined: DateTimeResolver
     email: String!
     password: String!
-    recipes: [Recipe!]!
-    ingredients: [Ingredient!]!
+    recipes: [Recipe!]
+    versions: [Version!]
+    sharedVersions: [Version!]
+    ingredients: [Ingredient!]
+    specs: [Spec]
+  }
+
+  type UserVersion {
+    id: ID!
+    versions: [Version!]
+    users: [User!]
   }
 
   type Recipe {
@@ -37,16 +60,40 @@ const typeDefs = gql`
     origin: String
     postedBy: User
     history: String
+    versions: [Version]
+  }
+
+  type Version {
+    id: ID!
+    recipe: Recipe
+    versionName: String
+    instructions: String
+    glassware: String
+    ice: String
+    postedBy: User
+    usersVersion: [User]
     specs: [Spec]
+  }
+
+  type Spec {
+    id: ID!
+    order: Int
+    version: Version
+    ingredient: Ingredient
+    amount: Float
+    unit: String
+    postedBy: User
   }
 
   type Ingredient {
     id: ID!
     name: String
     amount: Int
+    unit: String
     price: Float
     source: String
     postedBy: User
+    specs: [Spec]
   }
 
   type Query {
@@ -54,46 +101,77 @@ const typeDefs = gql`
     allUsers: [User]
     allRecipes: [Recipe]
     allIngredients: [Ingredient]
+    allVersions: [Version]
+    allSpecs: [Spec]
   }
 
-  type Spec {
-    id: ID!
-    instructions: String
-    glassware: String
-    ice: String
-    postedBy: User
-    quantities: [Quantity]!
-  }
-
-  type Quantity {
-    id: ID!
-    spec_id: Int
-    ingredient_id: Int
+  input SpecInput {
+    order: Int
+    ingredientId: Int
     amount: Float
     unit: String
   }
 
+  input SpecUpdate {
+    ingredientId: Int
+    amount: Float
+    unit: String
+  }
+
+  input VersionInput {
+    versionName: String
+    instructions: String
+    glassware: String
+    ice: String
+    specs: [SpecInput]
+  }
+
   type Mutation {
+    addIngredient(
+      name: String
+      amount: Int
+      unit: String
+      price: Float
+      source: String
+      postedBy: Int
+    ): Ingredient!
+
+    addVersion(
+      recipeId: Int
+      versionName: String
+      instructions: String
+      glassware: String
+      ice: String
+      postedBy: Int
+      specArray: [SpecInput]
+    ): Version
+
     addRecipe(
       name: String
       origin: String
       postedBy: Int
       history: String
-    ): Recipe!
-    addSpec(
+      versionName: String
       instructions: String
       glassware: String
       ice: String
-      postedBy: Int
-      quantities: [Int]!
-    ): Spec!
-    addIngredient(
-      name: String
-      amount: Int
-      price: Float
-      source: String
-      postedBy: Int
-    ): Ingredient!
+      specArray: [SpecInput]
+    ): Recipe
+
+    shareVersion(fromUser: Int, toUser: Int, versionId: Int): Version
+
+    updateVersion(
+      versionId: Int
+      recipeId: Int
+      versionName: String
+      instructions: String
+      glassware: String
+      ice: String
+    ): Version
+
+    updateSingleSpec(input: SpecUpdate, versionId: Int): Spec
+    updateSpecs(input: [SpecUpdate], versionId: Int): [Spec]
+
     login(email: String!, password: String!): AuthPayload!
     signup(
       user_name: String!

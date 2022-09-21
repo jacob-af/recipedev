@@ -6,13 +6,19 @@ const Mutation = require("./resolvers/Mutation");
 const User = require("./resolvers/User");
 const Recipe = require("./resolvers/Recipe");
 const Ingredient = require("./resolvers/Ingredient");
+const Version = require("./resolvers/Version");
+const Spec = require("./resolvers/Spec");
+const UserVersion = require("./resolvers/UserVersion");
 
 const resolvers = {
   Query,
   Mutation,
   Recipe,
   User,
-  Ingredient
+  Ingredient,
+  Version,
+  Spec,
+  UserVersion
 };
 
 const server = new ApolloServer({ typeDefs, resolvers, context: context });

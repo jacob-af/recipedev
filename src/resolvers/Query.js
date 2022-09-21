@@ -13,10 +13,18 @@ function allRecipes(parent, args, context) {
 function allIngredients(parent, args, context) {
   return context.prisma.ingredient.findMany({});
 }
+function allVersions(parent, args, context) {
+  return context.prisma.version.findMany({});
+}
+function allSpecs(parent, args, context) {
+  return context.prisma.spec.findMany({});
+}
 
 module.exports = {
   allGroups,
   allUsers,
   allRecipes,
-  allIngredients
+  allIngredients,
+  allVersions,
+  allSpecs
 };

@@ -13,7 +13,7 @@ model Groups {
   date_created       DateTime             @db.Date
   groups_ingredients Groups_Ingredients[]
   groups_mods        groups_mods[]
-  groups_specs       groups_specs[]
+  group_version      Group_Version[]
   groups_users       groups_users[]
 }
 
@@ -35,13 +35,13 @@ model groups_mods {
   @@id([user_id, group_id])
 }
 
-model groups_specs {
-  group_id Int
-  spec_id  Int
-  groups   Groups @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  specs    specs  @relation(fields: [spec_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model Group_Version {
+  groupId   Int
+  versionId Int
+  groups    Groups  @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  version   Version @relation(fields: [versionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([group_id, spec_id])
+  @@id([groupId, versionId])
 }
 
 model groups_users {
@@ -64,43 +64,47 @@ model Ingredient {
   postedBy           Users?               @relation(fields: [postedById], references: [id])
   postedById         Int?
   groups_ingredients Groups_Ingredients[]
-  quantities         quantities[]
-  users_ingredients  users_ingredients[]
+  spec               Spec[]
+  user_ingredient    User_Ingredient[]
 }
 
-model quantities {
-  id            Int         @id @default(autoincrement())
-  spec_id       Int?
-  ingredient_id Int?
-  amount        Float?      @db.Real
-  unit          String?     @db.VarChar(50)
-  ingredients   Ingredient? @relation(fields: [ingredient_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  specs         specs?      @relation(fields: [spec_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model Spec {
+  id           Int         @id @default(autoincrement())
+  ingredientId Int?
+  order        Int?
+  amount       Float?      @db.Real
+  unit         String?     @db.VarChar(50)
+  ingredient   Ingredient? @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  version      Version?    @relation(fields: [versionId], references: [id])
+  versionId    Int?
+  postedBy     Users?      @relation(fields: [postedById], references: [id])
+  postedById   Int?
 }
 
 model Recipe {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  name       String   @db.VarChar(255)
-  origin     String   @db.VarChar(255)
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  name       String    @db.VarChar(255)
+  origin     String    @db.VarChar(255)
   history    String?
-  postedBy   Users?   @relation(fields: [postedById], references: [id])
+  postedBy   Users?    @relation(fields: [postedById], references: [id])
   postedById Int?
-  specs      specs[]
+  version    Version[]
 }
 
-model specs {
-  id           Int            @id @default(autoincrement())
-  postedBy     Users?         @relation(fields: [postedById], references: [id])
-  postedById   Int?
-  instructions String?
-  glassware    String?        @db.VarChar(50)
-  ice          String?        @db.VarChar(25)
-  groups_specs groups_specs[]
-  quantities   quantities[]
-  users_specs  users_specs[]
-  Recipe       Recipe?        @relation(fields: [recipeId], references: [id])
-  recipeId     Int?
+model Version {
+  id            Int             @id @default(autoincrement())
+  versionName   String
+  postedBy      Users?          @relation(fields: [postedById], references: [id])
+  postedById    Int?
+  instructions  String?
+  glassware     String?         @db.VarChar(50)
+  ice           String?         @db.VarChar(25)
+  group_version Group_Version[]
+  user_version  UserVersion[]
+  recipe        Recipe?         @relation(fields: [recipeId], references: [id])
+  recipeId      Int?
+  specs         Spec[]
 }
 
 model user_data {
@@ -113,37 +117,38 @@ model user_data {
 }
 
 model Users {
-  id                Int                 @id @default(autoincrement())
-  user_name         String              @db.VarChar(255)
-  first_name        String?             @db.VarChar(25)
-  last_name         String?             @db.VarChar(50)
-  date_joined       DateTime            @default(now())
-  email             String              @unique @db.VarChar(100)
-  password          String              @db.VarChar(255)
-  groups_mods       groups_mods[]
-  groups_users      groups_users[]
-  user_data         user_data[]
-  users_ingredients users_ingredients[]
-  users_specs       users_specs[]
-  recipes           Recipe[]
-  specs             specs[]
-  ingredients       Ingredient[]
+  id              Int               @id @default(autoincrement())
+  user_name       String            @db.VarChar(255)
+  first_name      String?           @db.VarChar(25)
+  last_name       String?           @db.VarChar(50)
+  date_joined     DateTime          @default(now())
+  email           String            @unique @db.VarChar(100)
+  password        String            @db.VarChar(255)
+  groups_mods     groups_mods[]
+  groups_users    groups_users[]
+  user_data       user_data[]
+  user_ingredient User_Ingredient[]
+  user_version    UserVersion[]
+  recipes         Recipe[]
+  version         Version[]
+  ingredients     Ingredient[]
+  spec            Spec[]
 }
 
-model users_ingredients {
-  user_id       Int
-  ingredient_id Int
-  ingredients   Ingredient @relation(fields: [ingredient_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users         Users      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model User_Ingredient {
+  userId       Int
+  ingredientId Int
+  ingredients  Ingredient @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users        Users      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([user_id, ingredient_id])
+  @@id([userId, ingredientId])
 }
 
-model users_specs {
-  user_id Int
-  spec_id Int
-  specs   specs @relation(fields: [spec_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users   Users @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model UserVersion {
+  userId    Int
+  versionId Int
+  version   Version @relation(fields: [versionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users     Users   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([user_id, spec_id])
+  @@id([userId, versionId])
 }

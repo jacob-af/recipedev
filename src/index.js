@@ -8,7 +8,6 @@ const Recipe = require("./resolvers/Recipe");
 const Ingredient = require("./resolvers/Ingredient");
 const Version = require("./resolvers/Version");
 const Spec = require("./resolvers/Spec");
-const UserVersion = require("./resolvers/UserVersion");
 
 const resolvers = {
   Query,
@@ -17,8 +16,7 @@ const resolvers = {
   User,
   Ingredient,
   Version,
-  Spec,
-  UserVersion
+  Spec
 };
 
 const server = new ApolloServer({ typeDefs, resolvers, context: context });

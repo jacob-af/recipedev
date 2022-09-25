@@ -43,15 +43,20 @@ const typeDefs = gql`
     password: String!
     recipes: [Recipe!]
     versions: [Version!]
+    adminOnVersion: [Version!]
     sharedVersions: [Version!]
     ingredients: [Ingredient!]
     specs: [Spec]
   }
 
   type UserVersion {
-    id: ID!
     versions: [Version!]
     users: [User!]
+  }
+
+  type AdminOnVersion {
+    versions: [Version]!
+    users: [User]!
   }
 
   type Recipe {
@@ -71,7 +76,8 @@ const typeDefs = gql`
     glassware: String
     ice: String
     postedBy: User
-    usersVersion: [User]
+    sharedVersion: [User]
+    adminOnVersion: [User]
     specs: [Spec]
   }
 
@@ -159,6 +165,7 @@ const typeDefs = gql`
     ): Recipe
 
     shareVersion(fromUser: Int, toUser: Int, versionId: Int): Version
+    adminOnVersion(toUser: Int, versionId: Int): Version
 
     updateVersion(
       versionId: Int

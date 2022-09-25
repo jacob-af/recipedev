@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { UserInputError } = require("apollo-server");
 const { APP_SECRET, getUserId } = require("../utils");
 
 async function signup(parent, args, context, info) {
@@ -91,6 +92,15 @@ async function addRecipe(parent, args, context, info) {
 
 async function addVersion(parent, args, context, info) {
   const { userId } = context;
+  const specArrayWithId = args.specArray.map((spec, index) => {
+    return {
+      order: index,
+      postedBy: { connect: { id: userId } },
+      ingredient: { connect: { id: spec.ingredientId } },
+      amount: spec.amount,
+      unit: spec.unit
+    };
+  });
   const version = await context.prisma.version.create({
     data: {
       recipe: { connect: { id: args.recipeId } },
@@ -100,7 +110,7 @@ async function addVersion(parent, args, context, info) {
       ice: args.ice,
       postedBy: { connect: { id: userId } },
       specs: {
-        create: args.specArray
+        create: specArrayWithId
       }
     }
   });
@@ -165,18 +175,45 @@ async function updateSpecs(parent, args, context, info) {
 
 async function shareVersion(parent, args, context, info) {
   const { userId } = context;
-  const exists = await context.prisma.UserVersion.findMany({
+  const admins = await context.prisma.versionAdmin.findMany({
     where: { versionId: args.versionId }
   });
-  console.log(exists);
+  const admin = admins.find(admin => admin.userId === userId);
+  const users = await context.prisma.userVersion.findMany({
+    where: { versionId: args.versionId }
+  });
+  const user = users.find(user => user.userId === userId);
+
+  console.log(admin);
+  if (admin) {
+    const data = await context.prisma.UserVersion.create({
+      data: { versionId: args.versionId, userId: args.toUser }
+    });
+    console.log(data);
+    return data;
+  } else {
+    console.log("should really throw an error here");
+    throw new UserInputError("Invalid argument value");
+  }
+}
+
+async function adminOnVersion(parent, args, context, info) {
+  const { userId } = context;
+  const exists = await context.prisma.adminOnVersion.findMany({
+    where: { versionId: args.versionId }
+  });
+  console.log(exists, userId);
   const version = await context.prisma.version.findUnique({
     where: { id: args.versionId }
   });
-  console.log(version, args.fromUser);
-  if (version.postedById === args.fromUser) {
+  if (version.postedById === userId) {
     console.log("if working");
-    await context.prisma.UserVersion.create({
-      data: { versionId: args.versionId, userId: args.toUser }
+    await context.prisma.adminOnVersion.create({
+      data: {
+        versionId: args.versionId,
+        userId: args.toUser,
+        assignedById: userId
+      }
     });
     return version;
   } else {
@@ -194,5 +231,6 @@ module.exports = {
   updateVersion,
   shareVersion,
   updateSingleSpec,
-  updateSpecs
+  updateSpecs,
+  adminOnVersion
 };

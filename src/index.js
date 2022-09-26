@@ -6,8 +6,8 @@ const Mutation = require("./resolvers/Mutation");
 const User = require("./resolvers/User");
 const Recipe = require("./resolvers/Recipe");
 const Ingredient = require("./resolvers/Ingredient");
-const Version = require("./resolvers/Version");
 const Spec = require("./resolvers/Spec");
+const Touch = require("./resolvers/Touch");
 
 const resolvers = {
   Query,
@@ -15,7 +15,7 @@ const resolvers = {
   Recipe,
   User,
   Ingredient,
-  Version,
+  Touch,
   Spec
 };
 

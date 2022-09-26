@@ -1,52 +1,52 @@
-function recipes(parent, args, context) {
-  return context.prisma.Users.findUnique({
+function recipe(parent, args, context) {
+  return context.prisma.User.findUnique({
     where: { id: parent.id }
   }).recipes();
 }
 
-function ingredients(parent, args, context) {
-  return context.prisma.Users.findUnique({
+function ingredient(parent, args, context) {
+  return context.prisma.User.findUnique({
     where: { id: parent.id }
   }).ingredients();
 }
 
-function versions(parent, args, context) {
-  return context.prisma.Users.findUnique({
-    where: { id: parent.id }
-  }).version();
-}
-
-async function sharedVersions(parent, args, context) {
-  let results = await context.prisma.sharedVersion.findMany({
-    where: { userId: parent.id }
-  });
-  console.log(results);
-  return results.map(result =>
-    context.prisma.version.findUnique({ where: { id: result.versionId } })
-  );
-}
-
-async function adminOnVersion(parent, args, context) {
-  let results = await context.prisma.adminOnVersion.findMany({
-    where: { userId: parent.id }
-  });
-  console.log(results);
-  return results.map(result =>
-    context.prisma.version.findUnique({ where: { id: result.versionId } })
-  );
-}
-
-function specs(parent, args, context) {
-  return context.prisma.Users.findUnique({
+function spec(parent, args, context) {
+  return context.prisma.User.findUnique({
     where: { id: parent.id }
   }).spec();
 }
 
+async function sharedSpec(parent, args, context) {
+  let results = await context.prisma.sharedSpec.findMany({
+    where: { userId: parent.id }
+  });
+  console.log(results);
+  return results.map(result =>
+    context.prisma.spec.findUnique({ where: { id: result.specId } })
+  );
+}
+
+async function adminOnSpec(parent, args, context) {
+  let results = await context.prisma.adminOnSpec.findMany({
+    where: { userId: parent.id }
+  });
+  console.log(results);
+  return results.map(result =>
+    context.prisma.spec.findUnique({ where: { id: result.specId } })
+  );
+}
+
+function touch(parent, args, context) {
+  return context.prisma.User.findUnique({
+    where: { id: parent.id }
+  }).touch();
+}
+
 module.exports = {
-  recipes,
-  ingredients,
-  versions,
-  specs,
-  sharedVersions,
-  adminOnVersion
+  recipe,
+  ingredient,
+  spec,
+  touch,
+  sharedSpec,
+  adminOnSpec
 };

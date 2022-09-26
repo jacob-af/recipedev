@@ -1,9 +1,9 @@
 function allGroups(parent, args, context) {
-  return context.prisma.groups.findMany({});
+  return context.prisma.group.findMany({});
 }
 
 function allUsers(parent, args, context) {
-  return context.prisma.users.findMany({});
+  return context.prisma.user.findMany({});
 }
 
 function allRecipes(parent, args, context) {
@@ -13,8 +13,8 @@ function allRecipes(parent, args, context) {
 function allIngredients(parent, args, context) {
   return context.prisma.ingredient.findMany({});
 }
-function allVersions(parent, args, context) {
-  return context.prisma.version.findMany({});
+function allTouches(parent, args, context) {
+  return context.prisma.touch.findMany({});
 }
 function allSpecs(parent, args, context) {
   return context.prisma.spec.findMany({});
@@ -25,6 +25,6 @@ module.exports = {
   allUsers,
   allRecipes,
   allIngredients,
-  allVersions,
+  allTouches,
   allSpecs
 };

@@ -6,15 +6,15 @@ function postedBy(parent, args, context) {
     .postedBy();
 }
 
-function specs(parent, args, context) {
+function touch(parent, args, context) {
   return context.prisma.ingredient
     .findUnique({
       where: { id: parent.id }
     })
-    .spec();
+    .touch();
 }
 
 module.exports = {
   postedBy,
-  specs
+  touch
 };

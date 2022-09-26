@@ -8,7 +8,7 @@ async function signup(parent, args, context, info) {
   const password = await bcrypt.hash(args.password, 10);
 
   // 2
-  const user = await context.prisma.Users.create({
+  const user = await context.prisma.User.create({
     data: {
       ...args,
       password: password
@@ -27,7 +27,7 @@ async function signup(parent, args, context, info) {
 
 async function login(parent, args, context, info) {
   // 1
-  const user = await context.prisma.Users.findUnique({
+  const user = await context.prisma.User.findUnique({
     where: { email: args.email }
   });
   if (!user) {
@@ -71,71 +71,68 @@ async function addRecipe(parent, args, context, info) {
       name: args.name,
       origin: args.origin,
       history: args.history,
-      postedBy: { connect: { id: userId } },
-      version: {
-        create: {
-          versionName: args.versionName,
-          instructions: args.instructions,
-          glassware: args.glassware,
-          ice: args.ice,
-          postedBy: { connect: { id: userId } },
-          specs: {
-            create: args.specArray
-          }
-        }
-      }
+      postedBy: { connect: { id: userId } }
     }
   });
+  const argsWithRecipeId = {
+    ...args,
+    recipeId: recipe.id
+  };
+  await addSpec(parent, argsWithRecipeId, context, info);
   console.log(recipe);
+
   return recipe;
 }
 
-async function addVersion(parent, args, context, info) {
+async function addSpec(parent, args, context, info) {
   const { userId } = context;
-  const specArrayWithId = args.specArray.map((spec, index) => {
+  const touchArrayWithId = args.touchArray.map((touch, index) => {
     return {
       order: index,
       postedBy: { connect: { id: userId } },
-      ingredient: { connect: { id: spec.ingredientId } },
-      amount: spec.amount,
-      unit: spec.unit
+      ingredient: { connect: { id: touch.ingredientId } },
+      amount: touch.amount,
+      unit: touch.unit
     };
   });
-  const version = await context.prisma.version.create({
+  const spec = await context.prisma.spec.create({
     data: {
       recipe: { connect: { id: args.recipeId } },
-      versionName: args.versionName,
+      specName: args.specName,
       instructions: args.instructions,
       glassware: args.glassware,
       ice: args.ice,
       postedBy: { connect: { id: userId } },
-      specs: {
-        create: specArrayWithId
+      touch: {
+        create: touchArrayWithId
       }
     }
   });
-  return version;
+  await context.prisma.adminOnSpec.create({
+    data: { specId: spec.id, userId: userId, assignedById: userId }
+  });
+  return spec;
 }
 
-async function updateVersion(parent, args, context, info) {
-  const version = await context.prisma.version.update({
+async function updateSpec(parent, args, context, info) {
+  const spec = await context.prisma.spec.update({
     where: {
-      id: args.versionId
+      id: args.specId
     },
     data: {
       recipe: { connect: { id: args.recipeId } },
-      versionName: args.versionName,
+      specName: args.specName,
       instructions: args.instructions,
       glassware: args.glassware,
       ice: args.ice
     }
   });
-  return version;
+  return spec;
 }
 
-async function updateSingleSpec(parent, args, context, info) {
-  console.log(context.prisma.spec_id_seq);
-  return await context.prisma.spec.upsert({
+async function updateSingleTouch(parent, args, context, info) {
+  console.log(context.prisma.touch_id_seq);
+  return await context.prisma.touch.upsert({
     where: { id: args.input.id },
     update: {
       order: args.input.order,
@@ -144,7 +141,7 @@ async function updateSingleSpec(parent, args, context, info) {
       unit: args.input.unit
     },
     create: {
-      versionId: args.versionId,
+      specId: args.specId,
       order: args.input.order,
       ingredientId: args.input.ingredientId,
       amount: args.input.amount,
@@ -153,69 +150,75 @@ async function updateSingleSpec(parent, args, context, info) {
   });
 }
 
-async function updateSpecs(parent, args, context, info) {
-  await context.prisma.spec.deleteMany({
-    where: { versionId: args.versionId }
+async function updateTouch(parent, args, context, info) {
+  await context.prisma.touch.deleteMany({
+    where: { specId: args.specId }
   });
   console.log(args.input);
   return await context.prisma.$transaction(
-    args.input.map((spec, index) =>
-      context.prisma.spec.create({
+    args.input.map((touch, index) =>
+      context.prisma.touch.create({
         data: {
-          versionId: args.versionId,
+          specId: args.specId,
           order: index,
-          ingredientId: spec.ingredientId,
-          amount: spec.amount,
-          unit: spec.unit
+          ingredientId: touch.ingredientId,
+          amount: touch.amount,
+          unit: touch.unit
         }
       })
     )
   );
 }
 
-async function shareVersion(parent, args, context, info) {
+async function shareSpec(parent, args, context, info) {
   const { userId } = context;
-  const admins = await context.prisma.versionAdmin.findMany({
-    where: { versionId: args.versionId }
+  const hasAdmin = await context.prisma.adminOnSpec.findUnique({
+    where: { userId_specId: { specId: args.specId, userId: userId } }
   });
-  const admin = admins.find(admin => admin.userId === userId);
-  const users = await context.prisma.userVersion.findMany({
-    where: { versionId: args.versionId }
-  });
-  const user = users.find(user => user.userId === userId);
-
-  console.log(admin);
-  if (admin) {
-    const data = await context.prisma.UserVersion.create({
-      data: { versionId: args.versionId, userId: args.toUser }
+  if (hasAdmin) {
+    //Check if user has admin rights
+    const isShared = await context.prisma.sharedSpec.findUnique({
+      where: {
+        userId_specId: { specId: args.specId, userId: args.toUser }
+      }
     });
-    console.log(data);
-    return data;
+    if (isShared) {
+      //CHeck if target already has access
+      return { status: "This touch has already been shared" };
+    } else {
+      await context.prisma.sharedSpec.create({
+        data: {
+          specId: args.specId,
+          userId: args.toUser,
+          sharedById: userId
+        }
+      });
+      return { status: "Spec successfully shared." };
+    }
   } else {
-    console.log("should really throw an error here");
-    throw new UserInputError("Invalid argument value");
+    return { status: "You are not authorized to share this recipe" };
   }
 }
 
-async function adminOnVersion(parent, args, context, info) {
+async function adminOnSpec(parent, args, context, info) {
   const { userId } = context;
-  const exists = await context.prisma.adminOnVersion.findMany({
-    where: { versionId: args.versionId }
+  const exists = await context.prisma.adminOnSpec.findMany({
+    where: { specId: args.specId }
   });
   console.log(exists, userId);
-  const version = await context.prisma.version.findUnique({
-    where: { id: args.versionId }
+  const spec = await context.prisma.spec.findUnique({
+    where: { id: args.specId }
   });
-  if (version.postedById === userId) {
+  if (spec.postedById === userId) {
     console.log("if working");
-    await context.prisma.adminOnVersion.create({
+    await context.prisma.adminOnSpec.create({
       data: {
-        versionId: args.versionId,
+        specId: args.specId,
         userId: args.toUser,
         assignedById: userId
       }
     });
-    return version;
+    return spec;
   } else {
     console.log("if not working");
     return { error: "not your recipe, fool" };
@@ -227,10 +230,10 @@ module.exports = {
   login,
   addIngredient,
   addRecipe,
-  addVersion,
-  updateVersion,
-  shareVersion,
-  updateSingleSpec,
-  updateSpecs,
-  adminOnVersion
+  addSpec,
+  updateSpec,
+  shareSpec,
+  updateSingleTouch,
+  updateTouch,
+  adminOnSpec
 };

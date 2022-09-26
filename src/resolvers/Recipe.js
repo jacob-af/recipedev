@@ -6,15 +6,15 @@ function postedBy(parent, args, context) {
     .postedBy();
 }
 
-function versions(parent, args, context) {
+function spec(parent, args, context) {
   return context.prisma.recipe
     .findUnique({
       where: { id: parent.id }
     })
-    .version();
+    .spec();
 }
 
 module.exports = {
   postedBy,
-  versions
+  spec
 };

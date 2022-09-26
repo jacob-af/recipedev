@@ -7,6 +7,8 @@ const { gql } = require("apollo-server");
 
 const { DateTimeResolver } = require("graphql-scalars");
 
+//Each recipe can have multiple specs, each spec is made up of multiple bottle touches
+
 const typeDefs = gql`
   type AuthPayload {
     token: String
@@ -19,44 +21,48 @@ const typeDefs = gql`
 
   type CompleteRecipe {
     recipe: Recipe
-    version: CompleteVersion
+    spec: CompleteSpec
   }
 
-  type CompleteVersion {
-    version: Version
-    specs: [Spec]
+  type CompleteSpec {
+    spec: Spec
+    touch: [Touch]
   }
 
   type Group {
     id: ID
-    group_name: String
+    groupName: String
     date_created: DateTimeResolver
+  }
+
+  type StatusMessage {
+    status: String
   }
 
   type User {
     id: ID!
-    user_name: String!
-    first_name: String
-    last_name: String
-    date_joined: DateTimeResolver
+    userName: String!
+    firstName: String
+    lastName: String
+    dateJoined: DateTimeResolver
     email: String!
     password: String!
-    recipes: [Recipe!]
-    versions: [Version!]
-    adminOnVersion: [Version!]
-    sharedVersions: [Version!]
-    ingredients: [Ingredient!]
-    specs: [Spec]
+    recipe: [Recipe!]
+    spec: [Spec!]
+    adminOnSpec: [Spec!]
+    sharedSpec: [Spec!]
+    ingredient: [Ingredient!]
+    touch: [Touch]
   }
 
-  type UserVersion {
-    versions: [Version!]
-    users: [User!]
+  type SharedSpec {
+    spec: [Spec!]
+    user: [User!]
   }
 
-  type AdminOnVersion {
-    versions: [Version]!
-    users: [User]!
+  type AdminOnSpec {
+    spec: [Spec]!
+    user: [User]!
   }
 
   type Recipe {
@@ -65,26 +71,26 @@ const typeDefs = gql`
     origin: String
     postedBy: User
     history: String
-    versions: [Version]
-  }
-
-  type Version {
-    id: ID!
-    recipe: Recipe
-    versionName: String
-    instructions: String
-    glassware: String
-    ice: String
-    postedBy: User
-    sharedVersion: [User]
-    adminOnVersion: [User]
-    specs: [Spec]
+    spec: [Spec]
   }
 
   type Spec {
     id: ID!
+    recipe: Recipe
+    specName: String
+    instructions: String
+    glassware: String
+    ice: String
+    postedBy: User
+    sharedSpec: [User]
+    adminOnSpec: [User]
+    touch: [Touch]
+  }
+
+  type Touch {
+    id: ID!
     order: Int
-    version: Version
+    spec: Spec
     ingredient: Ingredient
     amount: Float
     unit: String
@@ -99,7 +105,7 @@ const typeDefs = gql`
     price: Float
     source: String
     postedBy: User
-    specs: [Spec]
+    touch: [Touch]
   }
 
   type Query {
@@ -107,29 +113,29 @@ const typeDefs = gql`
     allUsers: [User]
     allRecipes: [Recipe]
     allIngredients: [Ingredient]
-    allVersions: [Version]
     allSpecs: [Spec]
+    allTouches: [Touch]
   }
 
-  input SpecInput {
+  input TouchInput {
     order: Int
     ingredientId: Int
     amount: Float
     unit: String
   }
 
-  input SpecUpdate {
+  input TouchUpdate {
     ingredientId: Int
     amount: Float
     unit: String
   }
 
-  input VersionInput {
-    versionName: String
+  input SpecInput {
+    specName: String
     instructions: String
     glassware: String
     ice: String
-    specs: [SpecInput]
+    touch: [TouchInput]
   }
 
   type Mutation {
@@ -142,48 +148,48 @@ const typeDefs = gql`
       postedBy: Int
     ): Ingredient!
 
-    addVersion(
+    addSpec(
       recipeId: Int
-      versionName: String
+      specName: String
       instructions: String
       glassware: String
       ice: String
       postedBy: Int
-      specArray: [SpecInput]
-    ): Version
+      touchArray: [TouchInput]
+    ): Spec
 
     addRecipe(
       name: String
       origin: String
       postedBy: Int
       history: String
-      versionName: String
+      specName: String
       instructions: String
       glassware: String
       ice: String
-      specArray: [SpecInput]
+      touchArray: [TouchInput]
     ): Recipe
 
-    shareVersion(fromUser: Int, toUser: Int, versionId: Int): Version
-    adminOnVersion(toUser: Int, versionId: Int): Version
+    shareSpec(fromUser: String, toUser: String, specId: Int): StatusMessage
+    adminOnSpec(toUser: String, specId: Int): Spec
 
-    updateVersion(
-      versionId: Int
+    updateSpec(
+      specId: Int
       recipeId: Int
-      versionName: String
+      specName: String
       instructions: String
       glassware: String
       ice: String
-    ): Version
+    ): Spec
 
-    updateSingleSpec(input: SpecUpdate, versionId: Int): Spec
-    updateSpecs(input: [SpecUpdate], versionId: Int): [Spec]
+    updateSingleTouch(input: TouchUpdate, specId: Int): Touch
+    updateTouch(input: [TouchUpdate], specId: Int): [Touch]
 
     login(email: String!, password: String!): AuthPayload!
     signup(
-      user_name: String!
-      first_name: String
-      last_name: String
+      userName: String!
+      firstName: String
+      lastName: String
       email: String!
       password: String!
     ): AuthPayload!

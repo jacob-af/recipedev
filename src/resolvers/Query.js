@@ -10,6 +10,10 @@ function allRecipes(parent, args, context) {
   return context.prisma.recipe.findMany({});
 }
 
+function allRecipeBooks(parent, args, context) {
+  return context.prisma.recipeBook.findMany({});
+}
+
 function allIngredients(parent, args, context) {
   return context.prisma.ingredient.findMany({});
 }
@@ -26,5 +30,6 @@ module.exports = {
   allRecipes,
   allIngredients,
   allTouches,
-  allSpecs
+  allSpecs,
+  allRecipeBooks
 };

@@ -114,6 +114,20 @@ async function addSpec(parent, args, context, info) {
   return spec;
 }
 
+async function createRecipeBook(parent, args, context, info) {
+  const { userId } = context;
+  const recipeBook = await context.prisma.recipeBook.create({
+    data: {
+      name: args.name,
+      createdBy: { connect: { id: userId } }
+    }
+  });
+  await context.prisma.adminOnRecipeBook.create({
+    data: { recipeBookId: recipeBook.id, userId: userId, assignedById: userId }
+  });
+  return { status: `${args.name} Created` };
+}
+
 async function updateSpec(parent, args, context, info) {
   const spec = await context.prisma.spec.update({
     where: {
@@ -202,26 +216,134 @@ async function shareSpec(parent, args, context, info) {
 
 async function adminOnSpec(parent, args, context, info) {
   const { userId } = context;
-  const exists = await context.prisma.adminOnSpec.findMany({
-    where: { specId: args.specId }
+  const hasAdmin = await context.prisma.adminOnSpec.findUnique({
+    where: { userId_specId: { specId: args.specId, userId: userId } }
   });
-  console.log(exists, userId);
-  const spec = await context.prisma.spec.findUnique({
-    where: { id: args.specId }
-  });
-  if (spec.postedById === userId) {
-    console.log("if working");
-    await context.prisma.adminOnSpec.create({
-      data: {
-        specId: args.specId,
-        userId: args.toUser,
-        assignedById: userId
+  if (hasAdmin) {
+    //Check if user has admin rights
+    const isAdmin = await context.prisma.adminOnSpec.findUnique({
+      where: {
+        userId_specId: { specId: args.specId, userId: args.toUser }
       }
     });
-    return spec;
+    if (isAdmin) {
+      //CHeck if target already has access
+      return { status: "This user is already an Admin" };
+    } else {
+      await context.prisma.adminOnSpec.create({
+        data: {
+          specId: args.specId,
+          userId: args.toUser,
+          assignedById: userId
+        }
+      });
+      return { status: "Spec successfully shared." };
+    }
   } else {
-    console.log("if not working");
-    return { error: "not your recipe, fool" };
+    return { status: "You are not authorized to share this spec" };
+  }
+}
+
+async function shareRecipeBook(parent, args, context, info) {
+  const { userId } = context;
+  const hasAdmin = await context.prisma.adminOnRecipeBook.findUnique({
+    where: {
+      userId_recipeBookId: { recipeBookId: args.recipeBookId, userId: userId }
+    }
+  });
+  if (hasAdmin) {
+    //Check if user has admin rights
+    const isShared = await context.prisma.sharedRecipeBook.findUnique({
+      where: {
+        userId_recipeBookId: {
+          recipeBookId: args.recipeBookId,
+          userId: args.toUser
+        }
+      }
+    });
+    if (isShared) {
+      //CHeck if target already has access
+      return { status: "This touch has already been shared" };
+    } else {
+      await context.prisma.sharedRecipeBook.create({
+        data: {
+          recipeBookId: args.recipeBookId,
+          userId: args.toUser,
+          sharedById: userId
+        }
+      });
+      return { status: "Spec successfully shared." };
+    }
+  } else {
+    return { status: "You are not authorized to share this recipe" };
+  }
+}
+
+async function adminOnRecipeBook(parent, args, context, info) {
+  const { userId } = context;
+  const hasAdmin = await context.prisma.adminOnRecipeBook.findUnique({
+    where: {
+      userId_recipeBookId: { recipeBookId: args.recipeBookId, userId: userId }
+    }
+  });
+  if (hasAdmin) {
+    //Check if user has admin rights
+    const isAdmin = await context.prisma.adminOnRecipeBook.findUnique({
+      where: {
+        userId_recipeBookId: {
+          recipeBookId: args.recipeBookId,
+          userId: args.toUser
+        }
+      }
+    });
+    if (isAdmin) {
+      //CHeck if target already has access
+      return { status: "This user is already an Admin" };
+    } else {
+      await context.prisma.adminOnRecipeBook.create({
+        data: {
+          recipeBookId: args.recipeBookId,
+          userId: args.toUser,
+          assignedById: userId
+        }
+      });
+      return { status: "Admin status granted on Recipe Book" };
+    }
+  } else {
+    return { status: "You are not authorized to share this Recipe Book" };
+  }
+}
+
+async function addSpecToRecipeBook(parent, args, context, info) {
+  const { userId } = context;
+  const hasAdmin = await context.prisma.adminOnRecipeBook.findUnique({
+    where: {
+      userId_recipeBookId: { recipeBookId: args.recipeBookId, userId: userId }
+    }
+  });
+  if (hasAdmin) {
+    const alreadyAdded = await context.prisma.RecipeBookSpec.findUnique({
+      where: {
+        recipeBookId_specId: {
+          specId: args.specId,
+          recipeBookId: args.recipeBookId
+        }
+      }
+    });
+    if (alreadyAdded) {
+      return { status: "This spec has already been addedd" };
+    } else {
+      await context.prisma.RecipeBookSpec.create({
+        data: {
+          specId: args.specId,
+          recipeBookId: args.recipeBookId,
+          addedById: userId
+        }
+      });
+      return { status: "Spec successfully added to Recipe Book." };
+    }
+  } else {
+    return { status: "You are not authorized to edit this recipe book" };
   }
 }
 
@@ -235,5 +357,9 @@ module.exports = {
   shareSpec,
   updateSingleTouch,
   updateTouch,
-  adminOnSpec
+  adminOnSpec,
+  createRecipeBook,
+  addSpecToRecipeBook,
+  adminOnRecipeBook,
+  shareRecipeBook
 };

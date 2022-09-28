@@ -16,6 +16,32 @@ function spec(parent, args, context) {
   }).spec();
 }
 
+async function recipeBook(parent, args, context) {
+  return await context.prisma.User.findUnique({
+    where: { id: parent.id }
+  }).recipeBook();
+}
+
+async function sharedRecipeBook(parent, args, context) {
+  let results = await context.prisma.sharedrecipeBook.findMany({
+    where: { userId: parent.id }
+  });
+  console.log(results);
+  return results.map(result =>
+    context.prisma.recipeBook.findUnique({ where: { id: result.recipeBookId } })
+  );
+}
+
+async function adminOnRecipeBook(parent, args, context) {
+  let results = await context.prisma.adminOnrecipeBook.findMany({
+    where: { userId: parent.id }
+  });
+  console.log(results);
+  return results.map(result =>
+    context.prisma.recipeBook.findUnique({ where: { id: result.recipeBookId } })
+  );
+}
+
 async function sharedSpec(parent, args, context) {
   let results = await context.prisma.sharedSpec.findMany({
     where: { userId: parent.id }
@@ -48,5 +74,8 @@ module.exports = {
   spec,
   touch,
   sharedSpec,
-  adminOnSpec
+  adminOnSpec,
+  recipeBook,
+  sharedRecipeBook,
+  adminOnRecipeBook
 };

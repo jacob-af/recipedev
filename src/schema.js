@@ -47,6 +47,9 @@ const typeDefs = gql`
     dateJoined: DateTimeResolver
     email: String!
     password: String!
+    recipeBook: [RecipeBook]
+    adminOnRecipeBook: [RecipeBook]
+    sharedRecipeBook: [RecipeBook]
     recipe: [Recipe!]
     spec: [Spec!]
     adminOnSpec: [Spec!]
@@ -74,6 +77,19 @@ const typeDefs = gql`
     spec: [Spec]
   }
 
+  type RecipeBook {
+    id: ID!
+    name: String!
+    createdAt: DateTimeResolver
+    createdBy: User
+    spec: [Spec]
+  }
+
+  type recipeBookSpec {
+    spec: [Spec]!
+    recipeBook: [RecipeBook]!
+  }
+
   type Spec {
     id: ID!
     recipe: Recipe
@@ -85,6 +101,7 @@ const typeDefs = gql`
     sharedSpec: [User]
     adminOnSpec: [User]
     touch: [Touch]
+    recipeBookSpec: [RecipeBook]
   }
 
   type Touch {
@@ -112,6 +129,7 @@ const typeDefs = gql`
     allGroups: [Group]
     allUsers: [User]
     allRecipes: [Recipe]
+    allRecipeBooks: [RecipeBook]
     allIngredients: [Ingredient]
     allSpecs: [Spec]
     allTouches: [Touch]
@@ -169,6 +187,11 @@ const typeDefs = gql`
       ice: String
       touchArray: [TouchInput]
     ): Recipe
+
+    createRecipeBook(name: String): StatusMessage
+    shareRecipeBook(toUser: String, recipeBookId: Int): StatusMessage
+    adminOnRecipeBook(toUser: String, recipeBookId: Int): StatusMessage
+    addSpecToRecipeBook(specId: Int, recipeBookId: Int): StatusMessage
 
     shareSpec(fromUser: String, toUser: String, specId: Int): StatusMessage
     adminOnSpec(toUser: String, specId: Int): Spec

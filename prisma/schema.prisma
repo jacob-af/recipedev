@@ -139,8 +139,8 @@ model Spec {
   postedBy       User?            @relation(fields: [postedById], references: [id])
   postedById     String
   instructions   String?
-  glassware      String?          @db.VarChar(50)
-  ice            String?          @db.VarChar(25)
+  glassware      String?          @db.VarChar()
+  ice            String?          @db.VarChar(100)
   groupSpec      GroupSpec[]
   sharedSpec     SharedSpec[]
   recipe         Recipe?          @relation(fields: [recipeId], references: [id])

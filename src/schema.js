@@ -37,6 +37,7 @@ const typeDefs = gql`
 
   type StatusMessage {
     status: String
+    id: Int
   }
 
   type User {
@@ -54,6 +55,8 @@ const typeDefs = gql`
     spec: [Spec!]
     adminOnSpec: [Spec!]
     sharedSpec: [Spec!]
+    allBooks: [RecipeBook]
+    allSpec: [Spec!]
     ingredient: [Ingredient!]
     touch: [Touch]
   }
@@ -66,6 +69,11 @@ const typeDefs = gql`
   type AdminOnSpec {
     spec: [Spec]!
     user: [User]!
+  }
+
+  type RecipeAndSpec {
+    spec: Spec!
+    recipe: Recipe!
   }
 
   type Recipe {
@@ -186,7 +194,7 @@ const typeDefs = gql`
       glassware: String
       ice: String
       touchArray: [TouchInput]
-    ): Recipe
+    ): RecipeAndSpec
 
     createRecipeBook(name: String): StatusMessage
     shareRecipeBook(toUser: String, recipeBookId: Int): StatusMessage

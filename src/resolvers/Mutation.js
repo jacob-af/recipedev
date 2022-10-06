@@ -14,15 +14,57 @@ async function signup(parent, args, context, info) {
       password: password
     }
   });
+  if (user) {
+    const token = jwt.sign({ userId: user.id }, APP_SECRET);
+    const recipeBookArgs = {
+      name: "My Recipes"
+    };
+    const recipeArgs = {
+      name: "Create a new Recipe",
+      origin: "Where did this recipe originate?",
+      history: "What is this recipes history",
+      specName: "Name this version",
+      instructions: "How is it made?",
+      glassware: "What glassware should it be served in?",
+      ice: "What ice cream should it be served with?",
+      touchArray: [
+        {
+          order: 0,
+          ingredientId: 11,
+          amount: 0,
+          unit: "oz"
+        }
+      ]
+    };
 
-  // 3
-  const token = jwt.sign({ userId: user.id }, APP_SECRET);
+    context = {
+      ...context,
+      userId: user.id
+    };
 
-  // 4
-  return {
-    token,
-    user
-  };
+    const recipeBook = await createRecipeBook(
+      parent,
+      recipeBookArgs,
+      context,
+      info
+    );
+    const recipeAndSpec = await addRecipe(parent, recipeArgs, context, info);
+
+    const additionArgs = {
+      specId: recipeAndSpec.spec.id,
+      recipeBookId: recipeBook.id
+    };
+
+    await addSpecToRecipeBook(parent, additionArgs, context, info);
+
+    // 4
+    return {
+      token,
+      user
+    };
+  } else {
+    return null;
+  }
 }
 
 async function login(parent, args, context, info) {
@@ -78,10 +120,9 @@ async function addRecipe(parent, args, context, info) {
     ...args,
     recipeId: recipe.id
   };
-  await addSpec(parent, argsWithRecipeId, context, info);
-  console.log(recipe);
+  const spec = await addSpec(parent, argsWithRecipeId, context, info);
 
-  return recipe;
+  return { recipe, spec };
 }
 
 async function addSpec(parent, args, context, info) {
@@ -95,6 +136,7 @@ async function addSpec(parent, args, context, info) {
       unit: touch.unit
     };
   });
+  console.log(args, touchArrayWithId);
   const spec = await context.prisma.spec.create({
     data: {
       recipe: { connect: { id: args.recipeId } },
@@ -125,7 +167,7 @@ async function createRecipeBook(parent, args, context, info) {
   await context.prisma.adminOnRecipeBook.create({
     data: { recipeBookId: recipeBook.id, userId: userId, assignedById: userId }
   });
-  return { status: `${args.name} Created` };
+  return { status: `${args.name} Created`, id: recipeBook.id };
 }
 
 async function updateSpec(parent, args, context, info) {
@@ -198,7 +240,7 @@ async function shareSpec(parent, args, context, info) {
     });
     if (isShared) {
       //CHeck if target already has access
-      return { status: "This touch has already been shared" };
+      return { status: "This touch has already been shared", id: 0 };
     } else {
       await context.prisma.sharedSpec.create({
         data: {
@@ -207,10 +249,10 @@ async function shareSpec(parent, args, context, info) {
           sharedById: userId
         }
       });
-      return { status: "Spec successfully shared." };
+      return { status: "Spec successfully shared.", id: args.specId };
     }
   } else {
-    return { status: "You are not authorized to share this recipe" };
+    return { status: "You are not authorized to share this recipe", id: 0 };
   }
 }
 
@@ -228,7 +270,7 @@ async function adminOnSpec(parent, args, context, info) {
     });
     if (isAdmin) {
       //CHeck if target already has access
-      return { status: "This user is already an Admin" };
+      return { status: "This user is already an Admin", id: 0 };
     } else {
       await context.prisma.adminOnSpec.create({
         data: {
@@ -237,10 +279,10 @@ async function adminOnSpec(parent, args, context, info) {
           assignedById: userId
         }
       });
-      return { status: "Spec successfully shared." };
+      return { status: "Spec successfully shared.", id: args.specId };
     }
   } else {
-    return { status: "You are not authorized to share this spec" };
+    return { status: "You are not authorized to share this spec", id: 0 };
   }
 }
 
@@ -263,7 +305,7 @@ async function shareRecipeBook(parent, args, context, info) {
     });
     if (isShared) {
       //CHeck if target already has access
-      return { status: "This touch has already been shared" };
+      return { status: "This recipe book has already been shared", id: 0 };
     } else {
       await context.prisma.sharedRecipeBook.create({
         data: {
@@ -272,10 +314,13 @@ async function shareRecipeBook(parent, args, context, info) {
           sharedById: userId
         }
       });
-      return { status: "Spec successfully shared." };
+      return {
+        status: "Recipe book successfully shared.",
+        id: args.recipeBookId
+      };
     }
   } else {
-    return { status: "You are not authorized to share this recipe" };
+    return { status: "You are not authorized to share this recipe", id: 0 };
   }
 }
 

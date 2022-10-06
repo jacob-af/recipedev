@@ -1,7 +1,5 @@
 function spec(parent, args, context) {
-  return context.prisma.touch
-    .findUnique({ where: { id: parent.id } })
-    .version();
+  return context.prisma.touch.findUnique({ where: { id: parent.id } }).spec();
 }
 
 function ingredient(parent, args, context) {

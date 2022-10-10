@@ -4,7 +4,11 @@
   "description": "recipe building application",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server",
+    "server": "nodemon src/index.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
@@ -34,6 +38,8 @@
     "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
-    "prisma": "^4.3.1"
+    "prisma": "^4.3.1",
+    "concurrently": "^5.3.0",
+    "nodemon": "^2.0.6"
   }
 }

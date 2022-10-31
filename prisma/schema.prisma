@@ -37,6 +37,18 @@ model AdminOnRecipeBook {
   @@id([userId, recipeBookId])
 }
 
+model AdminOnInventory {
+  userId       String
+  assignedById String
+  assignedAt   DateTime  @default(now())
+  user         User      @relation("inventoryAdmins", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  assignedBy   User      @relation("inventoryAdminAssignedBy", fields: [assignedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  inventory    Inventory @relation(fields: [inventoryId], references: [id])
+  inventoryId  Int
+
+  @@id([userId, inventoryId])
+}
+
 model Group {
   id              Int               @id @default(autoincrement())
   groupName       String            @db.VarChar(255)
@@ -48,12 +60,12 @@ model Group {
 }
 
 model GroupIngredient {
-  groupId      Int
-  ingredientId Int
-  group        Group      @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  groupId          Int
+  ingredientSpecId Int
+  group            Group          @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ingredientSpec   IngredientSpec @relation(fields: [ingredientSpecId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([groupId, ingredientId])
+  @@id([groupId, ingredientSpecId])
 }
 
 model GroupMod {
@@ -84,18 +96,34 @@ model GroupUser {
 }
 
 model Ingredient {
-  id               Int                @id @default(autoincrement())
-  dateCreated      DateTime           @default(now())
-  name             String             @db.VarChar(255)
-  amount           Int?
-  unit             String?            @db.VarChar(50)
-  price            Decimal?           @db.Money
-  source           String?            @db.VarChar(50)
-  postedBy         User?              @relation(fields: [postedById], references: [id])
-  postedById       String
-  groupIngredient  GroupIngredient[]
-  touch            Touch[]
-  sharedIngredient SharedIngredient[]
+  id          Int      @id @default(autoincrement())
+  dateCreated DateTime @default(now())
+  name        String   @db.VarChar(255)
+  postedBy    User?    @relation(fields: [postedById], references: [id])
+  postedById  String
+
+  touch Touch[]
+
+  ingredientSpec IngredientSpec[]
+}
+
+model IngredientSpec {
+  id                            Int                       @id @default(autoincrement())
+  dateCreated                   DateTime                  @default(now())
+  name                          String                    @db.VarChar(255)
+  amount                        Int?
+  unit                          String?                   @db.VarChar(50)
+  price                         Decimal?                  @db.Money
+  source                        String?                   @db.VarChar(50)
+  postedBy                      User?                     @relation(fields: [postedById], references: [id])
+  postedById                    String
+  ingredient                    Ingredient?               @relation(fields: [ingredientId], references: [id])
+  ingredientId                  Int?
+  Inventory                     Inventory?                @relation(fields: [inventoryId], references: [id])
+  inventoryId                   Int?
+  sharedInventoryIngredientSpec InventoryIngredientSpec[] @relation("sharedInventoryIngredientSpec")
+  GroupIngredient               GroupIngredient[]
+  SharedIngredient              SharedIngredient[]
 }
 
 model Recipe {
@@ -121,6 +149,18 @@ model RecipeBook {
   AdminOnRecipeBook AdminOnRecipeBook[]
 }
 
+model Inventory {
+  id                      Int                       @id @default(autoincrement())
+  name                    String                    @db.VarChar(255)
+  createdAt               DateTime                  @default(now())
+  createdById             String
+  createdBy               User?                     @relation(fields: [createdById], references: [id])
+  sharedInventory         SharedInventory[]
+  ingredientSpec          IngredientSpec[]
+  inventoryIngredientSpec InventoryIngredientSpec[]
+  adminOnInventory        AdminOnInventory[]
+}
+
 model RecipeBookSpec {
   recipeBookId Int
   specId       Int
@@ -131,6 +171,18 @@ model RecipeBookSpec {
   addeddBy     User       @relation("recipeBookSpecAddedBy", fields: [addedById], references: [id], onDelete: NoAction)
 
   @@id([recipeBookId, specId])
+}
+
+model InventoryIngredientSpec {
+  inventoryId      Int
+  ingredientSpecId Int
+  addedById        String
+  sharedAt         DateTime       @default(now())
+  inventory        Inventory      @relation(fields: [inventoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ingredientSpec   IngredientSpec @relation("sharedInventoryIngredientSpec", fields: [ingredientSpecId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  addedBy          User           @relation("inventoryIngredientSpecAddedBy", fields: [addedById], references: [id], onDelete: NoAction)
+
+  @@id([inventoryId, ingredientSpecId])
 }
 
 model Spec {
@@ -149,7 +201,7 @@ model Spec {
   adminOnSpec    AdminOnSpec[]
   RecipeBook     RecipeBook?      @relation(fields: [recipeBookId], references: [id])
   recipeBookId   Int?
-  RecipeBookSpec RecipeBookSpec[] @relation("sharedRecipeBookSpec")
+  recipeBookSpec RecipeBookSpec[] @relation("sharedRecipeBookSpec")
 }
 
 model UserData {
@@ -162,44 +214,51 @@ model UserData {
 }
 
 model User {
-  id                        String              @id @default(uuid())
-  userName                  String              @db.VarChar(255)
-  firstName                 String?             @db.VarChar(25)
-  lastName                  String?             @db.VarChar(50)
-  dateJoined                DateTime            @default(now())
-  email                     String              @unique @db.VarChar(100)
-  password                  String              @db.VarChar(255)
+  id                        String                    @id @default(uuid())
+  userName                  String                    @db.VarChar(255)
+  firstName                 String?                   @db.VarChar(25)
+  lastName                  String?                   @db.VarChar(50)
+  dateJoined                DateTime                  @default(now())
+  email                     String                    @unique @db.VarChar(100)
+  password                  String                    @db.VarChar(255)
   groupMod                  GroupMod[]
   groupUser                 GroupUser[]
   userData                  UserData[]
-  sharedIngredient          SharedIngredient[]  @relation("sharedIngredient")
-  ingredientSharedBy        SharedIngredient[]  @relation("ingredientSharedBy")
-  sharedSpec                SharedSpec[]        @relation("sharedSpec")
-  specSharedBy              SharedSpec[]        @relation("specSharedBy")
+  sharedIngredient          SharedIngredient[]        @relation("sharedIngredient")
+  ingredientSharedBy        SharedIngredient[]        @relation("ingredientSharedBy")
+  sharedSpec                SharedSpec[]              @relation("sharedSpec")
+  specSharedBy              SharedSpec[]              @relation("specSharedBy")
   recipes                   Recipe[]
   spec                      Spec[]
   ingredient                Ingredient[]
   touch                     Touch[]
-  adminOnSpec               AdminOnSpec[]       @relation("admins")
-  adminAssignedBy           AdminOnSpec[]       @relation("adminAssignedBy")
+  adminOnSpec               AdminOnSpec[]             @relation("admins")
+  adminAssignedBy           AdminOnSpec[]             @relation("adminAssignedBy")
   recipeBook                RecipeBook[]
-  sharedRecipeBook          SharedRecipeBook[]  @relation("sharedRecipeBook")
-  recipeBookSharedBy        SharedRecipeBook[]  @relation("recipeBookSharedBy")
-  adminOnRecipeBook         AdminOnRecipeBook[] @relation("recipeBookAdmins")
-  recipeBookAdminAssignedBy AdminOnRecipeBook[] @relation("recipeBookAdminAssignedBy")
-  RecipeBookSpec            RecipeBookSpec[]    @relation("recipeBookSpecAddedBy")
+  sharedRecipeBook          SharedRecipeBook[]        @relation("sharedRecipeBook")
+  recipeBookSharedBy        SharedRecipeBook[]        @relation("recipeBookSharedBy")
+  adminOnRecipeBook         AdminOnRecipeBook[]       @relation("recipeBookAdmins")
+  recipeBookAdminAssignedBy AdminOnRecipeBook[]       @relation("recipeBookAdminAssignedBy")
+  RecipeBookSpec            RecipeBookSpec[]          @relation("recipeBookSpecAddedBy")
+  ingredientSpec            IngredientSpec[]
+  adminOnInventory          AdminOnInventory[]        @relation("inventoryAdmins")
+  inventoryAdminAssignedBy  AdminOnInventory[]        @relation("inventoryAdminAssignedBy")
+  inventory                 Inventory[]
+  sharedInventory           SharedInventory[]         @relation("sharedInventory")
+  inventorySharedBy         SharedInventory[]         @relation("inventorySharedBy")
+  InventoryIngredientSpec   InventoryIngredientSpec[] @relation("inventoryIngredientSpecAddedBy")
 }
 
 model SharedIngredient {
-  userId       String
-  ingredientId Int
-  sharedById   String
-  sharedAt     DateTime   @default(now())
-  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user         User       @relation("sharedIngredient", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  sharedBy     User       @relation("ingredientSharedBy", fields: [sharedById], references: [id], onDelete: NoAction)
+  userId           String
+  ingredientSpecId Int
+  sharedById       String
+  sharedAt         DateTime       @default(now())
+  ingredientSpec   IngredientSpec @relation(fields: [ingredientSpecId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user             User           @relation("sharedIngredient", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  sharedBy         User           @relation("ingredientSharedBy", fields: [sharedById], references: [id], onDelete: NoAction)
 
-  @@id([userId, ingredientId])
+  @@id([userId, ingredientSpecId])
 }
 
 model SharedRecipeBook {
@@ -212,6 +271,18 @@ model SharedRecipeBook {
   sharedBy     User       @relation("recipeBookSharedBy", fields: [sharedById], references: [id], onDelete: NoAction)
 
   @@id([userId, recipeBookId])
+}
+
+model SharedInventory {
+  userId      String
+  inventoryId Int
+  sharedById  String
+  sharedAt    DateTime  @default(now())
+  inventory   Inventory @relation(fields: [inventoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user        User      @relation("sharedInventory", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  sharedBy    User      @relation("inventorySharedBy", fields: [sharedById], references: [id], onDelete: NoAction)
+
+  @@id([userId, inventoryId])
 }
 
 model SharedSpec {

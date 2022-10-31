@@ -3,74 +3,61 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { useQuery, gql } from "@apollo/client";
-import Button from "@mui/material/Button";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { Fragment } from "react";
+import { token } from "./state/User";
+import Navbar from "./components/layout/Navbar";
+import Landing from "./components/layout/Landing";
+import Login from "./components/auth/Login";
+import SignUp from "./components/auth/SignUp";
+import Alert from "./components/layout/Alert";
+
+import PrivateRoute from "./components/routing/PrivateRoute.js";
+import Container from "@mui/material/Container";
+import { BottomNavigation } from "@mui/material";
 import { css } from "@emotion/css";
-
-const GET_USERS = gql`
-  query AllUsers {
-    allUsers {
-      id
-      userName
-      firstName
-      lastName
-    }
-  }
-`;
-
-function DisplayUsers() {
-  const { loading, error, data } = useQuery(GET_USERS);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
-  console.log(data.allUsers);
-  return data.allUsers.map(({ id, userName, firstName, lastName }) => (
-    <div key={id}>
-      <Button
-        variant="contained"
-        color="error"
-        className={css`
-          padding: 32px;
-          border-color: red;
-          font-size: 24px;
-          border-radius: 4px;
-          &:hover {
-            color: black;
-          }
-        `}
-      >
-        {userName}
-      </Button>
-      <br />
-      <b>full user name</b>
-      <p>
-        {firstName} {lastName}
-      </p>
-      <br />
-    </div>
-  ));
-}
 
 function App() {
   return (
-    <div
-      className={css`
-        display: flex;
-        align-content: center;
-      `}
-    >
-      <div>
-        <h2
+    <Router>
+      <Fragment>
+        <Container
           className={css`
-            text-align: center;
+            padding: 32px;
+            background-color: #eee;
+            height: 100%;
+            font-size: 24px;
+            border-radius: 4px;
+            &:hover {
+              color: black;
+            }
           `}
         >
-          My first Apollo app 🚀
-        </h2>
-      </div>
-      <br />
-      <DisplayUsers />
-    </div>
+          <Navbar />
+          <Alert />
+          <Routes>
+            <Route
+              exact
+              path="/"
+              element={
+                <PrivateRoute>
+                  <Landing />
+                </PrivateRoute>
+              }
+            />
+            <Route exact path="/signup" element={<SignUp />} />
+            <Route exact path="/login" element={<Login />} />
+          </Routes>
+        </Container>
+        <BottomNavigation
+          showLabels
+          // value={value}
+          // onChange={(event, newValue) => {
+          //   setValue(newValue);
+          // }}
+        ></BottomNavigation>
+      </Fragment>
+    </Router>
   );
 }
 

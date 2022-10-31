@@ -125,12 +125,18 @@ const typeDefs = gql`
   type Ingredient {
     id: ID!
     name: String
+    postedBy: User
+    touch: [Touch]
+  }
+
+  type IngredientSpec {
+    id: ID!
+    ingredient: Ingredient
     amount: Int
     unit: String
     price: Float
     source: String
     postedBy: User
-    touch: [Touch]
   }
 
   type Query {

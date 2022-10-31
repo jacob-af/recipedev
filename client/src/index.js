@@ -3,11 +3,35 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import {
+  ApolloClient,
+  ApolloProvider,
+  createHttpLink,
+  InMemoryCache
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+import { cache } from "./cache";
+import { token } from "./state/User";
+
+const httpLink = createHttpLink({
+  uri: "http://localhost:4000/"
+});
+
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const loadToken = token();
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: loadToken ? `Bearer ${loadToken}` : ""
+    }
+  };
+});
 
 const client = new ApolloClient({
-  uri: "http://localhost:4000/",
-  cache: new InMemoryCache()
+  link: authLink.concat(httpLink),
+  cache
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

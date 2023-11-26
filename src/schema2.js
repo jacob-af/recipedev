@@ -17,6 +17,11 @@ const typeDefs = gql`
     count: Int
   }
 
+  type StatusMessage {
+    status: String
+    id: Int
+  }
+
   type CompleteRecipe {
     recipe: Recipe
     spec: CompleteSpec
@@ -31,11 +36,6 @@ const typeDefs = gql`
     id: ID
     groupName: String
     date_created: DateTimeResolver
-  }
-
-  type StatusMessage {
-    status: String
-    id: Int
   }
 
   type SharedSpec {
@@ -142,6 +142,7 @@ const typeDefs = gql`
     firstName: String
     lastName: String
     dateJoined: DateTimeResolver
+    lastEdited: DateTimeResolver
     email: String!
     password: String!
     recipeBook: [RecipeBook]

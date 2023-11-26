@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-const userData = [
+const users = [
   {
     user_name: "jfeitler",
     first_name: "Jacob",
@@ -26,13 +26,23 @@ const userData = [
   }
 ];
 
+const recipeBooks = [
+  {
+    name: "My Recipes"
+  }
+];
+
 async function main() {
   console.log(`Start seeding ...`);
-  for (const u of userData) {
-    const users = await prisma.user.create({
+  for (const u of users) {
+    const userSeed = await prisma.user.create({
       data: u
     });
-    console.log(`Created user with id: ${user.id}`);
+    console.log(`Created user with id: ${userSeed.id}`);
+    const recipeBookSeed = await prisma.recipeBook.create({
+      ...recipeBooks[0],
+      createdById: userSeed.id
+    });
   }
   console.log(`Seeding finished.`);
 }

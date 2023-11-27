@@ -59,14 +59,14 @@ model User {
 }
 
 model Profile {
-  id     Int    @id @default(autoincrement())
+  id     String @id @default(uuid())
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique
   photo  String
 }
 
 model RecipeBook {
-  id              Int               @id @default(autoincrement())
+  id              String            @id @default(uuid())
   name            String            @db.VarChar(255)
   description     String?
   createdAt       DateTime          @default(now())
@@ -81,7 +81,7 @@ model RecipeBook {
 
 model RecipeBookUser {
   userId       String
-  recipeBookId Int
+  recipeBookId String
   recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   user         User       @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   permission   String
@@ -90,7 +90,7 @@ model RecipeBookUser {
 }
 
 model Build {
-  id              Int               @id @default(autoincrement())
+  id              String            @id @default(uuid())
   buildName       String            @default("")
   createdAt       DateTime          @default(now())
   editedAt        DateTime          @default(now())
@@ -99,7 +99,7 @@ model Build {
   createdBy       User?             @relation(fields: [createdById], references: [id])
   editedBy        User?             @relation("buildEditedById", fields: [editedById], references: [id])
   recipe          Recipe?           @relation(fields: [recipeId], references: [id])
-  recipeId        Int?
+  recipeId        String?
   instructions    String?
   notes           String?
   glassware       String?           @db.VarChar()
@@ -111,7 +111,7 @@ model Build {
 
 model BuildUser {
   userId     String
-  buildId    Int
+  buildId    String
   user       User   @relation(fields: [userId], references: [id])
   build      Build  @relation(fields: [buildId], references: [id])
   permission String
@@ -120,7 +120,7 @@ model BuildUser {
 }
 
 model Recipe {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
   name        String   @db.VarChar(255)
   origin      String?  @db.VarChar(255)
@@ -131,8 +131,8 @@ model Recipe {
 }
 
 model RecipeBookBuild {
-  buildId      Int
-  recipeBookId Int
+  buildId      String
+  recipeBookId String
   recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   build        Build      @relation(fields: [buildId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
@@ -140,20 +140,20 @@ model RecipeBookBuild {
 }
 
 model Touch {
-  id                   Int                 @id @default(autoincrement())
-  build                Build?              @relation(fields: [buildId], references: [id])
-  buildId              Int?
+  id                   String              @id @default(uuid())
+  build                Build               @relation(fields: [buildId], references: [id])
+  buildId              String
   order                Int?
   amount               Float?              @db.Real
   unit                 String?             @db.VarChar(50)
-  genericIngredientID  Int
-  genericIngredient    GenericIngredient   @relation(fields: [genericIngredientID], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  specificIngredientID Int?
-  specificIngredient   SpecificIngredient? @relation(fields: [specificIngredientID], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  genericIngredientId  String
+  genericIngredient    GenericIngredient   @relation(fields: [genericIngredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  specificIngredientId String?
+  specificIngredient   SpecificIngredient? @relation(fields: [specificIngredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model GenericIngredient {
-  id                   Int                    @id @default(autoincrement())
+  id                   String                 @id @default(uuid())
   name                 String
   description          String?
   touch                Touch[]
@@ -162,11 +162,11 @@ model GenericIngredient {
 }
 
 model SpecificIngredient {
-  id                   Int                    @id @default(autoincrement())
+  id                   String                 @id @default(uuid())
   dateCreated          DateTime               @default(now())
   createdBy            User?                  @relation(fields: [createdById], references: [id])
   createdById          String?
-  genericIngredientId  Int
+  genericIngredientId  String
   genericIngredient    GenericIngredient      @relation(fields: [genericIngredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   name                 String                 @default("") @db.VarChar(255)
   description          String
@@ -180,19 +180,19 @@ model SpecificIngredient {
 }
 
 model IngredientPreference {
-  genericIngredientID  Int
-  genericIngredient    GenericIngredient  @relation(fields: [genericIngredientID], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  specificIngredientID Int
-  specificIngredient   SpecificIngredient @relation("userSpecPreference", fields: [specificIngredientID], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  genericIngredientId  String
+  genericIngredient    GenericIngredient  @relation(fields: [genericIngredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  specificIngredientId String
+  specificIngredient   SpecificIngredient @relation("userSpecPreference", fields: [specificIngredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  @@id([genericIngredientID, specificIngredientID])
+  @@id([genericIngredientId, specificIngredientId])
 }
 
 model Inventory {
-  id               Int                @id @default(autoincrement())
+  id               String             @id @default(uuid())
   name             String             @db.VarChar(255)
   createdAt        DateTime           @default(now())
   editedAt         DateTime           @default(now())
@@ -206,7 +206,7 @@ model Inventory {
 
 model InventoryUser {
   userId      String
-  inventoryId Int
+  inventoryId String
   user        User      @relation(fields: [userId], references: [id])
   inventory   Inventory @relation(fields: [inventoryId], references: [id])
   permission  String
@@ -215,7 +215,7 @@ model InventoryUser {
 }
 
 model Storage {
-  id                Int                 @id @default(autoincrement())
+  id                String              @id @default(uuid())
   name              String              @db.VarChar(255)
   createdAt         DateTime            @default(now())
   editedAt          DateTime            @default(now())
@@ -229,8 +229,8 @@ model Storage {
 }
 
 model InventoryStorage {
-  inventoryId Int
-  storageId   Int
+  inventoryId String
+  storageId   String
   storage     Storage   @relation(fields: [storageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   inventory   Inventory @relation(fields: [inventoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
@@ -238,9 +238,9 @@ model InventoryStorage {
 }
 
 model IngredientStorage {
-  ingredientId Int
+  ingredientId String
   ingredient   SpecificIngredient @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  storageId    Int
+  storageId    String
   Storage      Storage            @relation(fields: [storageId], references: [id])
   quantity     Float?
 
@@ -250,7 +250,7 @@ model IngredientStorage {
 model StorageUser {
   userId     String
   user       User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  storageId  Int
+  storageId  String
   Storage    Storage @relation(fields: [storageId], references: [id])
   permission String
 
@@ -258,7 +258,7 @@ model StorageUser {
 }
 
 model Crew {
-  id          Int        @id @default(autoincrement())
+  id          String     @id @default(uuid())
   name        String
   description String
   createdAt   DateTime   @default(now())
@@ -272,7 +272,7 @@ model Crew {
 
 model UserCrew {
   userId     String
-  crewId     Int
+  crewId     String
   user       User   @relation(fields: [userId], references: [id])
   crew       Crew   @relation(fields: [crewId], references: [id])
   permission String

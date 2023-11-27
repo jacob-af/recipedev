@@ -40,7 +40,7 @@ const typeDefs = gql`
 
   type StatusMessage {
     status: String
-    id: Int
+    id: String
   }
 
   type User {
@@ -80,7 +80,7 @@ const typeDefs = gql`
   }
 
   type Profile {
-    id: Int!
+    id: String!
     user: User!
     photo: String
   }
@@ -256,18 +256,20 @@ const typeDefs = gql`
 
   input TouchInput {
     order: Int
-    ingredientId: Int
+    ingredientId: String
     amount: Float
     unit: String
   }
 
   input TouchUpdate {
-    ingredientId: Int
+    ingredientId: String
     amount: Float
     unit: String
   }
 
   type Mutation {
+    addGenericIngredient(name: String, description: String): GenericIngredient!
+
     addSpecificIngredient(
       name: String
       description: String
@@ -275,12 +277,12 @@ const typeDefs = gql`
       unit: String
       price: Float
       source: String
-      genericIngredientId: Int
+      genericIngredientId: String
       createdBy: String
     ): SpecificIngredient!
 
     addBuild(
-      recipeId: Int
+      recipeId: String
       buildName: String
       instructions: String
       glassware: String
@@ -302,28 +304,28 @@ const typeDefs = gql`
     ): Recipe
 
     createRecipeBook(name: String): StatusMessage
-    shareRecipeBook(toUser: String, recipeBookId: Int): StatusMessage
-    adminOnRecipeBook(toUser: String, recipeBookId: Int): StatusMessage
-    addBuildToRecipeBook(buildId: Int, recipeBookId: Int): StatusMessage
+    shareRecipeBook(toUser: String, recipeBookId: String): StatusMessage
+    adminOnRecipeBook(toUser: String, recipeBookId: String): StatusMessage
+    addBuildToRecipeBook(buildId: String, recipeBookId: String): StatusMessage
 
-    shareBuild(fromUser: String, toUser: String, buildId: Int): StatusMessage
+    shareBuild(fromUser: String, toUser: String, buildId: String): StatusMessage
     changeBuildPermission(
       fromUser: String
       toUser: String
-      buildId: Int
+      buildId: String
     ): StatusMessage
 
     updateBuild(
-      buildId: Int
-      recipeId: Int
+      buildId: String
+      recipeId: String
       buildName: String
       instructions: String
       glassware: String
       ice: String
     ): Build
 
-    updateSingleTouch(input: TouchUpdate, specId: Int): Touch
-    updateTouch(input: [TouchUpdate], specId: Int): [Touch]
+    updateSingleTouch(input: TouchUpdate, specId: String): Touch
+    updateTouch(input: [TouchUpdate], specId: String): [Touch]
 
     login(email: String!, password: String!): AuthPayload!
 

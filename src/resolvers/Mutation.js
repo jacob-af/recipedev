@@ -91,6 +91,15 @@ async function login(parent, args, context, info) {
   };
 }
 
+async function addGenericIngredient(parent, args, context, info) {
+  return await context.prisma.genericIngredient.create({
+    data: {
+      name: args.name,
+      description: args.description
+    }
+  });
+}
+
 async function addSpecificIngredient(parent, args, context, info) {
   const { userId } = context;
 
@@ -122,9 +131,9 @@ async function addRecipe(parent, args, context, info) {
     ...args,
     recipeId: recipe.id
   };
-  const spec = await addSpec(parent, argsWithRecipeId, context, info);
+  const build = await addBuild(parent, argsWithRecipeId, context, info);
 
-  return { recipe, spec };
+  return { recipe, build };
 }
 
 async function addBuild(parent, args, context, info) {
@@ -132,7 +141,7 @@ async function addBuild(parent, args, context, info) {
   const touchArrayWithId = args.touchArray.map((touch, index) => {
     return {
       order: index,
-      postedBy: { connect: { id: userId } },
+      postedById: userId,
       genericIngredient: { connect: { id: touch.genericIngredientId } },
       specificIngredient: { connect: { id: touch.specificIngredientId } },
       amount: touch.amount,
@@ -398,6 +407,7 @@ async function addBuildToRecipeBook(parent, args, context, info) {
 module.exports = {
   signup,
   login,
+  addGenericIngredient,
   addSpecificIngredient,
   addRecipe,
   addBuild,

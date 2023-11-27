@@ -1,5 +1,5 @@
 const { ApolloServer } = require("apollo-server");
-const { typeDefs } = require("./schema");
+const typeDefs = require("./typeDefs");
 const { context } = require("./context");
 const Query = require("./resolvers/Query");
 const Mutation = require("./resolvers/Mutation");

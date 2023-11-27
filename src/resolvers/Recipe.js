@@ -15,6 +15,6 @@ function build(parent, args, context) {
 }
 
 module.exports = {
-  createdBy,
-  build
+  // createdBy,
+  // build
 };

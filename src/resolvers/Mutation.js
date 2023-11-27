@@ -99,6 +99,11 @@ async function addGenericIngredient(parent, args, context, info) {
     }
   });
 }
+async function addManyGenericIngredients(parent, args, context, info) {
+  return await context.prisma.genericIngredient.createMany({
+    data: args.dat
+  });
+}
 
 async function addSpecificIngredient(parent, args, context, info) {
   const { userId } = context;
@@ -173,13 +178,37 @@ async function createRecipeBook(parent, args, context, info) {
   const recipeBook = await context.prisma.recipeBook.create({
     data: {
       name: args.name,
-      createdBy: { connect: { id: userId } }
+      description: args.description,
+      createdById: userId,
+      editedById: userId
     }
   });
-  await context.prisma.adminOnRecipeBook.create({
-    data: { recipeBookId: recipeBook.id, userId: userId, assignedById: userId }
+  return { status: `${args.name} Created`, recipeBook };
+}
+
+async function createInventory(parent, args, context, info) {
+  const { userId } = context;
+  const inventory = await context.prisma.inventory.create({
+    data: {
+      name: args.name,
+      description: args.description,
+      createdById: userId,
+      editedById: userId
+    }
   });
-  return { status: `${args.name} Created`, id: recipeBook.id };
+  return { status: `${args.name} Created`, inventory };
+}
+async function createStorage(parent, args, context, info) {
+  const { userId } = context;
+  const storage = await context.prisma.storage.create({
+    data: {
+      name: args.name,
+      description: args.description,
+      createdById: userId,
+      editedById: userId
+    }
+  });
+  return { status: `${args.name} Created`, storage };
 }
 
 async function updateBuild(parent, args, context, info) {
@@ -408,6 +437,7 @@ module.exports = {
   signup,
   login,
   addGenericIngredient,
+  addManyGenericIngredients,
   addSpecificIngredient,
   addRecipe,
   addBuild,
@@ -417,6 +447,8 @@ module.exports = {
   updateTouch,
   changeBuildPermission,
   createRecipeBook,
+  createInventory,
+  createStorage,
   addBuildToRecipeBook,
   adminOnRecipeBook,
   shareRecipeBook

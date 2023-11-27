@@ -1,14 +1,7 @@
 function recipe(parent, args, context) {
   return context.prisma.User.findUnique({
     where: { id: parent.id }
-  }).recipes();
-}
-
-async function specificIngredient(parent, args, context) {
-  let results = await context.prisma.specificIngredient.findMany({
-    where: { createdById: parent.id }
-  });
-  return results;
+  }).recipe();
 }
 
 function build(parent, args, context) {
@@ -16,11 +9,22 @@ function build(parent, args, context) {
     where: { id: parent.id }
   }).build();
 }
+function specificIngredient(parent, args, context) {
+  return context.prisma.User.findUnique({
+    where: { id: parent.id }
+  }).ingredient();
+}
 
 async function recipeBook(parent, args, context) {
   return await context.prisma.User.findUnique({
     where: { id: parent.id }
   }).recipeBook();
+}
+
+async function inventory(parent, args, context) {
+  return await context.prisma.User.findUnique({
+    where: { id: parent.id }
+  }).inventory();
 }
 
 // async function sharedRecipeBook(parent, args, context) {
@@ -108,10 +112,11 @@ async function recipeBook(parent, args, context) {
 // }
 
 module.exports = {
-  recipe,
+  //recipe,
   specificIngredient,
   build,
-  recipeBook
+  recipeBook,
+  inventory
   //userBuild,
   //allBuild,
   //recipeBook,

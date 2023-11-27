@@ -17,14 +17,14 @@ datasource db {
 ///---Recipe M-1
 /// * RecipeBookBuild
 ///---Touch 
-///----Ingredient
+///----GenericIngredient
 ///-Inventory
 /// * InventoryUser
 ///--Storage
 /// * InventoryStorage
 /// * IgredientStorage
 /// * StorageUser
-///---Ingredient
+///---SpecificIngredient
 ///-Crew
 /// * UserCrew
 
@@ -45,7 +45,7 @@ model User {
   buildUser            BuildUser[]
   build                Build[]
   buildEditedBy        Build[]                @relation("buildEditedById")
-  userCrew             UserCrew[]
+  CrewUser             CrewUser[]
   crew                 Crew[]
   crewEditedBy         Crew[]                 @relation("crewEditedById")
   ingredient           SpecificIngredient[]
@@ -53,7 +53,7 @@ model User {
   storageUser          StorageUser[]
   storage              Storage[]
   storageEditedBy      Storage[]              @relation("storageEditedById")
-  inventoryCreatedBy   Inventory[]            @relation("inventoryCreatedById")
+  inventory            Inventory[]            @relation("inventoryCreatedById")
   inventoryEditedBy    Inventory[]            @relation("inventoryEditedById")
   inventoryUser        InventoryUser[]
 }
@@ -194,6 +194,7 @@ model IngredientPreference {
 model Inventory {
   id               String             @id @default(uuid())
   name             String             @db.VarChar(255)
+  description      String
   createdAt        DateTime           @default(now())
   editedAt         DateTime           @default(now())
   createdById      String
@@ -267,10 +268,10 @@ model Crew {
   editedById  String
   createdBy   User?      @relation(fields: [createdById], references: [id])
   editedBy    User?      @relation("crewEditedById", fields: [editedById], references: [id])
-  userCrew    UserCrew[]
+  userCrew    CrewUser[]
 }
 
-model UserCrew {
+model CrewUser {
   userId     String
   crewId     String
   user       User   @relation(fields: [userId], references: [id])

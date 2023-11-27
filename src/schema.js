@@ -13,20 +13,20 @@ const { DateTimeResolver } = require("graphql-scalars");
 /// * UserRecipeBook
 /// * RecipeBooksBuild
 ///--Build
-/// * UserBuild
+/// * BuildUser
 ///---Recipe M-1
 /// * RecipeBookBuild
 ///---Touch
 ///----Ingredient
 ///-Inventory
-/// * UserInventory
+/// * InventoryUser
 ///--Storage
 /// * InventoryStorage
 /// * IgredientStorage
-/// * UserStorage
+/// * StorageUser
 ///---Ingredient
 ///-Crew
-/// * UserCrew
+/// * CrewUser
 
 const typeDefs = gql`
   type AuthPayload {
@@ -41,6 +41,16 @@ const typeDefs = gql`
   type StatusMessage {
     status: String
     id: String
+  }
+
+  type BookReturn {
+    status: String
+    recipeBook: RecipeBook
+  }
+
+  type InventoryReturn {
+    status: String
+    inventory: Inventory
   }
 
   type User {
@@ -59,22 +69,23 @@ const typeDefs = gql`
     recipeBookEditedBy: [RecipeBook]
     recipe: [Recipe!]
 
-    userBuild: [UserBuild]
+    buildUser: [BuildUser]
     build: [Build]
     buildEditedBy: [Build]
 
-    userCrew: [UserCrew]
+    crewUser: [CrewUser]
     crew: [Crew]
     crewEditedBy: [Crew]
 
     specificIngredient: [SpecificIngredient]
     ingredientPreference: [IngredientPreference]
 
-    userStorage: [UserStorage]
+    storageUser: [StorageUser]
     storage: [Storage]
     storageEditedBy: [Storage]
 
-    userInventory: [UserInventory]
+    inventory: [Inventory]
+    inventoryUser: [InventoryUser]
     inventoryCreatedBy: [Inventory]
     inventoryEditedBy: [Inventory]
   }
@@ -117,10 +128,10 @@ const typeDefs = gql`
     ice: String
     touch: [Touch]
     recipeBook: [RecipeBook]
-    userBuild: [UserBuild]
+    buildUser: [BuildUser]
   }
 
-  type UserBuild {
+  type BuildUser {
     id: ID!
     user: User!
     build: Build!
@@ -185,6 +196,7 @@ const typeDefs = gql`
   type Inventory {
     id: ID!
     name: String!
+    description: String
     createdAt: DateTimeResolver
     editedAt: DateTimeResolver
     createdBy: User
@@ -192,7 +204,7 @@ const typeDefs = gql`
     inventoryStorage: [InventoryStorage]
   }
 
-  type UserInventory {
+  type InventoryUser {
     user: User
     inventory: Inventory
     permission: Permission
@@ -207,7 +219,7 @@ const typeDefs = gql`
     editedBy: User
     inventoryStorage: [InventoryStorage]
     ingredientStorage: [IngredientStorage]
-    userStorage: [UserStorage]
+    storageUser: [StorageUser]
   }
 
   type InventoryStorage {
@@ -220,7 +232,7 @@ const typeDefs = gql`
     storage: Storage
   }
 
-  type UserStorage {
+  type StorageUser {
     storage: Storage
     user: User
     permission: Permission
@@ -234,10 +246,10 @@ const typeDefs = gql`
     editedAt: DateTimeResolver
     createdBy: User
     editedBy: User
-    userCrew: [UserCrew]
+    crewUser: [CrewUser]
   }
 
-  type UserCrew {
+  type CrewUser {
     crew: Crew
     user: User
     permission: Permission
@@ -303,8 +315,10 @@ const typeDefs = gql`
       touchArray: [TouchInput]
     ): Recipe
 
-    createRecipeBook(name: String): StatusMessage
-    shareRecipeBook(toUser: String, recipeBookId: String): StatusMessage
+    createRecipeBook(name: String!, description: String): BookReturn
+    createInventory(name: String!, description: String): InventoryReturn
+    shareRecipeBook(toUser: String, recipeBookId: String): BookReturn
+
     adminOnRecipeBook(toUser: String, recipeBookId: String): StatusMessage
     addBuildToRecipeBook(buildId: String, recipeBookId: String): StatusMessage
 

@@ -1,21 +1,14 @@
-function spec(parent, args, context) {
-  return context.prisma.touch.findUnique({ where: { id: parent.id } }).spec();
+function build(parent, args, context) {
+  return context.prisma.touch.findUnique({ where: { id: parent.id } }).build();
 }
 
-function ingredient(parent, args, context) {
+function genericIngredient(parent, args, context) {
   return context.prisma.touch
     .findUnique({ where: { id: parent.id } })
-    .ingredient();
-}
-
-function postedBy(parent, args, context) {
-  return context.prisma.touch
-    .findUnique({ where: { id: parent.id } })
-    .postedBy();
+    .genericIngredient();
 }
 
 module.exports = {
-  spec,
-  ingredient,
-  postedBy
+  build,
+  genericIngredient
 };

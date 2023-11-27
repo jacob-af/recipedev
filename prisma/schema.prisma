@@ -8,44 +8,54 @@ datasource db {
 }
 
 ///User
-///-Profile 1-1
-///-Recipe Books M-M
-///--Builds M-M
-///---Recipes M-1
-///---Touchs 1-M
-///----Ingredient 1-1
-///-Inventory M-M
-///--StorageSpace M-M
-///---Ingredient 1-M
-///-Crews M-M
-///--Users M-M
+///-Profile
+///-RecipeBook
+/// * UserRecipeBook
+/// * RecipeBooksBuild
+///--Build
+/// * BuildUser
+///---Recipe M-1
+/// * RecipeBookBuild
+///---Touch 
+///----Ingredient
+///-Inventory
+/// * InventoryUser
+///--Storage
+/// * InventoryStorage
+/// * IgredientStorage
+/// * StorageUser
+///---Ingredient
+///-Crew
+/// * UserCrew
 
 model User {
-  id                   String           @id @default(uuid())
-  userName             String           @db.VarChar(255)
-  firstName            String?          @db.VarChar(25)
-  lastName             String?          @db.VarChar(50)
-  dateJoined           DateTime         @default(now())
-  lastEdited           DateTime         @default(now())
-  email                String           @unique @db.VarChar(100)
-  password             String           @db.VarChar(255)
+  id                   String                 @id @default(uuid())
+  userName             String                 @db.VarChar(255)
+  firstName            String?                @db.VarChar(25)
+  lastName             String?                @db.VarChar(50)
+  dateJoined           DateTime               @default(now())
+  lastEdited           DateTime               @default(now())
+  email                String                 @unique @db.VarChar(100)
+  password             String                 @db.VarChar(255)
   profile              Profile?
   recipeBookUser       RecipeBookUser[]
   recipeBook           RecipeBook[]
-  recipeBookEditedById RecipeBook[]     @relation("recipeBookEditedById")
+  recipeBookEditedById RecipeBook[]           @relation("recipeBookEditedById")
+  recipe               Recipe[]
+  buildUser            BuildUser[]
+  build                Build[]
+  buildEditedBy        Build[]                @relation("buildEditedById")
   userCrew             UserCrew[]
   crew                 Crew[]
-  crewEditedBy         Crew[]           @relation("crewEditedById")
-  userBuild            UserBuild[]
-  build                Build[]
-  buildEditedBy        Build[]          @relation("buildEditedById")
-  recipe               Recipe[]
-  ingredient           Ingredient[]
-  userStorage          UserStorage[]
+  crewEditedBy         Crew[]                 @relation("crewEditedById")
+  ingredient           SpecificIngredient[]
+  ingredientPreference IngredientPreference[]
+  storageUser          StorageUser[]
   storage              Storage[]
-  storageEditedBy      Storage[]        @relation("storageEditedById")
-  inventoryCreatedBy   Inventory[]      @relation("inventoryCreatedById")
-  inventoryEditedBy    Inventory[]      @relation("inventoryEditedById")
+  storageEditedBy      Storage[]              @relation("storageEditedById")
+  inventoryCreatedBy   Inventory[]            @relation("inventoryCreatedById")
+  inventoryEditedBy    Inventory[]            @relation("inventoryEditedById")
+  inventoryUser        InventoryUser[]
 }
 
 model Profile {
@@ -58,6 +68,7 @@ model Profile {
 model RecipeBook {
   id              Int               @id @default(autoincrement())
   name            String            @db.VarChar(255)
+  description     String?
   createdAt       DateTime          @default(now())
   editedAt        DateTime          @default(now())
   createdById     String?
@@ -69,13 +80,13 @@ model RecipeBook {
 }
 
 model RecipeBookUser {
-  id           Int        @id @default(autoincrement())
   userId       String
   recipeBookId Int
   recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   user         User       @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  partner      Boolean
-  manager      Boolean
+  permission   String
+
+  @@id([userId, recipeBookId])
 }
 
 model Build {
@@ -95,17 +106,17 @@ model Build {
   ice             String?           @db.VarChar(100)
   touch           Touch[]
   RecipeBookBuild RecipeBookBuild[]
-  userBuild       UserBuild[]
+  buildUser       BuildUser[]
 }
 
-model UserBuild {
-  id      Int     @id @default(autoincrement())
-  userId  String
-  buildId Int
-  user    User    @relation(fields: [userId], references: [id])
-  build   Build   @relation(fields: [buildId], references: [id])
-  partner Boolean
-  manager Boolean
+model BuildUser {
+  userId     String
+  buildId    Int
+  user       User   @relation(fields: [userId], references: [id])
+  build      Build  @relation(fields: [buildId], references: [id])
+  permission String
+
+  @@id([userId, buildId])
 }
 
 model Recipe {
@@ -120,36 +131,64 @@ model Recipe {
 }
 
 model RecipeBookBuild {
-  id           Int        @id @default(autoincrement())
   buildId      Int
   recipeBookId Int
   recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   build        Build      @relation(fields: [buildId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([buildId, recipeBookId])
 }
 
 model Touch {
-  id             Int         @id @default(autoincrement())
-  ingredientName String      @default("")
-  ingredientId   Int?
-  ingredient     Ingredient? @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  build          Build?      @relation(fields: [buildId], references: [id])
-  buildId        Int?
-  order          Int?
-  amount         Float?      @db.Real
-  unit           String?     @db.VarChar(50)
+  id                   Int                 @id @default(autoincrement())
+  build                Build?              @relation(fields: [buildId], references: [id])
+  buildId              Int?
+  order                Int?
+  amount               Float?              @db.Real
+  unit                 String?             @db.VarChar(50)
+  genericIngredientID  Int
+  genericIngredient    GenericIngredient   @relation(fields: [genericIngredientID], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  specificIngredientID Int?
+  specificIngredient   SpecificIngredient? @relation(fields: [specificIngredientID], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model Ingredient {
-  id                Int                 @id @default(autoincrement())
-  dateCreated       DateTime            @default(now())
-  createdBy         User?               @relation(fields: [createdById], references: [id])
-  createdById       String?
-  name              String              @default("") @db.VarChar(255)
-  price             Float?              @db.Real
-  amount            Float?              @db.Real
-  unit              String?
-  touch             Touch[]
-  ingredientStorage ingredientStorage[]
+model GenericIngredient {
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  description          String?
+  touch                Touch[]
+  specificIngredient   SpecificIngredient[]
+  ingredientPreference IngredientPreference[]
+}
+
+model SpecificIngredient {
+  id                   Int                    @id @default(autoincrement())
+  dateCreated          DateTime               @default(now())
+  createdBy            User?                  @relation(fields: [createdById], references: [id])
+  createdById          String?
+  genericIngredientId  Int
+  genericIngredient    GenericIngredient      @relation(fields: [genericIngredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  name                 String                 @default("") @db.VarChar(255)
+  description          String
+  price                Float?                 @db.Real
+  amount               Float?                 @db.Real
+  unit                 String?
+  source               String?
+  touch                Touch[]
+  ingredientStorage    IngredientStorage[]
+  ingredientPreference IngredientPreference[] @relation("userSpecPreference")
+}
+
+model IngredientPreference {
+  genericIngredientID  Int
+  genericIngredient    GenericIngredient  @relation(fields: [genericIngredientID], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  specificIngredientID Int
+  specificIngredient   SpecificIngredient @relation("userSpecPreference", fields: [specificIngredientID], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([genericIngredientID, specificIngredientID])
 }
 
 model Inventory {
@@ -161,15 +200,18 @@ model Inventory {
   editedById       String
   createdBy        User?              @relation("inventoryCreatedById", fields: [createdById], references: [id])
   editedBy         User?              @relation("inventoryEditedById", fields: [editedById], references: [id])
-  InventoryStorage InventoryStorage[]
+  inventoryStorage InventoryStorage[]
+  inventoryUser    InventoryUser[]
 }
 
-model InventoryStorage {
-  id          Int       @id @default(autoincrement())
+model InventoryUser {
+  userId      String
   inventoryId Int
-  storageId   Int
-  storage     Storage   @relation(fields: [storageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  inventory   Inventory @relation(fields: [inventoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user        User      @relation(fields: [userId], references: [id])
+  inventory   Inventory @relation(fields: [inventoryId], references: [id])
+  permission  String
+
+  @@id([userId, inventoryId])
 }
 
 model Storage {
@@ -182,36 +224,43 @@ model Storage {
   createdBy         User?               @relation(fields: [createdById], references: [id])
   editedBy          User?               @relation("storageEditedById", fields: [editedById], references: [id])
   inventoryStorage  InventoryStorage[]
-  ingredientStorage ingredientStorage[]
-  userStorage       UserStorage[]
+  ingredientStorage IngredientStorage[]
+  storageUser       StorageUser[]
 }
 
-model ingredientStorage {
-  id           Int         @id @default(autoincrement())
-  createdAt    DateTime    @default(now())
-  editedAt     DateTime    @default(now())
-  ingredientId Int?
-  ingredient   Ingredient? @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model InventoryStorage {
+  inventoryId Int
+  storageId   Int
+  storage     Storage   @relation(fields: [storageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  inventory   Inventory @relation(fields: [inventoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([inventoryId, storageId])
+}
+
+model IngredientStorage {
+  ingredientId Int
+  ingredient   SpecificIngredient @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  storageId    Int
+  Storage      Storage            @relation(fields: [storageId], references: [id])
   quantity     Float?
-  Storage      Storage?    @relation(fields: [storageId], references: [id])
-  storageId    Int?
+
+  @@id([ingredientId, storageId])
 }
 
-model UserStorage {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  editedAt  DateTime @default(now())
-  userId    String
-  user      User?    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  quantity  Float?
-  Storage   Storage? @relation(fields: [storageId], references: [id])
-  storageId Int?
-  partner   Boolean
-  manager   Boolean
+model StorageUser {
+  userId     String
+  user       User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  storageId  Int
+  Storage    Storage @relation(fields: [storageId], references: [id])
+  permission String
+
+  @@id([userId, storageId])
 }
 
 model Crew {
   id          Int        @id @default(autoincrement())
+  name        String
+  description String
   createdAt   DateTime   @default(now())
   editedAt    DateTime   @default(now())
   createdById String
@@ -222,11 +271,11 @@ model Crew {
 }
 
 model UserCrew {
-  id      Int     @id @default(autoincrement())
-  userId  String
-  crewId  Int
-  user    User    @relation(fields: [userId], references: [id])
-  crew    Crew    @relation(fields: [crewId], references: [id])
-  partner Boolean
-  manager Boolean
+  userId     String
+  crewId     Int
+  user       User   @relation(fields: [userId], references: [id])
+  crew       Crew   @relation(fields: [crewId], references: [id])
+  permission String
+
+  @@id([userId, crewId])
 }

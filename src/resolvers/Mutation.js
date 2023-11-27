@@ -17,7 +17,7 @@ async function signup(parent, args, context, info) {
   if (user) {
     const token = jwt.sign({ userId: user.id }, APP_SECRET);
     const recipeBookArgs = {
-      name: "My Recipes"
+      name: `${user.userName}'s Recipes`
     };
     const recipeArgs = {
       name: "Create a new Recipe",
@@ -30,7 +30,7 @@ async function signup(parent, args, context, info) {
       touchArray: [
         {
           order: 0,
-          ingredientId: 11,
+          ingredientId: 1,
           amount: 0,
           unit: "oz"
         }
@@ -91,17 +91,19 @@ async function login(parent, args, context, info) {
   };
 }
 
-async function addIngredient(parent, args, context, info) {
+async function addSpecificIngredient(parent, args, context, info) {
   const { userId } = context;
 
-  return await context.prisma.ingredient.create({
+  return await context.prisma.specificIngredient.create({
     data: {
       name: args.name,
+      description: args.description,
       amount: args.amount,
       unit: args.unit,
       price: args.price,
       source: args.source,
-      postedBy: { connect: { id: userId } }
+      genericIngredientId: args.genericIngredientId,
+      createdById: userId
     }
   });
 }
@@ -125,19 +127,20 @@ async function addRecipe(parent, args, context, info) {
   return { recipe, spec };
 }
 
-async function addSpec(parent, args, context, info) {
+async function addBuild(parent, args, context, info) {
   const { userId } = context;
   const touchArrayWithId = args.touchArray.map((touch, index) => {
     return {
       order: index,
       postedBy: { connect: { id: userId } },
-      ingredient: { connect: { id: touch.ingredientId } },
+      genericIngredient: { connect: { id: touch.genericIngredientId } },
+      specificIngredient: { connect: { id: touch.specificIngredientId } },
       amount: touch.amount,
       unit: touch.unit
     };
   });
   console.log(args, touchArrayWithId);
-  const spec = await context.prisma.spec.create({
+  const build = await context.prisma.build.create({
     data: {
       recipe: { connect: { id: args.recipeId } },
       specName: args.specName,
@@ -153,7 +156,7 @@ async function addSpec(parent, args, context, info) {
   await context.prisma.adminOnSpec.create({
     data: { specId: spec.id, userId: userId, assignedById: userId }
   });
-  return spec;
+  return build;
 }
 
 async function createRecipeBook(parent, args, context, info) {
@@ -170,7 +173,7 @@ async function createRecipeBook(parent, args, context, info) {
   return { status: `${args.name} Created`, id: recipeBook.id };
 }
 
-async function updateSpec(parent, args, context, info) {
+async function updateBuild(parent, args, context, info) {
   const spec = await context.prisma.spec.update({
     where: {
       id: args.specId
@@ -226,7 +229,7 @@ async function updateTouch(parent, args, context, info) {
   );
 }
 
-async function shareSpec(parent, args, context, info) {
+async function shareBuild(parent, args, context, info) {
   const { userId } = context;
   const hasAdmin = await context.prisma.adminOnSpec.findUnique({
     where: { userId_specId: { specId: args.specId, userId: userId } }
@@ -256,7 +259,7 @@ async function shareSpec(parent, args, context, info) {
   }
 }
 
-async function adminOnSpec(parent, args, context, info) {
+async function changeBuildPermission(parent, args, context, info) {
   const { userId } = context;
   const hasAdmin = await context.prisma.adminOnSpec.findUnique({
     where: { userId_specId: { specId: args.specId, userId: userId } }
@@ -359,7 +362,7 @@ async function adminOnRecipeBook(parent, args, context, info) {
   }
 }
 
-async function addSpecToRecipeBook(parent, args, context, info) {
+async function addBuildToRecipeBook(parent, args, context, info) {
   const { userId } = context;
   const hasAdmin = await context.prisma.adminOnRecipeBook.findUnique({
     where: {
@@ -395,16 +398,16 @@ async function addSpecToRecipeBook(parent, args, context, info) {
 module.exports = {
   signup,
   login,
-  addIngredient,
+  addSpecificIngredient,
   addRecipe,
-  addSpec,
-  updateSpec,
-  shareSpec,
+  addBuild,
+  updateBuild,
+  shareBuild,
   updateSingleTouch,
   updateTouch,
-  adminOnSpec,
+  changeBuildPermission,
   createRecipeBook,
-  addSpecToRecipeBook,
+  addBuildToRecipeBook,
   adminOnRecipeBook,
   shareRecipeBook
 };

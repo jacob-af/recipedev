@@ -7,8 +7,8 @@ const User = require("./resolvers/User");
 const Recipe = require("./resolvers/Recipe");
 const Inventory = require("./resolvers/Inventory");
 const RecipeBook = require("./resolvers/RecipeBook");
-const Ingredient = require("./resolvers/Ingredient");
-const Spec = require("./resolvers/Spec");
+const GenericIngredient = require("./resolvers/GenericIngredient");
+const Build = require("./resolvers/Build");
 const Touch = require("./resolvers/Touch");
 
 const resolvers = {
@@ -17,10 +17,10 @@ const resolvers = {
   Recipe,
   RecipeBook,
   User,
-  Ingredient,
+  GenericIngredient,
   Inventory,
   Touch,
-  Spec
+  Build
 };
 
 const server = new ApolloServer({ typeDefs, resolvers, context: context });

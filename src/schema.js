@@ -7,6 +7,27 @@ const { gql } = require("apollo-server");
 
 const { DateTimeResolver } = require("graphql-scalars");
 
+///User
+///-Profile
+///-RecipeBook
+/// * UserRecipeBook
+/// * RecipeBooksBuild
+///--Build
+/// * UserBuild
+///---Recipe M-1
+/// * RecipeBookBuild
+///---Touch
+///----Ingredient
+///-Inventory
+/// * UserInventory
+///--Storage
+/// * InventoryStorage
+/// * IgredientStorage
+/// * UserStorage
+///---Ingredient
+///-Crew
+/// * UserCrew
+
 const typeDefs = gql`
   type AuthPayload {
     token: String
@@ -17,123 +38,9 @@ const typeDefs = gql`
     count: Int
   }
 
-  type CompleteRecipe {
-    recipe: Recipe
-    spec: CompleteSpec
-  }
-
-  type CompleteSpec {
-    spec: Spec
-    touch: [Touch]
-  }
-
-  type Group {
-    id: ID
-    groupName: String
-    date_created: DateTimeResolver
-  }
-
   type StatusMessage {
     status: String
     id: Int
-  }
-
-  type SharedSpec {
-    spec: [Spec!]
-    user: [User!]
-  }
-
-  type AdminOnSpec {
-    spec: [Spec]!
-    user: [User]!
-  }
-
-  type AdminOnRecipeBook {
-    recipeBook: [RecipeBook]!
-    user: [User]!
-  }
-
-  type AdminOnInventory {
-    inventory: [Inventory]!
-    user: [User]!
-  }
-
-  type Build {
-    id: ID!
-  }
-
-  type Inventory {
-    id: ID!
-    createdBy: [User]
-    build: [Build]
-  }
-
-  type Ingredient {
-    id: ID!
-    name: String
-    postedBy: User
-    touch: [Touch]
-  }
-
-  type IngredientSpec {
-    id: ID!
-    ingredient: Ingredient
-    amount: Int
-    unit: String
-    price: Float
-    source: String
-    postedBy: User
-  }
-
-  type RecipeAndSpec {
-    spec: Spec!
-    recipe: Recipe!
-  }
-
-  type Recipe {
-    id: ID!
-    name: String
-    origin: String
-    postedBy: User
-    history: String
-    spec: [Spec]
-  }
-
-  type RecipeBook {
-    id: ID!
-    name: String!
-    createdAt: DateTimeResolver
-    createdBy: User
-    spec: [Spec]
-  }
-
-  type recipeBookSpec {
-    spec: [Spec]!
-    recipeBook: [RecipeBook]!
-  }
-
-  type Spec {
-    id: ID!
-    recipe: Recipe
-    specName: String
-    instructions: String
-    glassware: String
-    ice: String
-    postedBy: User
-    sharedSpec: [User]
-    adminOnSpec: [User]
-    touch: [Touch]
-    recipeBookSpec: [RecipeBook]
-  }
-
-  type Touch {
-    id: ID!
-    order: Int
-    spec: Spec
-    ingredient: Ingredient
-    amount: Float
-    unit: String
-    postedBy: User
   }
 
   type User {
@@ -142,28 +49,208 @@ const typeDefs = gql`
     firstName: String
     lastName: String
     dateJoined: DateTimeResolver
+    lastEdited: DateTimeResolver
     email: String!
     password: String!
+    profile: Profile
+
+    recipeBookUser: [RecipeBookUser]
     recipeBook: [RecipeBook]
-    adminOnRecipeBook: [RecipeBook]
-    sharedRecipeBook: [RecipeBook]
+    recipeBookEditedBy: [RecipeBook]
     recipe: [Recipe!]
-    spec: [Spec!]
-    adminOnSpec: [Spec!]
-    sharedSpec: [Spec!]
-    allBooks: [RecipeBook]
-    allSpec: [Spec!]
-    ingredient: [Ingredient!]
+
+    userBuild: [UserBuild]
+    build: [Build]
+    buildEditedBy: [Build]
+
+    userCrew: [UserCrew]
+    crew: [Crew]
+    crewEditedBy: [Crew]
+
+    specificIngredient: [SpecificIngredient]
+    ingredientPreference: [IngredientPreference]
+
+    userStorage: [UserStorage]
+    storage: [Storage]
+    storageEditedBy: [Storage]
+
+    userInventory: [UserInventory]
+    inventoryCreatedBy: [Inventory]
+    inventoryEditedBy: [Inventory]
+  }
+
+  type Profile {
+    id: Int!
+    user: User!
+    photo: String
+  }
+
+  type RecipeBook {
+    id: ID!
+    name: String
+    description: String
+    createdAt: DateTimeResolver
+    editedAt: DateTimeResolver
+    createdBy: User
+    editedBy: User
+    build: [Build]
+  }
+
+  type RecipeBookUser {
+    id: ID!
+    user: User!
+    recipeBook: RecipeBook!
+    permission: Permission
+  }
+
+  type Build {
+    id: ID!
+    buildName: String!
+    createdAt: DateTimeResolver
+    editedAt: DateTimeResolver
+    createdBy: User
+    editedBy: User
+    recipe: Recipe
+    instructions: String
+    notes: String
+    glassware: String
+    ice: String
     touch: [Touch]
+    recipeBook: [RecipeBook]
+    userBuild: [UserBuild]
+  }
+
+  type UserBuild {
+    id: ID!
+    user: User!
+    build: Build!
+    permission: Permission
+  }
+
+  type Recipe {
+    id: ID!
+    name: String
+    origin: String
+    createdBy: User
+    history: String
+    build: [Build]
+  }
+
+  type RecipeBookBuild {
+    recipeBook: [RecipeBook]
+    build: [Build]
+  }
+
+  type Touch {
+    id: ID!
+    build: Build
+    order: Int
+    amount: Float
+    unit: String
+    genericIngredient: GenericIngredient
+    specificIngredient: SpecificIngredient
+  }
+
+  type GenericIngredient {
+    id: ID!
+    name: String!
+    description: String
+    touch: [Touch]
+    specificIngredient: [SpecificIngredient]
+    ingredientPreference: [IngredientPreference]
+  }
+
+  type SpecificIngredient {
+    id: ID!
+    createdAt: DateTimeResolver
+    createdBy: User
+    name: String!
+    description: String
+    price: Float
+    amount: Float
+    unit: String
+    source: String
+    touch: [Touch]
+    genericIngredient: GenericIngredient!
+    ingredientStorage: [IngredientStorage]
+    ingredientPreference: [IngredientPreference]
+  }
+
+  type IngredientPreference {
+    genericIngredient: GenericIngredient!
+    specificIngredient: SpecificIngredient!
+    user: User
+  }
+
+  type Inventory {
+    id: ID!
+    name: String!
+    createdAt: DateTimeResolver
+    editedAt: DateTimeResolver
+    createdBy: User
+    editedBy: User
+    inventoryStorage: [InventoryStorage]
+  }
+
+  type UserInventory {
+    user: User
+    inventory: Inventory
+    permission: Permission
+  }
+
+  type Storage {
+    id: ID!
+    name: String!
+    createdAt: DateTimeResolver
+    editedAt: DateTimeResolver
+    createdBy: User
+    editedBy: User
+    inventoryStorage: [InventoryStorage]
+    ingredientStorage: [IngredientStorage]
+    userStorage: [UserStorage]
+  }
+
+  type InventoryStorage {
+    inventory: Inventory
+    storage: Storage
+  }
+
+  type IngredientStorage {
+    ingredient: SpecificIngredient
+    storage: Storage
+  }
+
+  type UserStorage {
+    storage: Storage
+    user: User
+    permission: Permission
+  }
+
+  type Crew {
+    id: ID!
+    name: String
+    description: String
+    createdAt: DateTimeResolver
+    editedAt: DateTimeResolver
+    createdBy: User
+    editedBy: User
+    userCrew: [UserCrew]
+  }
+
+  type UserCrew {
+    crew: Crew
+    user: User
+    permission: Permission
   }
 
   type Query {
-    allGroups: [Group]
+    allCrews: [Crew]
     allUsers: [User]
     allRecipes: [Recipe]
+    allGenericIngredients: [GenericIngredient]
+    allSpecificIngredients: [SpecificIngredient]
     allRecipeBooks: [RecipeBook]
-    allIngredients: [Ingredient]
-    allSpecs: [Spec]
+    allBuilds: [Build]
     allTouches: [Touch]
   }
 
@@ -180,67 +267,66 @@ const typeDefs = gql`
     unit: String
   }
 
-  input SpecInput {
-    specName: String
-    instructions: String
-    glassware: String
-    ice: String
-    touch: [TouchInput]
-  }
-
   type Mutation {
-    addIngredient(
+    addSpecificIngredient(
       name: String
+      description: String
       amount: Int
       unit: String
       price: Float
       source: String
-      postedBy: Int
-    ): Ingredient!
+      genericIngredientId: Int
+      createdBy: String
+    ): SpecificIngredient!
 
-    addSpec(
+    addBuild(
       recipeId: Int
-      specName: String
+      buildName: String
       instructions: String
       glassware: String
       ice: String
       postedBy: Int
       touchArray: [TouchInput]
-    ): Spec
+    ): Build
 
     addRecipe(
       name: String
       origin: String
       postedBy: Int
       history: String
-      specName: String
+      buildName: String
       instructions: String
       glassware: String
       ice: String
       touchArray: [TouchInput]
-    ): RecipeAndSpec
+    ): Recipe
 
     createRecipeBook(name: String): StatusMessage
     shareRecipeBook(toUser: String, recipeBookId: Int): StatusMessage
     adminOnRecipeBook(toUser: String, recipeBookId: Int): StatusMessage
-    addSpecToRecipeBook(specId: Int, recipeBookId: Int): StatusMessage
+    addBuildToRecipeBook(buildId: Int, recipeBookId: Int): StatusMessage
 
-    shareSpec(fromUser: String, toUser: String, specId: Int): StatusMessage
-    adminOnSpec(toUser: String, specId: Int): Spec
+    shareBuild(fromUser: String, toUser: String, buildId: Int): StatusMessage
+    changeBuildPermission(
+      fromUser: String
+      toUser: String
+      buildId: Int
+    ): StatusMessage
 
-    updateSpec(
-      specId: Int
+    updateBuild(
+      buildId: Int
       recipeId: Int
-      specName: String
+      buildName: String
       instructions: String
       glassware: String
       ice: String
-    ): Spec
+    ): Build
 
     updateSingleTouch(input: TouchUpdate, specId: Int): Touch
     updateTouch(input: [TouchUpdate], specId: Int): [Touch]
 
     login(email: String!, password: String!): AuthPayload!
+
     signup(
       userName: String!
       firstName: String
@@ -251,6 +337,15 @@ const typeDefs = gql`
   }
 
   scalar DateTimeResolver
+
+  enum Permission {
+    View
+    Comment
+    Edit
+    Manage
+    Own
+    Blocked
+  }
 `;
 
 module.exports = {

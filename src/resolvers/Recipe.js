@@ -1,20 +1,20 @@
-function postedBy(parent, args, context) {
+function createdBy(parent, args, context) {
   return context.prisma.recipe
     .findUnique({
       where: { id: parent.id }
     })
-    .postedBy();
+    .createdBy();
 }
 
-function spec(parent, args, context) {
+function build(parent, args, context) {
   return context.prisma.recipe
     .findUnique({
       where: { id: parent.id }
     })
-    .spec();
+    .build();
 }
 
 module.exports = {
-  postedBy,
-  spec
+  createdBy,
+  build
 };

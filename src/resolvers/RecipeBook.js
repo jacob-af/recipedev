@@ -16,7 +16,7 @@ async function build(parent, args, context) {
   );
 }
 
-module.exports = {
+export default {
   build,
   createdBy
 };

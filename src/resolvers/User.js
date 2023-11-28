@@ -120,7 +120,7 @@ async function inventory(parent, args, context) {
 //   return allBuilds;
 // }
 
-module.exports = {
+export default {
   //recipe,
   specificIngredient,
   build,

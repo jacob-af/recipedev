@@ -14,7 +14,7 @@ function build(parent, args, context) {
     .build();
 }
 
-module.exports = {
+export default {
   // createdBy,
   // build
 };

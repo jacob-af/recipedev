@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+import { gql } from "graphql-tag";
 
 const inventory = gql`
   type Inventory {
@@ -56,4 +56,4 @@ const inventory = gql`
   }
 `;
 
-module.exports = inventory;
+export default inventory;

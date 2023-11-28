@@ -32,7 +32,7 @@ function allBuilds(parent, args, context) {
   return context.prisma.build.findMany({});
 }
 
-module.exports = {
+export default {
   allCrews,
   allUsers,
   allRecipes,

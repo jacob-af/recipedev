@@ -1,7 +1,10 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { UserInputError } = require("apollo-server");
-const { APP_SECRET, getUserId } = require("../utils");
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+//const { UserInputError } = require("apollo-server");
+import { APP_SECRET, getUserId } from "../utils.js";
+
+//
+//
 
 async function signup(parent, args, context, info) {
   // 1
@@ -129,13 +132,14 @@ async function addRecipe(parent, args, context, info) {
       name: args.name,
       origin: args.origin,
       history: args.history,
-      postedBy: { connect: { id: userId } }
+      createdById: userId
     }
   });
   const argsWithRecipeId = {
     ...args,
     recipeId: recipe.id
   };
+  //console.log(argsWithRecipeId);
   const build = await addBuild(parent, argsWithRecipeId, context, info);
 
   return { recipe, build };
@@ -146,30 +150,29 @@ async function addBuild(parent, args, context, info) {
   const touchArrayWithId = args.touchArray.map((touch, index) => {
     return {
       order: index,
-      postedById: userId,
-      genericIngredient: { connect: { id: touch.genericIngredientId } },
-      specificIngredient: { connect: { id: touch.specificIngredientId } },
+      createdBy: { connect: { id: userId } },
+      editedById: userId,
+      genericIngredientId: touch.genericIngredientId,
+      specificIngredientId: touch.specificIngredientId,
       amount: touch.amount,
       unit: touch.unit
     };
   });
-  console.log(args, touchArrayWithId);
+  console.log(args);
   const build = await context.prisma.build.create({
     data: {
       recipe: { connect: { id: args.recipeId } },
-      specName: args.specName,
+      buildName: args.buildName,
       instructions: args.instructions,
       glassware: args.glassware,
       ice: args.ice,
-      postedBy: { connect: { id: userId } },
+      createdById: userId,
       touch: {
         create: touchArrayWithId
       }
     }
   });
-  await context.prisma.adminOnSpec.create({
-    data: { specId: spec.id, userId: userId, assignedById: userId }
-  });
+
   return build;
 }
 
@@ -291,7 +294,7 @@ async function updateTouch(parent, args, context, info) {
   );
 }
 
-async function shareBuild(parent, args, context, info) {
+async function addBuildPermission(parent, args, context, info) {
   const { userId } = context;
   const hasAdmin = await context.prisma.adminOnSpec.findUnique({
     where: { userId_specId: { specId: args.specId, userId: userId } }
@@ -457,21 +460,26 @@ async function addBuildToRecipeBook(parent, args, context, info) {
   }
 }
 
-module.exports = {
+export default {
   signup,
   login,
   addGenericIngredient,
+
   addManyGenericIngredients,
   addSpecificIngredient,
+
+  createRecipeBook,
+  addRecipeBookPermission,
+
   addRecipe,
   addBuild,
   updateBuild,
-  shareBuild,
+  addBuildPermission,
+
   updateSingleTouch,
   updateTouch,
   changeBuildPermission,
-  createRecipeBook,
-  addRecipeBookPermission,
+
   createInventory,
   createStorage,
   addBuildToRecipeBook,

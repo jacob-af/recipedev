@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+import { gql } from "graphql-tag";
 
 const user = gql`
   type User {
@@ -50,4 +50,4 @@ const user = gql`
     permission: Permission
   }
 `;
-module.exports = user;
+export default user;

@@ -6,6 +6,6 @@ function createdBy(parent, args, context) {
     .createdBy();
 }
 
-module.exports = {
+export default {
   createdBy
 };

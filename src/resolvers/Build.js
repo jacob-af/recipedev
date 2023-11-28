@@ -37,7 +37,7 @@ function touch(parent, args, context) {
 //   );
 // }
 
-module.exports = {
+export default {
   createdBy,
   recipe,
   touch

@@ -10,7 +10,7 @@ async function recipeBook(parent, args, context) {
   });
 }
 
-module.exports = {
+export default {
   recipeBook,
   user
 };

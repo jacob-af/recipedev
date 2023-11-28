@@ -1,5 +1,5 @@
-const { gql } = require("apollo-server");
-const { DateTimeResolver } = require("graphql-scalars");
+import { gql } from "graphql-tag";
+import { DateTimeResolver } from "graphql-scalars";
 const util = gql`
   type AuthPayload {
     token: String
@@ -27,4 +27,4 @@ const util = gql`
   scalar DateTimeResolver
 `;
 
-module.exports = util;
+export default util;

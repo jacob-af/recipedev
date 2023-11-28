@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+import { gql } from "graphql-tag";
 
 const mutation = gql`
   type Mutation {
@@ -13,9 +13,21 @@ const mutation = gql`
       unit: String
       price: Float
       source: String
-      genericIngredientId: Int
+      genericIngredientId: String
       createdBy: String
     ): SpecificIngredient!
+
+    addRecipe(
+      name: String
+      origin: String
+      createdById: String
+      history: String
+      buildName: String
+      instructions: String
+      glassware: String
+      ice: String
+      touchArray: [TouchInput]
+    ): Recipe
 
     addBuild(
       recipeId: String
@@ -27,23 +39,17 @@ const mutation = gql`
       touchArray: [TouchInput]
     ): Build
 
+    addBuildPermission(
+      fromUser: String
+      toUser: String
+      buildId: String
+    ): StatusMessage
+
     addRecipeBookPermission(
       userId: String
       recipeBookId: String!
       permission: Permission!
     ): StatusMessage
-
-    addRecipe(
-      name: String
-      origin: String
-      postedBy: Int
-      history: String
-      buildName: String
-      instructions: String
-      glassware: String
-      ice: String
-      touchArray: [TouchInput]
-    ): Recipe
 
     createRecipeBook(name: String!, description: String): BookReturn
     createInventory(name: String!, description: String): InventoryReturn
@@ -54,7 +60,6 @@ const mutation = gql`
     adminOnRecipeBook(toUser: String, recipeBookId: String): StatusMessage
     addBuildToRecipeBook(buildId: String, recipeBookId: String): StatusMessage
 
-    shareBuild(fromUser: String, toUser: String, buildId: String): StatusMessage
     changeBuildPermission(
       fromUser: String
       toUser: String
@@ -85,4 +90,4 @@ const mutation = gql`
   }
 `;
 
-module.exports = mutation;
+export default mutation;

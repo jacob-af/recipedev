@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+import { gql } from "graphql-tag";
 
 const ingredient = gql`
   type GenericIngredient {
@@ -43,4 +43,4 @@ const ingredient = gql`
   }
 `;
 
-module.exports = ingredient;
+export default ingredient;

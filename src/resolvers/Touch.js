@@ -8,7 +8,7 @@ function genericIngredient(parent, args, context) {
     .genericIngredient();
 }
 
-module.exports = {
+export default {
   build,
   genericIngredient
 };

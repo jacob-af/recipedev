@@ -6,6 +6,6 @@ function touch(parent, args, context) {
     .touch();
 }
 
-module.exports = {
+export default {
   touch
 };

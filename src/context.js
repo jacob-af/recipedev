@@ -1,5 +1,5 @@
-const { PrismaClient } = require("@prisma/client");
-const { getUserId } = require("./utils");
+import { PrismaClient } from "@prisma/client";
+import { getUserId } from "./utils.js";
 
 const prisma = new PrismaClient();
 
@@ -11,6 +11,4 @@ function context({ req }) {
   };
 }
 
-module.exports = {
-  context
-};
+export { context };

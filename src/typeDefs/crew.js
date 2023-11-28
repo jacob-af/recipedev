@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+import { gql } from "graphql-tag";
 
 const crew = gql`
   type Crew {
@@ -19,4 +19,4 @@ const crew = gql`
   }
 `;
 
-module.exports = crew;
+export default crew;

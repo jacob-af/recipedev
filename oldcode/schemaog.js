@@ -169,7 +169,8 @@ const typeDefs = gql`
 
   input TouchInput {
     order: Int
-    ingredientId: Int
+    genericIngredientId: String
+    specificIngredientId: String
     amount: Float
     unit: String
   }

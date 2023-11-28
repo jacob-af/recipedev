@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+import { gql } from "graphql-tag";
 
 const recipeBook = gql`
   type RecipeBook {
@@ -73,7 +73,8 @@ const recipeBook = gql`
 
   input TouchInput {
     order: Int
-    ingredientId: String
+    genericIngredientId: String
+    specificIngredientId: String
     amount: Float
     unit: String
   }
@@ -85,4 +86,4 @@ const recipeBook = gql`
   }
 `;
 
-module.exports = recipeBook;
+export default recipeBook;

@@ -1,11 +1,11 @@
-const crew = require("./crew");
-const ingredient = require("./ingredient");
-const inventory = require("./inventory");
-const mutations = require("./mutations");
-const recipeBook = require("./recipeBook");
-const user = require("./user");
-const util = require("./util");
-const query = require("./query");
+import crew from "./crew.js";
+import ingredient from "./ingredient.js";
+import inventory from "./inventory.js";
+import mutations from "./mutations.js";
+import recipeBook from "./recipeBook.js";
+import user from "./user.js";
+import util from "./util.js";
+import query from "./query.js";
 
 const typeDefs = [
   user,
@@ -18,4 +18,4 @@ const typeDefs = [
   query
 ];
 
-module.exports = typeDefs;
+export default typeDefs;

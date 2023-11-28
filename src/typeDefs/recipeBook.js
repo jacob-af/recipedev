@@ -13,9 +13,8 @@ const recipeBook = gql`
   }
 
   type RecipeBookUser {
-    id: ID!
-    user: User!
-    recipeBook: RecipeBook!
+    user: User
+    recipeBook: RecipeBook
     permission: Permission
   }
 

@@ -27,6 +27,12 @@ const mutation = gql`
       touchArray: [TouchInput]
     ): Build
 
+    addRecipeBookPermission(
+      userId: String
+      recipeBookId: String!
+      permission: Permission!
+    ): StatusMessage
+
     addRecipe(
       name: String
       origin: String

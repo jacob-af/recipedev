@@ -21,14 +21,23 @@ async function recipeBook(parent, args, context) {
   }).recipeBook();
 }
 
+async function recipeBookUser(parent, args, context) {
+  console.log(parent);
+  return await context.prisma.user
+    .findUnique({
+      where: { id: parent.id }
+    })
+    .recipeBookUser(parent.id);
+}
+
 async function inventory(parent, args, context) {
   return await context.prisma.User.findUnique({
     where: { id: parent.id }
   }).inventory();
 }
 
-// async function sharedRecipeBook(parent, args, context) {
-//   let results = await context.prisma.sharedRecipeBook.findMany({
+// async function recipeBookUser(parent, args, context) {
+//   let results = await context.prisma.recipeBookUser.findMany({
 //     where: { userId: parent.id }
 //   });
 //   console.log(results);
@@ -116,6 +125,7 @@ module.exports = {
   specificIngredient,
   build,
   recipeBook,
+  recipeBookUser,
   inventory
   //userBuild,
   //allBuild,

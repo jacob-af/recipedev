@@ -14,6 +14,10 @@ function allRecipeBooks(parent, args, context) {
   return context.prisma.recipeBook.findMany({});
 }
 
+function allRecipeBookUsers(parent, args, context) {
+  return context.prisma.recipeBookUser.findMany({});
+}
+
 function allGenericIngredients(parent, args, context) {
   return context.prisma.genericIngredient.findMany({});
 }
@@ -34,6 +38,7 @@ module.exports = {
   allRecipes,
   allGenericIngredients,
   allSpecificIngredients,
+  allRecipeBookUsers,
   allTouches,
   allBuilds,
   allRecipeBooks

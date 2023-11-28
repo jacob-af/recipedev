@@ -183,7 +183,29 @@ async function createRecipeBook(parent, args, context, info) {
       editedById: userId
     }
   });
-  return { status: `${args.name} Created`, recipeBook };
+  const recipeBookUser = await context.prisma.recipeBookUser.create({
+    data: {
+      userId: userId,
+      recipeBookId: recipeBook.id,
+      permission: "Own"
+    }
+  });
+  return {
+    status: `${recipeBook.name} Created, permission level ${recipeBookUser.permission}`,
+    recipeBook
+  };
+}
+
+async function addRecipeBookPermission(parent, args, context, info) {
+  const { userId } = context;
+  const recipeBookUser = await context.prisma.recipeBookUser.create({
+    data: {
+      userId: userId,
+      recipeBookId: args.recipeBookId,
+      permission: args.permission
+    }
+  });
+  return { status: `${recipeBookUser.permission}` };
 }
 
 async function createInventory(parent, args, context, info) {
@@ -196,8 +218,10 @@ async function createInventory(parent, args, context, info) {
       editedById: userId
     }
   });
+
   return { status: `${args.name} Created`, inventory };
 }
+
 async function createStorage(parent, args, context, info) {
   const { userId } = context;
   const storage = await context.prisma.storage.create({
@@ -447,6 +471,7 @@ module.exports = {
   updateTouch,
   changeBuildPermission,
   createRecipeBook,
+  addRecipeBookPermission,
   createInventory,
   createStorage,
   addBuildToRecipeBook,

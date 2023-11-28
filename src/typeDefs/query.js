@@ -10,6 +10,7 @@ const query = gql`
     allRecipeBooks: [RecipeBook]
     allBuilds: [Build]
     allTouches: [Touch]
+    allRecipeBookUsers: [RecipeBookUser]
   }
 `;
 

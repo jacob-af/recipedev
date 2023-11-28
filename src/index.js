@@ -7,6 +7,7 @@ const User = require("./resolvers/User");
 const Recipe = require("./resolvers/Recipe");
 const Inventory = require("./resolvers/Inventory");
 const RecipeBook = require("./resolvers/RecipeBook");
+const RecipeBookUser = require("./resolvers/RecipeBookUser");
 const GenericIngredient = require("./resolvers/GenericIngredient");
 const Build = require("./resolvers/Build");
 const Touch = require("./resolvers/Touch");
@@ -16,6 +17,7 @@ const resolvers = {
   Mutation,
   Recipe,
   RecipeBook,
+  RecipeBookUser,
   User,
   GenericIngredient,
   Inventory,

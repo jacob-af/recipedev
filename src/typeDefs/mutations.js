@@ -30,7 +30,7 @@ const mutation = gql`
     ): Recipe
 
     addBuild(
-      recipeId: String
+      recipe: ID
       buildName: String
       instructions: String
       glassware: String
@@ -54,6 +54,7 @@ const mutation = gql`
     createRecipeBook(name: String!, description: String): BookReturn
     createInventory(name: String!, description: String): InventoryReturn
     createStorage(name: String!, description: String): StorageReturn
+    createCrew(name: String!, description: String): Crew
 
     shareRecipeBook(toUser: String, recipeBookId: String): BookReturn
 

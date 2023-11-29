@@ -16,5 +16,5 @@ function build(parent, args, context) {
 
 export default {
   // createdBy,
-  // build
+  build
 };

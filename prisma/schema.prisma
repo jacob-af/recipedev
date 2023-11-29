@@ -94,8 +94,8 @@ model Build {
   buildName       String            @default("")
   createdAt       DateTime          @default(now())
   editedAt        DateTime          @default(now())
-  createdById     String
-  editedById      String
+  createdById     String?
+  editedById      String?
   createdBy       User?             @relation(fields: [createdById], references: [id])
   editedBy        User?             @relation("buildEditedById", fields: [editedById], references: [id])
   recipe          Recipe?           @relation(fields: [recipeId], references: [id])

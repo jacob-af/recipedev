@@ -121,7 +121,7 @@ async function inventory(parent, args, context) {
 // }
 
 export default {
-  //recipe,
+  recipe,
   specificIngredient,
   build,
   recipeBook,

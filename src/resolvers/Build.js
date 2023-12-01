@@ -7,13 +7,10 @@ function createdBy(parent, args, context) {
 }
 
 function recipe(parent, args, context) {
-  return context.prisma.recipe
-    .findUnique({ where: { id: parent.id } })
-    .recipe();
+  return context.prisma.recipe.findUnique({ where: { id: parent.recipeId } });
 }
 
 function touch(parent, args, context) {
-  console.log(parent);
   const idToPass = parent.id || parent.buildId;
   return context.prisma.touch.findMany({ where: { buildId: parent.id } });
 }

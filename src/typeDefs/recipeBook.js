@@ -84,6 +84,38 @@ const recipeBook = gql`
     amount: Float
     unit: String
   }
+
+  type CompleteTouch {
+    order: Int
+    genericIngredientId: String
+    genericIngredientName: String
+    genericIngredientDescription: String
+    specificIngredientId: String
+    specificIngredientName: String
+    specificIngredientDescription: String
+    amount: Float
+    unit: String
+    cost: Float
+  }
+
+  type CompleteBuild {
+    id: ID!
+    buildName: String!
+    createdAt: DateTimeResolver
+    editedAt: DateTimeResolver
+    createdBy: User
+    editedBy: User
+    recipeId: String
+    recipeName: String
+    recipeOrigin: String
+    recipeCreatedBy: User
+    recipeHistory: String
+    instructions: String
+    notes: String
+    glassware: String
+    ice: String
+    touch: [Touch]
+  }
 `;
 
 export default recipeBook;

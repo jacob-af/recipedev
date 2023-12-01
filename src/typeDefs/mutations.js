@@ -79,7 +79,7 @@ const mutation = gql`
     updateSingleTouch(input: TouchUpdate, specId: String): Touch
     updateTouch(input: [TouchUpdate], specId: String): [Touch]
 
-    login(email: String!, password: String!): AuthPayload!
+    login(email: String!, password: String!): AuthPayload
 
     signup(
       userName: String!
@@ -87,7 +87,7 @@ const mutation = gql`
       lastName: String
       email: String!
       password: String!
-    ): AuthPayload!
+    ): AuthPayload
   }
 `;
 

@@ -12,6 +12,9 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { token, userData } from "../../state/User";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useMutation, gql } from "@apollo/client";
 
 function Copyright(props) {
   return (
@@ -31,16 +34,55 @@ function Copyright(props) {
   );
 }
 
+const NEW_USER = gql`
+  mutation SignUp(
+    $userName: String!
+    $email: String!
+    $password: String!
+    $firstName: String
+    $lastName: String
+  ) {
+    signup(
+      userName: $userName
+      firstName: $firstName
+      lastName: $lastName
+      email: $email
+      password: $password
+    ) {
+      token
+      user {
+        email
+        userName
+        firstName
+        lastName
+      }
+    }
+  }
+`;
+
 const theme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = event => {
+  const [newUser, { data, loading, error }] = useMutation(NEW_USER);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const handleSubmit = async event => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password")
+    const formData = new FormData(event.currentTarget);
+    const response = await newUser({
+      variables: {
+        email: formData.get("email"),
+        password: formData.get("password"),
+        userName: formData.get("userName"),
+        firstName: formData.get("firstName"),
+        lastName: formData.get("lastName")
+      }
     });
+    console.log(response.data);
+    token(response.data.signup.token);
+    userData(response.data.signup.user);
+    console.log(token(), userData());
+    navigate("/");
   };
 
   return (
@@ -68,6 +110,16 @@ export default function SignUp() {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="uerName"
+                  label="User Name"
+                  name="userName"
+                  autoComplete="userName"
+                />
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"

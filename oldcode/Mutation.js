@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 //const { UserInputError } = require("apollo-server");
-import { APP_SECRET, getUserId } from "../src/utils.js";
+import { APP_SECRET, getUserId } from "../utils.js";
 
 //
 //

@@ -6,6 +6,7 @@ import permission from "./permission.js";
 import recipe from "./recipe.js";
 import recipeBook from "./recipeBook.js";
 import specificIngredient from "./specificIngredient.js";
+import user from "./user.js";
 
 export default {
   ...crew,
@@ -15,5 +16,6 @@ export default {
   ...permission,
   ...recipe,
   ...recipeBook,
-  ...specificIngredient
+  ...specificIngredient,
+  ...user
 };

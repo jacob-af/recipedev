@@ -5,6 +5,8 @@ function Alert(props) {
   return <div>Alert</div>;
 }
 
-Alert.propTypes = {};
+Alert.propTypes = {
+  message: PropTypes.string
+};
 
 export default Alert;

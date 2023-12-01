@@ -43,6 +43,9 @@ const LOAD_USER = gql`
         userName
         firstName
         lastName
+        build {
+          buildName
+        }
       }
     }
   }
@@ -52,19 +55,21 @@ const theme = createTheme();
 
 export default function LogIn() {
   const [loadUser, { data, loading, error }] = useMutation(LOAD_USER);
+  console.log(data, loading, error);
   const location = useLocation();
   const navigate = useNavigate();
   const handleSubmit = async event => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const data = await loadUser({
+    const response = await loadUser({
       variables: {
         email: formData.get("email"),
         password: formData.get("password")
       }
     });
-    token(data.data.login.token);
-    userData(data.data.login.user);
+
+    token(response.data.login.token);
+    userData(response.data.login.user);
     console.log(token(), userData());
 
     navigate("/");

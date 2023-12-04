@@ -20,7 +20,7 @@ const util = gql`
     Comment
     Edit
     Manage
-    Own
+    Owner
     Blocked
   }
 

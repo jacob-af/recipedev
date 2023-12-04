@@ -1,3 +1,5 @@
+import completeTouch from "./Build.js";
+
 function recipe(parent, args, context) {
   return context.prisma.User.findUnique({
     where: { id: parent.id }
@@ -36,89 +38,67 @@ async function inventory(parent, args, context) {
   }).inventory();
 }
 
-// async function recipeBookUser(parent, args, context) {
-//   let results = await context.prisma.recipeBookUser.findMany({
-//     where: { userId: parent.id }
-//   });
-//   console.log(results);
-//   return results.map(result =>
-//     context.prisma.recipeBook.findUnique({ where: { id: result.recipeBookId } })
-//   );
-// }
+async function completeBuild(parent, args, context) {
+  const basicBuilds = await context.prisma.build.findMany({
+    where: { createdById: parent.id }
+  });
 
-// async function adminOnRecipeBook(parent, args, context) {
-//   let results = await context.prisma.adminOnRecipeBook.findMany({
-//     where: { userId: parent.id }
-//   });
-//   console.log(results);
-//   return results.map(result =>
-//     context.prisma.recipeBook.findUnique({ where: { id: result.recipeBookId } })
-//   );
-// }
+  async function completeTouch(parent, args, context) {
+    const basicTouches = await context.prisma.touch.findMany({
+      where: { buildId: parent.id }
+    });
 
-// async function userBuild(parent, args, context) {
-//   let results = await context.prisma.sharedBuild.findMany({
-//     where: { userId: parent.id }
-//   });
-//   console.log(results);
-//   return results.map(result =>
-//     context.prisma.build.findUnique({ where: { id: result.buildId } })
-//   );
-// }
+    const completeTouches = await basicTouches.map(async basicTouch => {
+      const genericIngredient =
+        await context.prisma.genericIngredient.findUnique({
+          where: { id: basicTouch.genericIngredientId }
+        });
+      if (basicTouch.specificIngredientId) {
+        const specificIngredient =
+          await context.prisma.specificIngredient.findUnique({
+            where: { id: basicTouch.specificIngredientId }
+          });
 
-// async function recipeBook(parent, args, context) {
-//   const recipeBooks = await context.prisma.user
-//     .findUnique({
-//       where: { id: parent.id }
-//     })
-//     .recipeBook();
-//   const sharedRecipeBookList = await context.prisma.user
-//     .findUnique({
-//       where: { id: parent.id }
-//     })
-//     .sharedRecipeBook();
-//   const sharedRecipeBooks = await context.prisma.$transaction(
-//     sharedRecipeBookList.map(result =>
-//       context.prisma.recipeBook.findUnique({
-//         where: { id: result.recipeBookId }
-//       })
-//     )
-//   );
-//   const allBooks = recipeBooks.concat(sharedRecipeBooks);
-//   //console.log(allBooks);
-//   return allBooks;
-// }
+        return {
+          ...basicTouch,
+          genericIngredientName: genericIngredient.name,
+          genericIngredientDescription: genericIngredient.description,
+          specificIngredientName: specificIngredient.name,
+          specificIngredientDescription: specificIngredient.description,
+          cost: specificIngredient.amount / specificIngredient.price
+        };
+      }
 
-// async function allBuild(parent, args, context) {
-//   const userBuilds = await context.prisma.user
-//     .findUnique({
-//       where: { id: parent.id }
-//     })
-//     .build();
-//   //console.log(userBuilds);
-//   const sharedBuildIds = await context.prisma.sharedBuild.findMany({
-//     where: { userId: parent.id }
-//   });
+      return {
+        ...basicTouch,
+        genericIngredientName: genericIngredient.name,
+        genericIngredientDescription: genericIngredient.description
+      };
+    });
+    return completeTouches;
+  }
+  const completeBuilds = await basicBuilds.map(async basicBuild => {
+    const recipe = await context.prisma.recipe.findUnique({
+      where: { id: basicBuild.recipeId }
+    });
+    const touches = await completeTouch(basicBuild, args, context);
+    return {
+      ...basicBuild,
+      recipeName: recipe.name,
+      recipeOrigin: recipe.origin,
+      recipeHistory: recipe.history,
+      completeTouch: touches
+    };
+  });
+  console.log(completeBuilds);
+  return completeBuilds;
+}
 
-//   const books = await allBooks(parent, args, context);
-//   //console.log(books);
-//   const bookBuilds = await context.prisma.$transaction(
-//     books.map(result =>
-//       context.prisma.recipeBookBuild.findMany({
-//         where: { recipeBookId: result.id }
-//       })
-//     )
-//   );
-//   const mostBuildIds = sharedBuildIds.concat(...bookBuilds);
-//   console.log(mostBuildIds);
-//   const sharedBuilds = await context.prisma.$transaction(
-//     mostBuildIds.map(result =>
-//       context.prisma.build.findUnique({ where: { id: result.buildId } })
-//     )
-//   );
-//   const allBuilds = userBuilds.concat(sharedBuilds);
-//   return allBuilds;
-// }
+async function buildUser(parent, args, context) {
+  return await context.prisma.User.findUnique({
+    where: { id: parent.id }
+  }).buildUser();
+}
 
 export default {
   recipe,
@@ -126,10 +106,7 @@ export default {
   build,
   recipeBook,
   recipeBookUser,
-  inventory
-  //userBuild,
-  //allBuild,
-  //recipeBook,
-  //sharedRecipeBook,
-  //adminOnRecipeBook
+  inventory,
+  completeBuild,
+  buildUser
 };

@@ -1,4 +1,6 @@
 import crew from "./crew.js";
+import build from "./build.js";
+import touch from "./touch.js";
 import ingredient from "./ingredient.js";
 import inventory from "./inventory.js";
 import mutations from "./mutations.js";
@@ -9,6 +11,8 @@ import query from "./query.js";
 
 const typeDefs = [
   user,
+  build,
+  touch,
   crew,
   ingredient,
   inventory,

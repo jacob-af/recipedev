@@ -4,10 +4,11 @@ import { userData } from "../../state/User";
 import Navbar from "./NavBar";
 import BottomNavBar from "./BottomNavBar";
 import { css } from "@emotion/css";
+import Post from "./Post";
 
 function Recipe(props) {
-  const { userName, build } = userData();
-  console.log(build);
+  const { completeBuild } = userData();
+  console.log(completeBuild);
   return (
     <Fragment>
       <Navbar />
@@ -17,11 +18,10 @@ function Recipe(props) {
         `}
       >
         <Fab sx={{ position: "absolute", top: 45, right: -15 }}>+</Fab>
-        <div>
-          {build.map(b => {
-            return <Container>{b.buildName}</Container>;
-          })}
-        </div>
+
+        {completeBuild.map(b => {
+          return <Post completeBuild={b} key={completeBuild.id} />;
+        })}
       </Container>
       <BottomNavBar />
     </Fragment>

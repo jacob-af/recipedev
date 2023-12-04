@@ -15,29 +15,44 @@ function touch(parent, args, context) {
   return context.prisma.touch.findMany({ where: { buildId: parent.id } });
 }
 
-// async function adminOnSpec(parent, args, context) {
-//   let results = await context.prisma.adminOnSpec.findMany({
-//     where: { specId: parent.id }
-//   });
-//   console.log(results);
-//   return results.map(result =>
-//     context.prisma.user.findUnique({ where: { id: result.userId } })
-//   );
-// }
+async function completeTouch(parent, args, context) {
+  const basicTouches = await context.prisma.touch.findMany({
+    where: { buildId: parent.id }
+  });
+  console.log(basicTouches);
+  const completeTouches = await basicTouches.map(async basicTouch => {
+    const genericIngredient =
+      await context.prisma.genericIngredientId.findUnique({
+        where: { id: basicTouch.genericIngedientId }
+      });
+    if (basicTouch.specificIngredientId) {
+      const specificIngredient = context.prisma.specificIngredientId.findUnique(
+        {
+          where: { id: basicTouch.specificIngedientId }
+        }
+      );
+      return {
+        ...basicTouch,
+        genericIngredientName: genericIngredient.name,
+        genericIngredientDescription: genericIngredient.description,
+        specificIngredientName: specificIngredient.name,
+        specificIngredientDescription: specificIngredient.description,
+        cost: specificIngredient.amount / specificIngredient.price
+      };
+    }
 
-// async function recipeBookSpec(parent, args, context) {
-//   console.log("ding");
-//   let results = await context.prisma.recipeBookSpec.findMany({
-//     where: { specId: parent.id }
-//   });
-//   console.log(results);
-//   return results.map(result =>
-//     context.prisma.spec.findUnique({ where: { id: result.specId } })
-//   );
-// }
+    return {
+      ...basicTouch,
+      genericIngredientName: genericIngredient.name,
+      genericIngredientDescription: genericIngredient.description
+    };
+  });
+  return completeTouches;
+}
 
 export default {
   createdBy,
   recipe,
-  touch
+  touch,
+  completeTouch
 };

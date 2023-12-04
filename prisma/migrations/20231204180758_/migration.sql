@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Recipe" ADD COLUMN     "editedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "editedById" TEXT;
+
+-- AddForeignKey
+ALTER TABLE "Recipe" ADD CONSTRAINT "Recipe_editedById_fkey" FOREIGN KEY ("editedById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;

@@ -6,8 +6,6 @@ function PrivateRoute({ children, ...rest }) {
   const userToken = token();
   const location = useLocation();
 
-  console.log(userToken);
-
   if (!userToken) {
     return <Navigate to="/login" state={{ from: location }} />;
   }

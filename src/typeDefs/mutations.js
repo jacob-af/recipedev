@@ -37,7 +37,7 @@ const mutation = gql`
       ice: String
       postedBy: String
       touchArray: [TouchInput]
-    ): Build
+    ): BuildResponse
 
     addBuildPermission(
       fromUser: String

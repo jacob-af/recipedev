@@ -20,7 +20,6 @@ async function addBuild(parent, args, context, info) {
       unit: touch.unit
     };
   });
-  console.log(args);
   const build = await context.prisma.build.create({
     data: {
       recipe: { connect: { id: args.recipe } },
@@ -29,13 +28,24 @@ async function addBuild(parent, args, context, info) {
       glassware: args.glassware,
       ice: args.ice,
       createdBy: { connect: { id: userId } },
+      editedBy: { connect: { id: userId } },
       touch: {
         create: touchArrayWithId
       }
     }
   });
-
-  return build;
+  console.log(build);
+  const buildUser = await context.prisma.buildUser.create({
+    data: {
+      build: { connect: { id: build.id } },
+      user: { connect: { id: userId } },
+      permission: "Owner"
+    }
+  });
+  return {
+    build: build,
+    status: `${build.buildName} Created, permission level ${buildUser.permission}`
+  };
 }
 
 async function updateBuild(parent, args, context, info) {

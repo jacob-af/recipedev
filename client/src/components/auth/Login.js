@@ -43,8 +43,16 @@ const LOAD_USER = gql`
         userName
         firstName
         lastName
-        build {
+        completeBuild {
+          id
+          recipeName
           buildName
+          completeTouch {
+            id
+            specificIngredientName
+            amount
+            unit
+          }
         }
       }
     }
@@ -70,7 +78,6 @@ export default function LogIn() {
 
     token(response.data.login.token);
     userData(response.data.login.user);
-    console.log(token(), userData());
 
     navigate("/");
   };

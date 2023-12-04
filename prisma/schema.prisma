@@ -40,8 +40,9 @@ model User {
   profile              Profile?
   recipeBookUser       RecipeBookUser[]
   recipeBook           RecipeBook[]
-  recipeBookEditedById RecipeBook[]           @relation("recipeBookEditedById")
+  recipeBookEditedBy   RecipeBook[]           @relation("recipeBookEditedById")
   recipe               Recipe[]
+  recipeEditedBy       Recipe[]               @relation("recipeEditedById")
   buildUser            BuildUser[]
   build                Build[]
   buildEditedBy        Build[]                @relation("buildEditedById")
@@ -112,8 +113,8 @@ model Build {
 model BuildUser {
   userId     String
   buildId    String
-  user       User   @relation(fields: [userId], references: [id])
-  build      Build  @relation(fields: [buildId], references: [id])
+  user       User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  build      Build? @relation(fields: [buildId], references: [id], onDelete: Cascade)
   permission String
 
   @@id([userId, buildId])
@@ -122,11 +123,14 @@ model BuildUser {
 model Recipe {
   id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
+  editedAt    DateTime @default(now())
   name        String   @db.VarChar(255)
   origin      String?  @db.VarChar(255)
   history     String?
   createdBy   User     @relation(fields: [createdById], references: [id])
   createdById String
+  editedBy    User?    @relation("recipeEditedById", fields: [editedById], references: [id])
+  editedById  String?
   build       Build[]
 }
 
@@ -141,7 +145,7 @@ model RecipeBookBuild {
 
 model Touch {
   id                   String              @id @default(uuid())
-  build                Build               @relation(fields: [buildId], references: [id])
+  build                Build               @relation(fields: [buildId], references: [id], onDelete: Cascade)
   buildId              String
   order                Int?
   amount               Float?              @db.Real

@@ -1,31 +1,29 @@
 import { gql } from "graphql-tag";
 
-const recipeBook = gql`
-  type RecipeBook {
+const build = gql`
+  type Build {
     id: ID!
-    name: String
-    description: String
+    buildName: String!
     createdAt: DateTimeResolver
     editedAt: DateTimeResolver
     createdBy: User
     editedBy: User
-    build: [Build]
-  }
-
-  type RecipeBookUser {
-    user: User
-    recipeBook: RecipeBook
-    permission: Permission
-  }
-
-  type BookReturn {
-    status: String
-    recipeBook: RecipeBook
-  }
-
-  type RecipeBookBuild {
+    recipe: Recipe
+    instructions: String
+    notes: String
+    glassware: String
+    ice: String
+    touch: [Touch]
+    completeTouch: [CompleteTouch]
     recipeBook: [RecipeBook]
-    build: [Build]
+    buildUser: [BuildUser]
+  }
+
+  type BuildUser {
+    id: ID!
+    user: User!
+    build: Build!
+    permission: Permission
   }
 
   type Recipe {
@@ -56,8 +54,13 @@ const recipeBook = gql`
     notes: String
     glassware: String
     ice: String
-    touch: [Touch]
+    completeTouch: [CompleteTouch]
+  }
+
+  type BuildResponse {
+    build: Build
+    status: String
   }
 `;
 
-export default recipeBook;
+export default build;

@@ -5,12 +5,10 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React, { Fragment } from "react";
-import { token } from "./state/User";
 import Landing from "./components/layout/Landing";
 import Recipe from "./components/layout/Recipe";
 import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
-import Alert from "./components/layout/Alert";
 
 import PrivateRoute from "./components/routing/PrivateRoute.js";
 import { Box } from "@mui/material";

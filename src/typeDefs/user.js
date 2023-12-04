@@ -16,10 +16,12 @@ const user = gql`
     recipeBook: [RecipeBook]
     recipeBookEditedBy: [RecipeBook]
     recipe: [Recipe!]
+    recipeEditedBy: [Recipe!]
 
     buildUser: [BuildUser]
     build: [Build]
     buildEditedBy: [Build]
+    completeBuild: [CompleteBuild]
 
     crewUser: [CrewUser]
     crew: [Crew]

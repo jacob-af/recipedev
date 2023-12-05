@@ -1,6 +1,7 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
+import LinearProgress from "@mui/material/LinearProgress";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -13,7 +14,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { token, userData } from "../../state/User";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
 
 function Copyright(props) {
@@ -63,8 +64,7 @@ const NEW_USER = gql`
 const theme = createTheme();
 
 export default function SignUp() {
-  const [newUser, { data, loading, error }] = useMutation(NEW_USER);
-  const location = useLocation();
+  const [newUser, feedback] = useMutation(NEW_USER);
   const navigate = useNavigate();
   const handleSubmit = async event => {
     event.preventDefault();
@@ -81,7 +81,6 @@ export default function SignUp() {
     console.log(response.data);
     token(response.data.signup.token);
     userData(response.data.signup.user);
-    console.log(token(), userData());
     navigate("/");
   };
 
@@ -103,6 +102,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
+          {feedback.loading ? <LinearProgress /> : ""}
           <Box
             component="form"
             noValidate

@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { token } from "../../state/User";
 
 function PrivateRoute({ children, ...rest }) {
@@ -10,19 +10,6 @@ function PrivateRoute({ children, ...rest }) {
     return <Navigate to="/login" state={{ from: location }} />;
   }
   return children;
-
-  //   return (
-  //     <Route
-  //       {...rest}
-  //       render={({ location }) =>
-  //         userToken ? (
-  //           children
-  //         ) : (
-  //           <Navigate to="/login" state={{ from: location }} />
-  //         )
-  //       }
-  //     />
-  //   );
 }
 
 export default PrivateRoute;

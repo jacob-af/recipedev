@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React, { Fragment } from "react";
 import Landing from "./components/layout/Landing";
 import Recipe from "./components/layout/Recipe";
+import AddRecipe from "./components/layout/AddRecipe";
 import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
 
@@ -47,6 +48,15 @@ function App() {
               element={
                 <PrivateRoute>
                   <Recipe />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              exact
+              path="/addrecipe"
+              element={
+                <PrivateRoute>
+                  <AddRecipe />
                 </PrivateRoute>
               }
             />

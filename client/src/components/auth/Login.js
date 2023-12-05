@@ -12,9 +12,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { token, userData } from "../../state/User";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useMutation, gql } from "@apollo/client";
+import { token, userData, genericIngredients } from "../../state/User";
+import { useNavigate } from "react-router-dom";
+import { useMutation, useQuery } from "@apollo/client";
+import { LOAD_USER, LOAD_GENERIC } from "../../reducers/query.js";
 
 function Copyright(props) {
   return (
@@ -34,37 +35,12 @@ function Copyright(props) {
   );
 }
 
-const LOAD_USER = gql`
-  mutation LoginUser($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      token
-      user {
-        email
-        userName
-        firstName
-        lastName
-        completeBuild {
-          id
-          recipeName
-          buildName
-          completeTouch {
-            id
-            specificIngredientName
-            amount
-            unit
-          }
-        }
-      }
-    }
-  }
-`;
-
 const theme = createTheme();
 
 export default function LogIn() {
   const [loadUser, { data, loading, error }] = useMutation(LOAD_USER);
+  const genericIngredientResponse = useQuery(LOAD_GENERIC);
   console.log(data, loading, error);
-  const location = useLocation();
   const navigate = useNavigate();
   const handleSubmit = async event => {
     event.preventDefault();
@@ -78,7 +54,8 @@ export default function LogIn() {
 
     token(response.data.login.token);
     userData(response.data.login.user);
-
+    genericIngredients(genericIngredientResponse.data.allGenericIngredients);
+    console.log(genericIngredients(), token());
     navigate("/");
   };
 

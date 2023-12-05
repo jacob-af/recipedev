@@ -2,16 +2,11 @@ import React from "react";
 import Paper from "@mui/material/Paper";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import RestoreIcon from "@mui/icons-material/Restore";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ArchiveIcon from "@mui/icons-material/Archive";
 import LocalBarIcon from "@mui/icons-material/LocalBar";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import LiquorIcon from "@mui/icons-material/Liquor";
 import HomeIcon from "@mui/icons-material/Home";
 import GroupsIcon from "@mui/icons-material/Groups";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { css } from "@emotion/css";
 import { Link as RouterLink } from "react-router-dom";
 
 function BottomNavBar() {

@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 
 function MainFeaturedPost(props) {
@@ -49,6 +48,7 @@ function MainFeaturedPost(props) {
               {completeBuild.buildName}
             </Typography>
             {completeBuild.completeTouch.map(touch => {
+              console.log(touch);
               return (
                 <Typography variant="body1" gutterBottom key={touch.id}>
                   {touch.amount} {touch.unit} {touch.specificIngredientName}

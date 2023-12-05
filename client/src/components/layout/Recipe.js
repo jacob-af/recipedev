@@ -3,8 +3,8 @@ import { Container, Fab } from "@mui/material";
 import { userData } from "../../state/User";
 import Navbar from "./NavBar";
 import BottomNavBar from "./BottomNavBar";
-import { css } from "@emotion/css";
 import Post from "./Post";
+import { Link as RouterLink } from "react-router-dom";
 
 function Recipe(props) {
   const { completeBuild } = userData();
@@ -12,15 +12,17 @@ function Recipe(props) {
   return (
     <Fragment>
       <Navbar />
-      <Container
-        className={css`
-          color: #333;
-        `}
-      >
-        <Fab sx={{ position: "absolute", top: 45, right: -15 }}>+</Fab>
+      <Container>
+        <Fab
+          component={RouterLink}
+          to="/addrecipe"
+          sx={{ position: "absolute", top: 45, right: -15 }}
+        >
+          +
+        </Fab>
 
         {completeBuild.map(b => {
-          return <Post completeBuild={b} key={completeBuild.id} />;
+          return <Post completeBuild={b} key={b.buildName} />;
         })}
       </Container>
       <BottomNavBar />

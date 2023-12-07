@@ -6,7 +6,7 @@ import "@fontsource/roboto/700.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React, { Fragment } from "react";
 import Landing from "./components/layout/Landing";
-import Recipe from "./components/layout/Recipe";
+import RecipeList from "./components/layout/RecipeList";
 import AddRecipe from "./components/layout/AddRecipe";
 import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
@@ -47,7 +47,7 @@ function App() {
               path="/recipe"
               element={
                 <PrivateRoute>
-                  <Recipe />
+                  <RecipeList />
                 </PrivateRoute>
               }
             />

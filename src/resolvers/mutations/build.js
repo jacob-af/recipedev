@@ -34,7 +34,6 @@ async function addBuild(parent, args, context, info) {
       }
     }
   });
-  console.log(build);
   const buildUser = await context.prisma.buildUser.create({
     data: {
       build: { connect: { id: build.id } },
@@ -103,7 +102,6 @@ async function updateTouch(parent, args, context, info) {
     )
   );
 }
-
-export default {
-  addBuild
-};
+// export default {
+//   addBuild
+// };

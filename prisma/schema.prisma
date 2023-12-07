@@ -127,8 +127,8 @@ model Recipe {
   name        String   @db.VarChar(255)
   origin      String?  @db.VarChar(255)
   history     String?
-  createdBy   User     @relation(fields: [createdById], references: [id])
-  createdById String
+  createdBy   User?    @relation(fields: [createdById], references: [id])
+  createdById String?
   editedBy    User?    @relation("recipeEditedById", fields: [editedById], references: [id])
   editedById  String?
   build       Build[]

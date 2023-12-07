@@ -5,19 +5,33 @@ export const LOAD_USER = gql`
     login(email: $email, password: $password) {
       token
       user {
-        email
-        userName
+        id
         firstName
-        lastName
         completeBuild {
           id
           recipeName
           buildName
+          recipeId
+          recipeOrigin
+          recipeCreatedBy {
+            id
+            userName
+          }
+          recipeHistory
+          instructions
+          notes
+          glassware
+          ice
           completeTouch {
             id
+            order
+            genericIngredientId
+            genericIngredientName
+            specificIngredientId
             specificIngredientName
             amount
             unit
+            cost
           }
         }
       }

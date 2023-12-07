@@ -4,9 +4,10 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Touch from "./Touch";
 
-function MainFeaturedPost(props) {
-  const { completeBuild } = props;
+function Build(props) {
+  const { recipe } = props;
 
   return (
     <Paper
@@ -41,20 +42,10 @@ function MainFeaturedPost(props) {
               pr: { md: 0 }
             }}
           >
-            <Typography component="h6" variant="h6" color="inherit">
-              {completeBuild.recipeName}
+            <Typography component="h6" variant="h6" color="white">
+              {recipe.recipeName}
             </Typography>
-            <Typography variant="subtitle1">
-              {completeBuild.buildName}
-            </Typography>
-            {completeBuild.completeTouch.map(touch => {
-              console.log(touch);
-              return (
-                <Typography variant="body1" gutterBottom key={touch.id}>
-                  {touch.amount} {touch.unit} {touch.specificIngredientName}
-                </Typography>
-              );
-            })}
+            <Touch builds={recipe.builds} />
           </Box>
         </Grid>
       </Grid>
@@ -62,14 +53,12 @@ function MainFeaturedPost(props) {
   );
 }
 
-MainFeaturedPost.propTypes = {
-  completeBuild: PropTypes.shape({
+Build.propTypes = {
+  recipe: PropTypes.shape({
     description: PropTypes.string,
     buildName: PropTypes.string,
-    recipeName: PropTypes.string,
-    linkText: PropTypes.string,
-    title: PropTypes.string
+    recipeName: PropTypes.string
   }).isRequired
 };
 
-export default MainFeaturedPost;
+export default Build;

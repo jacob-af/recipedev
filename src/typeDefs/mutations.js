@@ -27,7 +27,7 @@ const mutation = gql`
       glassware: String
       ice: String
       touchArray: [TouchInput]
-    ): Recipe
+    ): RecipeResponse
 
     addBuild(
       recipe: ID

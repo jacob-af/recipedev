@@ -114,7 +114,7 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="uerName"
+                  id="userName"
                   label="User Name"
                   name="userName"
                   autoComplete="userName"

@@ -5,15 +5,17 @@ import {
   Button,
   Typography,
   Box,
-  FormControlLabel,
-  Checkbox
+  Grid,
+  TextField
+  //Checkbox
 } from "@mui/material";
 import Navbar from "./NavBar";
 import BottomNavBar from "./BottomNavBar";
 import BuildInput from "./BuildInput";
-import { useMutation, gql } from "@apollo/client";
+import { useMutation, gql, useReactiveVar } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
+import { newRecipe } from "../../state/User";
 
 const ADD_RECIPE = gql`
   mutation AddRecipe(
@@ -36,32 +38,71 @@ const ADD_RECIPE = gql`
       ice: $ice
       touchArray: $touchArray
     ) {
-      id
+      recipe {
+        id
+        name
+      }
     }
   }
 `;
 
 function AddRecipe(props) {
+  const touches = useReactiveVar(newRecipe);
   const [addRecipe, response] = useMutation(ADD_RECIPE);
-  console.log(response);
-  const touchArray = [{}, {}];
   const navigate = useNavigate();
+
   const handleSubmit = async event => {
     event.preventDefault();
+    // console.log(touches);
     const formData = new FormData(event.currentTarget);
+    console.log(formData);
     const response = await addRecipe({
       variables: {
-        email: formData.get("email"),
-        password: formData.get("password")
+        name: formData.get("name"),
+        origin: formData.get("origin"),
+        history: formData.get("history"),
+        buildName: formData.get("buildName"),
+        instructions: formData.get("instructions"),
+        glassware: formData.get("glassware"),
+        ice: formData.get("ice"),
+        touchArray: touches.map(touch => {
+          console.log(touch);
+          return {
+            order: touch.order,
+            amount: touch.amount,
+            unit: touch.unit,
+            genericIngredientId: touch.genericIngredient.id,
+            specificIngredientId: touch.specificIngredient.id
+              ? touch.specificIngredient.id
+              : null
+          };
+        })
       }
     });
     console.log(response);
     navigate("/recipe");
   };
+
+  const addTouch = event => {
+    const rec = [
+      ...touches,
+      {
+        order: touches.length,
+        genericIngredient: {},
+        specificIngredient: {},
+        amount: 0,
+        unit: "oz"
+      }
+    ];
+
+    console.log(rec);
+    newRecipe(rec);
+  };
+
   return (
     <Fragment>
       <Navbar />
-      <Container sx={{ bgcolor: "#FFF" }}>
+      <Container sx={{ bgcolor: "#FFF", width: 1 }}>
         <Fab
           component={RouterLink}
           to="/recipe"
@@ -71,38 +112,88 @@ function AddRecipe(props) {
         </Fab>
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 2,
             display: "flex",
-            flexDirection: "column",
             alignItems: "center"
           }}
         >
-          <Typography component="h1" variant="h5">
-            New Build
-          </Typography>
-
           <Box
             component="form"
-            onSubmit={handleSubmit}
             noValidate
-            sx={{ mt: 1 }}
+            sx={{ mt: 2, overflow: "auto", maxHeight: 400 }}
+            onSubmit={handleSubmit}
           >
-            {touchArray.map((touch, index) => (
-              <BuildInput key={index} {...props} />
-            ))}
+            <Grid container spacing={2}>
+              <Typography component="h1" variant="h5">
+                New Build
+              </Typography>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="name"
+                  label="Recipe Name"
+                  name="name"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="origin"
+                  label="Origin"
+                  name="origin"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="history"
+                  label="History"
+                  name="history"
+                  multiline
+                  rows={4}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="buildName"
+                  label="Build Name"
+                  name="buildName"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  required
+                  fullWidth
+                  id="glassware"
+                  label="Glassware"
+                  name="glassware"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField required fullWidth id="ice" label="Ice" name="ice" />
+              </Grid>
+              {touches.map((touch, index) => (
+                <Grid item xs={12} key={index}>
+                  <BuildInput index={index} touch={touch} />
+                </Grid>
+              ))}
 
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Create Recipe
-            </Button>
+              <Fab onClick={addTouch}>-</Fab>
+
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Create Recipe
+              </Button>
+            </Grid>
           </Box>
         </Box>
       </Container>

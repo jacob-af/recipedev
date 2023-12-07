@@ -1,18 +1,17 @@
 import React, { Fragment } from "react";
 import { Container, Fab } from "@mui/material";
-import { userData } from "../../state/User";
+import { userData, recipeData } from "../../state/User";
 import Navbar from "./NavBar";
 import BottomNavBar from "./BottomNavBar";
-import Post from "./Post";
+import Build from "./Build";
 import { Link as RouterLink } from "react-router-dom";
 
-function Recipe(props) {
-  const { completeBuild } = userData();
-  console.log(completeBuild);
+function RecipeList(props) {
+  const recipeStack = recipeData();
   return (
     <Fragment>
       <Navbar />
-      <Container>
+      <Container sx={{ mt: 2, overflow: "auto", maxHeight: 400 }}>
         <Fab
           component={RouterLink}
           to="/addrecipe"
@@ -21,8 +20,8 @@ function Recipe(props) {
           +
         </Fab>
 
-        {completeBuild.map(b => {
-          return <Post completeBuild={b} key={b.buildName} />;
+        {recipeStack.map(b => {
+          return <Build recipe={b} key={b.recipeId} />;
         })}
       </Container>
       <BottomNavBar />
@@ -30,4 +29,4 @@ function Recipe(props) {
   );
 }
 
-export default Recipe;
+export default RecipeList;

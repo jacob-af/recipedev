@@ -24,6 +24,7 @@ const build = gql`
     user: User!
     build: Build!
     permission: Permission
+    recipeStack: RecipeStack
   }
 
   type Recipe {
@@ -57,7 +58,21 @@ const build = gql`
     completeTouch: [CompleteTouch]
   }
 
+  type RecipeStack {
+    recipeId: String
+    recipeName: String
+    recipeOrigin: String
+    recipeCreatedById: String
+    recipeHistory: String
+    builds: CompleteBuild
+  }
+
   type BuildResponse {
+    build: Build
+    status: String
+  }
+  type RecipeResponse {
+    recipe: Recipe
     build: Build
     status: String
   }

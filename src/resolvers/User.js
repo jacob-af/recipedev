@@ -1,5 +1,3 @@
-import completeTouch from "./Build.js";
-
 function recipe(parent, args, context) {
   return context.prisma.User.findUnique({
     where: { id: parent.id }
@@ -24,7 +22,7 @@ async function recipeBook(parent, args, context) {
 }
 
 async function recipeBookUser(parent, args, context) {
-  console.log(parent);
+  //console.log(parent);
   return await context.prisma.user
     .findUnique({
       where: { id: parent.id }
@@ -38,59 +36,66 @@ async function inventory(parent, args, context) {
   }).inventory();
 }
 
-async function completeBuild(parent, args, context) {
-  const basicBuilds = await context.prisma.build.findMany({
-    where: { createdById: parent.id }
+async function completeTouch(parent, args, context) {
+  const basicTouches = await context.prisma.touch.findMany({
+    where: { buildId: parent.id }
   });
 
-  async function completeTouch(parent, args, context) {
-    const basicTouches = await context.prisma.touch.findMany({
-      where: { buildId: parent.id }
-    });
-
-    const completeTouches = await basicTouches.map(async basicTouch => {
-      const genericIngredient =
-        await context.prisma.genericIngredient.findUnique({
-          where: { id: basicTouch.genericIngredientId }
-        });
-      if (basicTouch.specificIngredientId) {
-        const specificIngredient =
-          await context.prisma.specificIngredient.findUnique({
-            where: { id: basicTouch.specificIngredientId }
-          });
-
-        return {
-          ...basicTouch,
-          genericIngredientName: genericIngredient.name,
-          genericIngredientDescription: genericIngredient.description,
-          specificIngredientName: specificIngredient.name,
-          specificIngredientDescription: specificIngredient.description,
-          cost: specificIngredient.amount / specificIngredient.price
-        };
+  const completeTouches = await basicTouches.map(async basicTouch => {
+    const genericIngredient = await context.prisma.genericIngredient.findUnique(
+      {
+        where: { id: basicTouch.genericIngredientId }
       }
+    );
+    if (basicTouch.specificIngredientId) {
+      const specificIngredient =
+        await context.prisma.specificIngredient.findUnique({
+          where: { id: basicTouch.specificIngredientId }
+        });
 
       return {
         ...basicTouch,
         genericIngredientName: genericIngredient.name,
-        genericIngredientDescription: genericIngredient.description
+        genericIngredientDescription: genericIngredient.description,
+        specificIngredientName: specificIngredient.name,
+        specificIngredientDescription: specificIngredient.description,
+        cost: specificIngredient.amount / specificIngredient.price
       };
-    });
-    return completeTouches;
-  }
-  const completeBuilds = await basicBuilds.map(async basicBuild => {
-    const recipe = await context.prisma.recipe.findUnique({
-      where: { id: basicBuild.recipeId }
-    });
-    const touches = await completeTouch(basicBuild, args, context);
+    }
+
     return {
-      ...basicBuild,
+      ...basicTouch,
+      genericIngredientName: genericIngredient.name,
+      genericIngredientDescription: genericIngredient.description
+    };
+  });
+  return completeTouches;
+}
+
+async function completeBuild(parent, args, context) {
+  const userBuildIds = await context.prisma.buildUser.findMany({
+    where: { userId: parent.id }
+  });
+
+  const completeBuilds = userBuildIds.map(async buildId => {
+    const build = await context.prisma.build.findUnique({
+      where: { id: buildId.buildId }
+    });
+    const recipe = await context.prisma.recipe.findUnique({
+      where: { id: build.recipeId }
+    });
+    const touches = await completeTouch(build, args, context);
+    console.log(build.buildName);
+    return {
+      ...build,
       recipeName: recipe.name,
       recipeOrigin: recipe.origin,
       recipeHistory: recipe.history,
-      completeTouch: touches
+      completeTouch: touches,
+      permission: build.permission
     };
   });
-  console.log(completeBuilds);
+
   return completeBuilds;
 }
 
@@ -99,6 +104,36 @@ async function buildUser(parent, args, context) {
     where: { id: parent.id }
   }).buildUser();
 }
+
+// async function recipeStack(parent, args, context) {
+//   const userBuildIds = await context.prisma.buildUser.findMany({
+//     where: { userId: parent.id }
+//   });
+//   //console.log(userBuildIds);
+//   const allUserRecipes = await userBuildIds
+//     .map(async userBuildId => {
+//       const build = await context.prisma.build.findUnique({
+//         where: { id: userBuildId.buildId }
+//       });
+//       //console.log({ ...build, permission: userBuildId.permission });
+//       return { ...build, permission: userBuildId.permission };
+//     })
+//     .reduce(restructure, []);
+
+//   function restructure(accumulator, currentvalue) {
+//     if (accumulator.findIndex(i => i.recipeId === -1)) {
+//       accumulator.push({
+//         recipeId: currentvalue.recipeId,
+//         builds: [currentvalue]
+//       });
+//     } else {
+//       accumulator.i.builds.push(currentvalue);
+//     }
+//     return accumulator;
+//   }
+
+//   return allUserRecipes;
+// }
 
 export default {
   recipe,
@@ -109,4 +144,5 @@ export default {
   inventory,
   completeBuild,
   buildUser
+  //recipeStack
 };

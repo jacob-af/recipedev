@@ -12,7 +12,13 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { token, userData, genericIngredients } from "../../state/User";
+import {
+  token,
+  userData,
+  buildData,
+  recipeData,
+  genericIngredients
+} from "../../state/User";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/client";
 import { LOAD_USER, LOAD_GENERIC } from "../../reducers/query.js";
@@ -37,10 +43,27 @@ function Copyright(props) {
 
 const theme = createTheme();
 
+function restructure(accumulator, currentvalue) {
+  const index = accumulator.findIndex(
+    i => i.recipeId === currentvalue.recipeId
+  );
+  if (index === -1) {
+    //console.log(currentvalue, "beep");
+    accumulator.push({
+      recipeId: currentvalue.recipeId,
+      recipeName: currentvalue.recipeName,
+      builds: [currentvalue]
+    });
+  } else {
+    accumulator[index].builds.push(currentvalue);
+  }
+  return accumulator;
+}
+
 export default function LogIn() {
   const [loadUser, { data, loading, error }] = useMutation(LOAD_USER);
   const genericIngredientResponse = useQuery(LOAD_GENERIC);
-  console.log(data, loading, error);
+  //console.log(data, loading, error);
   const navigate = useNavigate();
   const handleSubmit = async event => {
     event.preventDefault();
@@ -54,8 +77,11 @@ export default function LogIn() {
 
     token(response.data.login.token);
     userData(response.data.login.user);
+    buildData(response.data.login.user.completeBuild);
+    recipeData(response.data.login.user.completeBuild.reduce(restructure, []));
+
     genericIngredients(genericIngredientResponse.data.allGenericIngredients);
-    console.log(genericIngredients(), token());
+
     navigate("/");
   };
 

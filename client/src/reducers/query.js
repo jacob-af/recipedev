@@ -1,5 +1,7 @@
 import { gql } from "@apollo/client";
 
+const recipeName = `recipeName`;
+
 export const LOAD_USER = gql`
   mutation LoginUser($email: String!, $password: String!) {
     login(email: $email, password: $password) {
@@ -7,6 +9,8 @@ export const LOAD_USER = gql`
       user {
         id
         firstName
+        lastName
+        userName
         completeBuild {
           id
           recipeName
@@ -32,6 +36,37 @@ export const LOAD_USER = gql`
             amount
             unit
             cost
+          }
+        }
+        recipeBook {
+          id
+          name
+          completeBuild {
+            id
+            recipeName
+            buildName
+            recipeId
+            recipeOrigin
+            recipeCreatedBy {
+              id
+              userName
+            }
+            recipeHistory
+            instructions
+            notes
+            glassware
+            ice
+            completeTouch {
+              id
+              order
+              genericIngredientId
+              genericIngredientName
+              specificIngredientId
+              specificIngredientName
+              amount
+              unit
+              cost
+            }
           }
         }
       }

@@ -78,7 +78,6 @@ export default function SignUp() {
         lastName: formData.get("lastName")
       }
     });
-    console.log(response.data);
     token(response.data.signup.token);
     userData(response.data.signup.user);
     navigate("/");

@@ -10,6 +10,7 @@ const recipeBook = gql`
     createdBy: User
     editedBy: User
     build: [Build]
+    completeBuild: [CompleteBuild]
   }
 
   type RecipeBookUser {

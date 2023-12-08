@@ -29,7 +29,12 @@ function BottomNavBar() {
           to="/"
           icon={<HomeIcon />}
         />
-        <BottomNavigationAction label="RecipeBooks" icon={<MenuBookIcon />} />
+        <BottomNavigationAction
+          label="RecipeBooks"
+          component={RouterLink}
+          to="/recipeBook"
+          icon={<MenuBookIcon />}
+        />
         <BottomNavigationAction
           label="Recipes"
           component={RouterLink}

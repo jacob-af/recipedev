@@ -6,8 +6,9 @@ import "@fontsource/roboto/700.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React, { Fragment } from "react";
 import Landing from "./components/layout/Landing";
-import RecipeList from "./components/layout/RecipeList";
-import AddRecipe from "./components/layout/AddRecipe";
+import RecipeList from "./components/layout/Recipes/RecipeList";
+import RecipeBookList from "./components/layout/RecipeBooks/RecipeBookList";
+import AddRecipe from "./components/layout/Recipes/AddRecipe";
 import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
 
@@ -48,6 +49,15 @@ function App() {
               element={
                 <PrivateRoute>
                   <RecipeList />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              exact
+              path="/recipeBook"
+              element={
+                <PrivateRoute>
+                  <RecipeBookList />
                 </PrivateRoute>
               }
             />

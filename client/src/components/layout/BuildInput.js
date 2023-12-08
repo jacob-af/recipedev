@@ -40,7 +40,6 @@ function BuildInput(props) {
 
   const handleIngredientChange = value => {
     const touchArray = newRecipe().map((touch, index) => {
-      console.log(value);
       if (index === props.index) {
         return {
           ...touch,
@@ -50,7 +49,6 @@ function BuildInput(props) {
       return touch;
     });
     newRecipe(touchArray);
-    console.log(touchArray);
   };
 
   const genericIngredientInput = genericIngredients().map(ingredient => {

@@ -4,9 +4,9 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Touch from "./Touch";
+import Build from "./Build";
 
-function Build(props) {
+function RecipeBook(props) {
   const { recipe } = props;
 
   return (
@@ -43,7 +43,7 @@ function Build(props) {
             <Typography component="h6" variant="h6" color="white">
               {recipe.recipeName}
             </Typography>
-            <Touch builds={recipe.builds} />
+            <Build builds={recipe.builds} />
           </Box>
         </Grid>
       </Grid>
@@ -51,12 +51,12 @@ function Build(props) {
   );
 }
 
-Build.propTypes = {
-  recipe: PropTypes.shape({
-    description: PropTypes.string,
-    buildName: PropTypes.string,
-    recipeName: PropTypes.string
-  }).isRequired
-};
+// RecipeBook.propTypes = {
+//   recipe: PropTypes.shape({
+//     description: PropTypes.string,
+//     buildName: PropTypes.string,
+//     recipeName: PropTypes.string
+//   }).isRequired
+// };
 
-export default Build;
+export default RecipeBook;

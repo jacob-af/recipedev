@@ -55,6 +55,7 @@ const build = gql`
     notes: String
     glassware: String
     ice: String
+    permission: Permission
     completeTouch: [CompleteTouch]
   }
 

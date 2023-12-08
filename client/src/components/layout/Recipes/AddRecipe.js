@@ -9,13 +9,13 @@ import {
   TextField
   //Checkbox
 } from "@mui/material";
-import Navbar from "./NavBar";
-import BottomNavBar from "./BottomNavBar";
-import BuildInput from "./BuildInput";
+import Navbar from "../NavBar";
+import BottomNavBar from "../BottomNavBar";
+import BuildInput from "../BuildInput";
 import { useMutation, gql, useReactiveVar } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
-import { newRecipe } from "../../state/User";
+import { newRecipe } from "../../../state/User";
 
 const ADD_RECIPE = gql`
   mutation AddRecipe(
@@ -55,7 +55,6 @@ function AddRecipe(props) {
     event.preventDefault();
     // console.log(touches);
     const formData = new FormData(event.currentTarget);
-    console.log(formData);
     const response = await addRecipe({
       variables: {
         name: formData.get("name"),
@@ -66,7 +65,6 @@ function AddRecipe(props) {
         glassware: formData.get("glassware"),
         ice: formData.get("ice"),
         touchArray: touches.map(touch => {
-          console.log(touch);
           return {
             order: touch.order,
             amount: touch.amount,
@@ -95,7 +93,6 @@ function AddRecipe(props) {
       }
     ];
 
-    console.log(rec);
     newRecipe(rec);
   };
 
@@ -120,7 +117,7 @@ function AddRecipe(props) {
           <Box
             component="form"
             noValidate
-            sx={{ mt: 2, overflow: "auto", maxHeight: 400 }}
+            sx={{ mt: 2, overflow: "auto", height: 0.9 }}
             onSubmit={handleSubmit}
           >
             <Grid container spacing={2}>

@@ -5,9 +5,7 @@
 // editRecipeBookPermission;
 // deleteRecipeBookPermission;
 
-//import addBuild from "./build.js";
-
-export async function addRecipe(parent, args, context, info) {
+async function addRecipe(parent, args, context, info) {
   const { userId } = context;
   const recipe = await context.prisma.recipe.create({
     data: {
@@ -22,7 +20,7 @@ export async function addRecipe(parent, args, context, info) {
     ...args,
     recipeId: recipe.id
   };
-  console.log(argsWithRecipeId, addBuild);
+  console.log(addBuild);
   const { build, status } = await addBuild(
     parent,
     argsWithRecipeId,
@@ -65,13 +63,16 @@ async function addBuild(parent, args, context, info) {
       permission: "Owner"
     }
   });
+  //   const recipeBookBuild = await context.prisma.recipeBookBuild.create({
+  //     data: {
+  //         build: build.id,
+  //         recipeBook:
+  //     }
+  //   })
   return {
     build: build,
     status: `${build.buildName} Created, permission level ${buildUser.permission}`
   };
 }
 
-export default {
-  addRecipe,
-  addBuild
-};
+export default { addRecipe };

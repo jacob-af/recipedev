@@ -24,4 +24,34 @@ function getUserId(req, authToken) {
   throw new Error("Not authenticated");
 }
 
-export { APP_SECRET, getUserId };
+// Admin
+// Owner
+// Manage
+// View
+// Block
+
+function resolvePermission(userPermission, desiredPermission) {
+  function toNumber(permission) {
+    switch (permission) {
+      case "Admin":
+        return 4;
+      case "Owner":
+        return 3;
+      case "Manager":
+        return 2;
+      case "View":
+        return 1;
+      default:
+        return 0;
+    }
+  }
+  if (toNumber(userPermission) < 2) {
+    return false;
+  } else if (toNumber(desiredPermission) - toNumber(userPermission) > 0) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+export { APP_SECRET, getUserId, resolvePermission };

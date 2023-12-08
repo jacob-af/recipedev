@@ -17,6 +17,7 @@ import {
   userData,
   buildData,
   recipeData,
+  recipeBookData,
   genericIngredients
 } from "../../state/User";
 import { useNavigate } from "react-router-dom";
@@ -76,8 +77,14 @@ export default function LogIn() {
     });
 
     token(response.data.login.token);
-    userData(response.data.login.user);
+    userData({
+      id: response.data.login.user.id,
+      firstName: response.data.login.user.firstName,
+      lastName: response.data.login.user.lastName,
+      userName: response.data.login.user.userName
+    });
     buildData(response.data.login.user.completeBuild);
+    recipeBookData(response.data.login.user.recipeBook);
     recipeData(response.data.login.user.completeBuild.reduce(restructure, []));
 
     genericIngredients(genericIngredientResponse.data.allGenericIngredients);

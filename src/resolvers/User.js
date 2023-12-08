@@ -15,19 +15,38 @@ function specificIngredient(parent, args, context) {
   }).ingredient();
 }
 
+// async function recipeBook(parent, args, context) {
+//   return await context.prisma.User.findUnique({
+//     where: { id: parent.id }
+//   }).recipeBook();
+// }
+
 async function recipeBook(parent, args, context) {
-  return await context.prisma.User.findUnique({
-    where: { id: parent.id }
-  }).recipeBook();
+  const recipeBookIds = await context.prisma.recipeBookUser.findMany({
+    where: { userId: parent.id }
+  });
+
+  const recipeBooks = await recipeBookIds.map(async recipeBookId => {
+    const recipeBook = await context.prisma.recipeBook.findUnique({
+      where: { id: recipeBookId.recipeBookId }
+    });
+    const buildIds = await context.prisma.recipeBookBuild.findMany({
+      where: { recipeBookId: recipeBook.id }
+    });
+
+    const builds = await completeBuilds(buildIds, context);
+    return {
+      ...recipeBook,
+      completeBuild: builds
+    };
+  });
+  return recipeBooks;
 }
 
 async function recipeBookUser(parent, args, context) {
-  //console.log(parent);
-  return await context.prisma.user
-    .findUnique({
-      where: { id: parent.id }
-    })
-    .recipeBookUser(parent.id);
+  return await context.prisma.recipeBookUser.findMany({
+    where: { userId: parent.id }
+  });
 }
 
 async function inventory(parent, args, context) {
@@ -36,7 +55,36 @@ async function inventory(parent, args, context) {
   }).inventory();
 }
 
-async function completeTouch(parent, args, context) {
+async function completeBuild(parent, args, context) {
+  const userBuildIds = await context.prisma.buildUser.findMany({
+    where: { userId: parent.id }
+  });
+
+  return completeBuilds(userBuildIds, context);
+}
+
+async function completeBuilds(buildIds, context) {
+  const completeBuilds = buildIds.map(async buildId => {
+    const build = await context.prisma.build.findUnique({
+      where: { id: buildId.buildId }
+    });
+    const recipe = await context.prisma.recipe.findUnique({
+      where: { id: build.recipeId }
+    });
+    const touches = await completeTouch(build, context);
+    return {
+      ...build,
+      recipeName: recipe.name,
+      recipeOrigin: recipe.origin,
+      recipeHistory: recipe.history,
+      completeTouch: touches,
+      permission: buildId.permission
+    };
+  });
+  return completeBuilds;
+}
+
+async function completeTouch(parent, context) {
   const basicTouches = await context.prisma.touch.findMany({
     where: { buildId: parent.id }
   });
@@ -72,68 +120,11 @@ async function completeTouch(parent, args, context) {
   return completeTouches;
 }
 
-async function completeBuild(parent, args, context) {
-  const userBuildIds = await context.prisma.buildUser.findMany({
-    where: { userId: parent.id }
-  });
-
-  const completeBuilds = userBuildIds.map(async buildId => {
-    const build = await context.prisma.build.findUnique({
-      where: { id: buildId.buildId }
-    });
-    const recipe = await context.prisma.recipe.findUnique({
-      where: { id: build.recipeId }
-    });
-    const touches = await completeTouch(build, args, context);
-    console.log(build.buildName);
-    return {
-      ...build,
-      recipeName: recipe.name,
-      recipeOrigin: recipe.origin,
-      recipeHistory: recipe.history,
-      completeTouch: touches,
-      permission: build.permission
-    };
-  });
-
-  return completeBuilds;
-}
-
 async function buildUser(parent, args, context) {
   return await context.prisma.User.findUnique({
     where: { id: parent.id }
   }).buildUser();
 }
-
-// async function recipeStack(parent, args, context) {
-//   const userBuildIds = await context.prisma.buildUser.findMany({
-//     where: { userId: parent.id }
-//   });
-//   //console.log(userBuildIds);
-//   const allUserRecipes = await userBuildIds
-//     .map(async userBuildId => {
-//       const build = await context.prisma.build.findUnique({
-//         where: { id: userBuildId.buildId }
-//       });
-//       //console.log({ ...build, permission: userBuildId.permission });
-//       return { ...build, permission: userBuildId.permission };
-//     })
-//     .reduce(restructure, []);
-
-//   function restructure(accumulator, currentvalue) {
-//     if (accumulator.findIndex(i => i.recipeId === -1)) {
-//       accumulator.push({
-//         recipeId: currentvalue.recipeId,
-//         builds: [currentvalue]
-//       });
-//     } else {
-//       accumulator.i.builds.push(currentvalue);
-//     }
-//     return accumulator;
-//   }
-
-//   return allUserRecipes;
-// }
 
 export default {
   recipe,

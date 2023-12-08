@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 
-export default function TextMobileStepper({ builds }) {
+export default function Build({ builds }) {
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
   const maxSteps = builds.length;
@@ -26,7 +26,7 @@ export default function TextMobileStepper({ builds }) {
   };
 
   return (
-    <Box sx={{ maxWidth: 400, flexGrow: 1, alignItems: "center" }}>
+    <Box sx={{ flexGrow: 1, alignItems: "center" }}>
       <Paper
         square
         elevation={0}
@@ -39,7 +39,7 @@ export default function TextMobileStepper({ builds }) {
       >
         <Typography>{builds[activeStep].buildName}</Typography>
       </Paper>
-      <Box sx={{ height: 100, maxWidth: 400, width: "100%", p: 2 }}>
+      <Box sx={{ height: 100, maxWidth: 400, p: 2, alignItems: "center" }}>
         {builds[activeStep].completeTouch.map(touch => {
           return (
             <Typography variant="body1" gutterBottom key={touch.id}>

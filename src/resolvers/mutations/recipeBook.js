@@ -19,7 +19,7 @@ async function createRecipeBook(parent, args, context, info) {
     data: {
       userId: userId,
       recipeBookId: recipeBook.id,
-      permission: "Own"
+      permission: "Owner"
     }
   });
   return {

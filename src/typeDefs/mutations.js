@@ -39,16 +39,19 @@ const mutation = gql`
       touchArray: [TouchInput]
     ): BuildResponse
 
-    addBuildPermission(
+    addBuildPermissions(
       fromUser: String
       toUser: String
       buildId: String
+      userPermission: Permission
+      toUserPermission: Permission
     ): StatusMessage
 
     addRecipeBookPermission(
       userId: String
       recipeBookId: String!
-      permission: Permission!
+      userPermission: Permission
+      toUserPermission: Permission
     ): StatusMessage
 
     createRecipeBook(name: String!, description: String): BookReturn
@@ -58,7 +61,6 @@ const mutation = gql`
 
     shareRecipeBook(toUser: String, recipeBookId: String): BookReturn
 
-    adminOnRecipeBook(toUser: String, recipeBookId: String): StatusMessage
     addBuildToRecipeBook(buildId: String, recipeBookId: String): StatusMessage
 
     changeBuildPermission(

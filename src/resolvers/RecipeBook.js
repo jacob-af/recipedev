@@ -7,10 +7,9 @@ function createdBy(parent, args, context) {
 }
 
 async function build(parent, args, context) {
-  let results = await context.prisma.recipeBookbuild.findMany({
+  let results = await context.prisma.recipeBookBuild.findMany({
     where: { recipeBookId: parent.id }
   });
-  console.log(results);
   return results.map(result =>
     context.prisma.build.findUnique({ where: { id: result.buildId } })
   );

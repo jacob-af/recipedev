@@ -12,12 +12,11 @@ const util = gql`
 
   type StatusMessage {
     status: String
-    id: Int
+    id: String
   }
 
   enum Permission {
     View
-    Comment
     Edit
     Manage
     Owner

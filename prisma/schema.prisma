@@ -139,6 +139,7 @@ model RecipeBookBuild {
   recipeBookId String
   recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   build        Build      @relation(fields: [buildId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  permission   String
 
   @@id([buildId, recipeBookId])
 }

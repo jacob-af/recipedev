@@ -27,7 +27,6 @@ async function signup(parent, args, context, info) {
 }
 
 async function login(parent, args, context, info) {
-  console.log("ping");
   const user = await context.prisma.User.findUnique({
     where: { email: args.email }
   });
@@ -42,7 +41,7 @@ async function login(parent, args, context, info) {
   }
 
   const token = jwt.sign({ userId: user.id }, APP_SECRET);
-  console.log("we out here");
+
   // 3
   return {
     token,

@@ -17,7 +17,6 @@ const user = gql`
     recipeBookEditedBy: [RecipeBook]
     recipe: [Recipe!]
     recipeEditedBy: [Recipe!]
-    recipeStack: [RecipeStack]
 
     buildUser: [BuildUser]
     build: [Build]

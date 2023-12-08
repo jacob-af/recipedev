@@ -5,6 +5,7 @@ export const token = cache.makeVar();
 export const userData = cache.makeVar();
 export const buildData = cache.makeVar();
 export const recipeData = cache.makeVar();
+export const recipeBookData = cache.makeVar();
 export const genericIngredients = cache.makeVar([]);
 
 export const newRecipe = cache.makeVar([

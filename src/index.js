@@ -3,7 +3,7 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import typeDefs from "./typeDefs/index.js";
 import { context } from "./context.js";
 import Query from "./resolvers/Query.js";
-import Mutation from "./resolvers/mutations/index.js";
+import Mutation from "./mutations/index.js";
 import User from "./resolvers/User.js";
 import Recipe from "./resolvers/Recipe.js";
 import Inventory from "./resolvers/Inventory.js";

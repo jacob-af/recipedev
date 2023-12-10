@@ -27,18 +27,6 @@ const build = gql`
     recipeStack: RecipeStack
   }
 
-  type Recipe {
-    id: ID!
-    createdAt: DateTimeResolver
-    editedAt: DateTimeResolver
-    name: String
-    origin: String
-    createdBy: User
-    editedBy: User
-    history: String
-    build: [Build]
-  }
-
   type CompleteBuild {
     id: ID!
     buildName: String!
@@ -59,17 +47,9 @@ const build = gql`
     completeTouch: [CompleteTouch]
   }
 
-  type RecipeStack {
-    recipeId: String
-    recipeName: String
-    recipeOrigin: String
-    recipeCreatedById: String
-    recipeHistory: String
-    builds: CompleteBuild
-  }
-
   type BuildResponse {
     build: Build
+    permission: Permission
     status: String
   }
   type RecipeResponse {

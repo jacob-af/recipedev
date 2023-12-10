@@ -14,50 +14,63 @@ const recipeBook = gql`
   }
 
   type RecipeBookUser {
-    user: User
-    recipeBook: RecipeBook
+    user: [User]
+    recipeBook: [RecipeBook]
     permission: Permission
-  }
-
-  type BookReturn {
-    status: String
-    recipeBook: RecipeBook
   }
 
   type RecipeBookBuild {
     recipeBook: [RecipeBook]
     build: [Build]
+    permission: Permission
   }
 
-  type Recipe {
-    id: ID!
-    createdAt: DateTimeResolver
-    editedAt: DateTimeResolver
-    name: String
-    origin: String
-    createdBy: User
-    editedBy: User
-    history: String
-    build: [Build]
+  type BookReturn {
+    status: StatusMessage
+    recipeBook: RecipeBook
+    permission: Permission
   }
 
-  type CompleteBuild {
-    id: ID!
-    buildName: String!
-    createdAt: DateTimeResolver
-    editedAt: DateTimeResolver
-    createdBy: User
-    editedBy: User
-    recipeId: String
-    recipeName: String
-    recipeOrigin: String
-    recipeCreatedBy: User
-    recipeHistory: String
-    instructions: String
-    notes: String
-    glassware: String
-    ice: String
-    touch: [Touch]
+  type BookShareReturn {
+    status: StatusMessage
+    recipeBookId: String
+  }
+
+  type Mutation {
+    newRecipeBook(name: String!, description: String): BookReturn
+
+    editRecipeBook(
+      recipeBookId: String!
+      name: String!
+      description: String
+      permission: Permission!
+    ): BookReturn
+
+    trashRecipeBook(
+      recipeBookId: String!
+      permission: Permission!
+    ): StatusMessage
+
+    addBuildToRecipeBook(
+      recipeBookId: String!
+      buildId: String!
+      buildPermission: Permission
+      bookPermission: Permission
+    ): StatusMessage
+
+    changeRecipeBookPermission(
+      userId: String!
+      recipeBookId: String!
+      permission: Permission
+      userPermission: Permission
+    ): BookShareReturn
+
+    removeRecipeBookPermission(
+      userId: String!
+      recipeBookId: String!
+      permission: Permission
+      userPermission: Permission
+    ): BookShareReturn
   }
 `;
 

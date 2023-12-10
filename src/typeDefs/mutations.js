@@ -47,21 +47,11 @@ const mutation = gql`
       toUserPermission: Permission
     ): StatusMessage
 
-    addRecipeBookPermission(
-      userId: String
-      recipeBookId: String!
-      userPermission: Permission
-      toUserPermission: Permission
-    ): StatusMessage
-
-    createRecipeBook(name: String!, description: String): BookReturn
     createInventory(name: String!, description: String): InventoryReturn
     createStorage(name: String!, description: String): StorageReturn
     createCrew(name: String!, description: String): Crew
 
     shareRecipeBook(toUser: String, recipeBookId: String): BookReturn
-
-    addBuildToRecipeBook(buildId: String, recipeBookId: String): StatusMessage
 
     changeBuildPermission(
       fromUser: String

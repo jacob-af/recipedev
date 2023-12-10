@@ -19,9 +19,11 @@ function RecipeList(props) {
         +
       </Fab>
       <Container sx={{ mt: 2, overflow: "auto", height: 0.9 }}>
-        {recipeStack.map(b => {
-          return <Recipe recipe={b} key={b.recipeId} />;
-        })}
+        {recipeStack.length > 0
+          ? recipeStack.map(b => {
+              return <Recipe recipe={b} key={b.recipeId} />;
+            })
+          : "you have no recipes"}
       </Container>
       <BottomNavBar />
     </Fragment>

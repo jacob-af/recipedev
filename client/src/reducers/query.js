@@ -1,7 +1,5 @@
 import { gql } from "@apollo/client";
 
-const recipeName = `recipeName`;
-
 export const LOAD_USER = gql`
   mutation LoginUser($email: String!, $password: String!) {
     login(email: $email, password: $password) {

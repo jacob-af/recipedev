@@ -3,13 +3,10 @@ import { Container, Typography, Fab, Box, Grid } from "@mui/material";
 import { recipeData, recipeBookData } from "../../../state/User";
 import Navbar from "../NavBar";
 import BottomNavBar from "../BottomNavBar";
-import Recipe from "../Recipes/Recipe";
 import { Link as RouterLink } from "react-router-dom";
-import { useReactiveVar } from "@apollo/client";
 
 function RecipeBookList(props) {
   const recipeBookStack = recipeBookData();
-  console.log(recipeBookStack);
   return (
     <Fragment>
       <Navbar />
@@ -23,7 +20,7 @@ function RecipeBookList(props) {
       <Container sx={{ mt: 2, overflow: "auto", height: 0.9 }}>
         {recipeBookStack.map(b => {
           return (
-            <Grid item md={6}>
+            <Grid item md={6} key={b.id}>
               <Box
                 sx={{
                   position: "relative",
@@ -31,9 +28,20 @@ function RecipeBookList(props) {
                   pr: { md: 0 }
                 }}
               >
-                <Typography variant="h4" color="white" key={b.id}>
+                <Typography variant="h4" color="white" align="center">
                   {b.name}
                 </Typography>
+                {b.completeBuild.length > 0 ? (
+                  <Typography color="white" align="center">
+                    {" "}
+                    {b.completeBuild[0].recipeName}{" "}
+                  </Typography>
+                ) : (
+                  <Typography color="white" align="center">
+                    {" "}
+                    No Recipes{" "}
+                  </Typography>
+                )}
               </Box>
             </Grid>
           );

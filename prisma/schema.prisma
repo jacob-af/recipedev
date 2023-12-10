@@ -71,11 +71,11 @@ model RecipeBook {
   name            String            @db.VarChar(255)
   description     String?
   createdAt       DateTime          @default(now())
-  editedAt        DateTime          @default(now())
+  editedAt        DateTime          @default(now()) @updatedAt()
   createdById     String?
   editedById      String?
-  createdBy       User?             @relation(fields: [createdById], references: [id])
-  editedBy        User?             @relation("recipeBookEditedById", fields: [editedById], references: [id])
+  createdBy       User?             @relation(fields: [createdById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  editedBy        User?             @relation("recipeBookEditedById", fields: [editedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
   recipeBookBuild RecipeBookBuild[]
   recipeBookUser  RecipeBookUser[]
 }
@@ -83,7 +83,7 @@ model RecipeBook {
 model RecipeBookUser {
   userId       String
   recipeBookId String
-  recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user         User       @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   permission   String
 
@@ -137,9 +137,8 @@ model Recipe {
 model RecipeBookBuild {
   buildId      String
   recipeBookId String
-  recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  build        Build      @relation(fields: [buildId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  permission   String
+  recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  build        Build      @relation(fields: [buildId], references: [id], onDelete: NoAction, onUpdate: Cascade)
 
   @@id([buildId, recipeBookId])
 }
@@ -268,7 +267,7 @@ model Crew {
   name        String
   description String
   createdAt   DateTime   @default(now())
-  editedAt    DateTime   @default(now())
+  editedAt    DateTime   @default(now()) @updatedAt()
   createdById String
   editedById  String
   createdBy   User?      @relation(fields: [createdById], references: [id])

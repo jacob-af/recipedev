@@ -37,7 +37,7 @@ export default function Build({ builds }) {
           pl: 2
         }}
       >
-        <Typography>{builds[activeStep].buildName}</Typography>
+        <Typography align="center">{builds[activeStep].buildName}</Typography>
       </Paper>
       <Box sx={{ height: 100, maxWidth: 400, p: 2, alignItems: "center" }}>
         {builds[activeStep].completeTouch.map(touch => {

@@ -5,14 +5,18 @@ const util = gql`
     token: String
     user: User
   }
+  type AuthPayload {
+    token: String
+    user: User
+  }
 
   type BatchPayload {
     count: Int
   }
 
   type StatusMessage {
-    status: String
-    id: String
+    message: String
+    code: String
   }
 
   enum Permission {

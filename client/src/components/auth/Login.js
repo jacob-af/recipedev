@@ -62,31 +62,34 @@ function restructure(accumulator, currentvalue) {
 }
 
 export default function LogIn() {
-  const [loadUser, { data, loading, error }] = useMutation(LOAD_USER);
-  const genericIngredientResponse = useQuery(LOAD_GENERIC);
   //console.log(data, loading, error);
+  const [loadUser] = useMutation(LOAD_USER);
+  const genericIngredientResponse = useQuery(LOAD_GENERIC);
+
   const navigate = useNavigate();
+  // if (loading) return "Submitting...";
+  // if (error) alertMessage(error);
+
   const handleSubmit = async event => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const response = await loadUser({
+
+    const { data } = await loadUser({
       variables: {
         email: formData.get("email"),
         password: formData.get("password")
       }
     });
-
-    token(response.data.login.token);
+    token(data.login.token);
     userData({
-      id: response.data.login.user.id,
-      firstName: response.data.login.user.firstName,
-      lastName: response.data.login.user.lastName,
-      userName: response.data.login.user.userName
+      id: data.login.user.id,
+      firstName: data.login.user.firstName,
+      lastName: data.login.user.lastName,
+      userName: data.login.user.userName
     });
-    buildData(response.data.login.user.completeBuild);
-    recipeBookData(response.data.login.user.recipeBook);
-    recipeData(response.data.login.user.completeBuild.reduce(restructure, []));
-
+    buildData(data.login.user.completeBuild);
+    recipeBookData(data.login.user.recipeBook);
+    recipeData(data.login.user.completeBuild.reduce(restructure, []));
     genericIngredients(genericIngredientResponse.data.allGenericIngredients);
 
     navigate("/");

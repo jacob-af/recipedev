@@ -11,28 +11,14 @@ import RecipeBookList from "./components/layout/RecipeBooks/RecipeBookList";
 import AddRecipe from "./components/layout/Recipes/AddRecipe";
 import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
-
 import PrivateRoute from "./components/routing/PrivateRoute.js";
 import { Box } from "@mui/material";
-import { css } from "@emotion/css";
 
 function App() {
   return (
     <Router>
-      gooober
       <Fragment>
-        <Box
-          className={css`
-            height: 100vh;
-            padding: 32px;
-            background-color: #0b0a10;
-            font-size: 24px;
-            font-color: #D993AA
-            &:hover {
-              color: #D993AA;
-            }
-          `}
-        >
+        <Box sx={{ width: 1, minHeight: 667, bgcolor: "#88e", p: 2 }}>
           <Routes>
             <Route
               exact

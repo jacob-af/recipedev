@@ -48,7 +48,7 @@ const ADD_RECIPE = gql`
 
 function AddRecipe(props) {
   const touches = useReactiveVar(newRecipe);
-  const [addRecipe, response] = useMutation(ADD_RECIPE);
+  const [addRecipe] = useMutation(ADD_RECIPE);
   const navigate = useNavigate();
 
   const handleSubmit = async event => {

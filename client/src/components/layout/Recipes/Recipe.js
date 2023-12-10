@@ -40,7 +40,12 @@ function Recipe(props) {
               pr: { md: 0 }
             }}
           >
-            <Typography component="h6" variant="h6" color="white">
+            <Typography
+              component="h6"
+              variant="h6"
+              color="white"
+              align="center"
+            >
               {recipe.recipeName}
             </Typography>
             <Build builds={recipe.builds} />

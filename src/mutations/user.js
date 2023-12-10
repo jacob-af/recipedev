@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 //const { UserInputError } = require("apollo-server");
-import { APP_SECRET, getUserId } from "../../../src/utils.js";
+import { APP_SECRET, getUserId } from "../helperFunctions/utils.js";
+import { createRecipeBook } from "../helperFunctions/recipeBook.js";
 
 async function signup(parent, args, context, info) {
   // 1
@@ -16,13 +17,20 @@ async function signup(parent, args, context, info) {
   });
   if (user) {
     const token = jwt.sign({ userId: user.id }, APP_SECRET);
-    console.log(token);
+
+    const recipeBook = await createRecipeBook(
+      context,
+      `${user.userName}'s Recipe Book`,
+      "Your First Recipe Book",
+      user.id
+    );
+
     return {
       token,
       user
     };
   } else {
-    return null;
+    throw new Error("This is Broken");
   }
 }
 

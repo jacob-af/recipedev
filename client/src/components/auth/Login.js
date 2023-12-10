@@ -65,7 +65,6 @@ export default function LogIn() {
   //console.log(data, loading, error);
   const [loadUser] = useMutation(LOAD_USER);
   const genericIngredientResponse = useQuery(LOAD_GENERIC);
-
   const navigate = useNavigate();
   // if (loading) return "Submitting...";
   // if (error) alertMessage(error);

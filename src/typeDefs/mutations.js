@@ -51,8 +51,6 @@ const mutation = gql`
     createStorage(name: String!, description: String): StorageReturn
     createCrew(name: String!, description: String): Crew
 
-    shareRecipeBook(toUser: String, recipeBookId: String): BookReturn
-
     changeBuildPermission(
       fromUser: String
       toUser: String

@@ -7,10 +7,12 @@
 
 import {
   createRecipeBook,
-  permissionOnRecipeBook,
   updateRecipeBook,
   deleteRecipeBook,
-  createBuildOnRecipeBook
+  createBuildOnRecipeBook,
+  deleteBuildFromRecipeBook,
+  createPermissionOnRecipeBook,
+  deleteRecipeBookPermission
 } from "../helperFunctions/recipeBook.js";
 
 async function newRecipeBook(parent, args, context, info) {
@@ -27,20 +29,6 @@ async function newRecipeBook(parent, args, context, info) {
     status: recipeBook.status,
     permission: recipeBook.permission,
     recipeBook: recipeBook.recipeBook
-  };
-}
-
-async function changeRecipeBookPermission(parent, args, context, info) {
-  const recipeBook = await permissionOnRecipeBook(
-    context,
-    args.userId,
-    args.recipeBookId,
-    args.permission,
-    args.userPermission
-  );
-  return {
-    status: { message: "barf", code: "success" },
-    recipeBookId: recipeBook.recipeBookId
   };
 }
 
@@ -79,10 +67,44 @@ async function addBuildToRecipeBook(parent, args, context, info) {
   );
 }
 
+async function removeBuildFromRecipeBook(parent, args, context, info) {
+  return await deleteBuildFromRecipeBook(
+    context,
+    args.buildId,
+    args.recipeBookId,
+    args.permission
+  );
+}
+
+async function changeRecipeBookPermission(parent, args, context, info) {
+  const recipeBook = await createPermissionOnRecipeBook(
+    context,
+    args.userId,
+    args.recipeBookId,
+    args.permission
+  );
+  return {
+    status: { message: "barf", code: "success" },
+    recipeBookId: recipeBook.recipeBookId
+  };
+}
+
+async function removeRecipeBookPermission(parent, args, context, info) {
+  const response = await deleteRecipeBookPermission(
+    context,
+    args.userId,
+    args.recipeBookId,
+    args.permission
+  );
+  return response;
+}
+
 export default {
   newRecipeBook,
-  changeRecipeBookPermission,
   editRecipeBook,
   trashRecipeBook,
-  addBuildToRecipeBook
+  addBuildToRecipeBook,
+  removeBuildFromRecipeBook,
+  changeRecipeBookPermission,
+  removeRecipeBookPermission
 };

@@ -26,7 +26,7 @@ function getUserId(req, authToken) {
 
 // Admin
 // Owner
-// Manage
+// Manager
 // View
 // Block
 

@@ -28,36 +28,6 @@ async function createRecipeBook(context, name, description, userId) {
   };
 }
 
-async function permissionOnRecipeBook(
-  context,
-  userId,
-  recipeBookId,
-  permission,
-  userPermission
-) {
-  if (resolvePermission(userPermission, permission)) {
-    console.log("hello");
-    const recipeBookUser = await context.prisma.recipeBookUser.upsert({
-      where: {
-        userId_recipeBookId: {
-          userId,
-          recipeBookId
-        }
-      },
-      update: {
-        permission
-      },
-      create: {
-        userId,
-        recipeBookId,
-        permission
-      }
-    });
-    console.log(recipeBookUser);
-    return recipeBookUser;
-  }
-}
-
 async function updateRecipeBook(
   context,
   recipeBookId,
@@ -87,7 +57,6 @@ async function updateRecipeBook(
       }
     };
   }
-  console.log("dong");
 }
 
 async function deleteRecipeBook(context, recipeBookId, permission) {
@@ -131,15 +100,102 @@ async function createBuildOnRecipeBook(
   });
   console.log(bookOnBuild);
   return {
-    message: "You have added this build to the recipe book",
+    message: "You have added this build to the recipe book!",
+    code: "Success"
+  };
+}
+
+async function deleteBuildFromRecipeBook(
+  context,
+  buildId,
+  recipeBookId,
+  permission
+) {
+  console.log(resolvePermission(permission, "Manager"));
+  if (!resolvePermission(permission, "Manager")) {
+    return {
+      message: "You don't have permission to add to this Recipe Book",
+      code: "Failure"
+    };
+  }
+  const deleteBuild = await context.prisma.recipeBookBuild.delete({
+    where: {
+      buildId_recipeBookId: {
+        buildId,
+        recipeBookId
+      }
+    }
+  });
+  return {
+    message: "You have removed this build from the recipe book!",
+    code: "Success"
+  };
+}
+
+async function createPermissionOnRecipeBook(
+  context,
+  userId,
+  recipeBookId,
+  permission,
+  userPermission
+) {
+  if (resolvePermission(userPermission, permission)) {
+    console.log("hello");
+    const recipeBookUser = await context.prisma.recipeBookUser.upsert({
+      where: {
+        userId_recipeBookId: {
+          userId,
+          recipeBookId
+        }
+      },
+      update: {
+        permission
+      },
+      create: {
+        userId,
+        recipeBookId,
+        permission
+      }
+    });
+    console.log(recipeBookUser);
+    return recipeBookUser;
+  }
+}
+
+async function deleteRecipeBookPermission(
+  context,
+  userId,
+  recipeBookId,
+  permission
+) {
+  console.log(resolvePermission(permission, "Manager"));
+  if (!resolvePermission(permission, "Manager")) {
+    return {
+      message: "You don't have permission to remove recipes from this book!",
+      code: "Failure"
+    };
+  }
+  const deletePermission = await context.prisma.recipeBookUser.delete({
+    where: {
+      userId_recipeBookId: {
+        userId,
+        recipeBookId
+      }
+    }
+  });
+  console.log(deletePermission);
+  return {
+    message: "You have removed this build from the recipe book!",
     code: "Success"
   };
 }
 
 export {
   createRecipeBook,
-  permissionOnRecipeBook,
   updateRecipeBook,
   deleteRecipeBook,
-  createBuildOnRecipeBook
+  createBuildOnRecipeBook,
+  deleteBuildFromRecipeBook,
+  createPermissionOnRecipeBook,
+  deleteRecipeBookPermission
 };

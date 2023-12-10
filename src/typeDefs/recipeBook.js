@@ -58,6 +58,12 @@ const recipeBook = gql`
       bookPermission: Permission
     ): StatusMessage
 
+    removeBuildFromRecipeBook(
+      recipeBookId: String!
+      buildId: String!
+      permission: Permission
+    ): StatusMessage
+
     changeRecipeBookPermission(
       userId: String!
       recipeBookId: String!
@@ -69,8 +75,7 @@ const recipeBook = gql`
       userId: String!
       recipeBookId: String!
       permission: Permission
-      userPermission: Permission
-    ): BookShareReturn
+    ): StatusMessage
   }
 `;
 

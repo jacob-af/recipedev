@@ -9,6 +9,61 @@ function build(parent, args, context) {
     where: { id: parent.id }
   }).build();
 }
+function storage(parent, args, context) {
+  return context.prisma.User.findUnique({
+    where: { id: parent.id }
+  }).storage();
+}
+function inventory(parent, args, context) {
+  const inv = context.prisma.User.findUnique({
+    where: { id: parent.id }
+  });
+  console.log(inv);
+  return inv.inventory();
+}
+
+async function following(parent, args, context) {
+  const followDatum = await context.prisma.follow.findMany({
+    where: { followedById: parent.id }
+  });
+
+  const user = await followDatum.map(async followData => {
+    if (followData.followingId) {
+      return await context.prisma.user.findUnique({
+        where: { id: followData.followingId }
+      });
+    }
+  });
+  return user;
+}
+async function followedBy(parent, args, context) {
+  const followDatum = await context.prisma.follow.findMany({
+    where: { followingId: parent.id }
+  });
+
+  const user = await followDatum.map(async followData => {
+    if (followData.followedById) {
+      return await context.prisma.user.findUnique({
+        where: { id: followData.followedById }
+      });
+    }
+  });
+  return user;
+}
+
+async function storageUser(parent, args, context) {
+  const storageIds = await context.prisma.storageUser.findMany({
+    where: { userId: parent.id }
+  });
+  console.log(storageIds);
+  const storage = await storageIds.map(async storageId => {
+    return context.prisma.storage.findUnique({
+      where: { id: storageId.storageId }
+    });
+  });
+  return storage;
+}
+
 function specificIngredient(parent, args, context) {
   return context.prisma.User.findUnique({
     where: { id: parent.id }
@@ -47,12 +102,6 @@ async function recipeBookUser(parent, args, context) {
   return await context.prisma.recipeBookUser.findMany({
     where: { userId: parent.id }
   });
-}
-
-async function inventory(parent, args, context) {
-  return await context.prisma.User.findUnique({
-    where: { id: parent.id }
-  }).inventory();
 }
 
 async function completeBuild(parent, args, context) {
@@ -127,13 +176,16 @@ async function buildUser(parent, args, context) {
 }
 
 export default {
-  recipe,
-  specificIngredient,
-  build,
+  following,
+  followedBy,
   recipeBook,
   recipeBookUser,
-  inventory,
+  recipe,
+  build,
+  buildUser,
   completeBuild,
-  buildUser
-  //recipeStack
+  inventory,
+  storage,
+  storageUser,
+  specificIngredient
 };

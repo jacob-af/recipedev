@@ -57,6 +57,18 @@ model User {
   inventory            Inventory[]            @relation("inventoryCreatedById")
   inventoryEditedBy    Inventory[]            @relation("inventoryEditedById")
   inventoryUser        InventoryUser[]
+  followedBy           Follow[]               @relation("followedBy")
+  following            Follow[]               @relation("following")
+}
+
+model Follow {
+  followedBy   User   @relation("followedBy", fields: [followedById], references: [id])
+  followedById String
+  following    User   @relation("following", fields: [followingId], references: [id])
+  followingId  String
+  relationship String
+
+  @@id([followingId, followedById])
 }
 
 model Profile {

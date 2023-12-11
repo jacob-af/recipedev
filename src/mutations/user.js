@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 //const { UserInputError } = require("apollo-server");
 import { APP_SECRET, getUserId } from "../helperFunctions/utils.js";
 import { createRecipeBook } from "../helperFunctions/recipeBook.js";
+import { addFollow, unFollow } from "../helperFunctions/user.js";
 
 async function signup(parent, args, context, info) {
   // 1
@@ -42,7 +43,6 @@ async function login(parent, args, context, info) {
     throw new Error("No such user found");
   }
 
-  // 2
   const valid = await bcrypt.compare(args.password, user.password);
   if (!valid) {
     throw new Error("Invalid password");
@@ -50,14 +50,24 @@ async function login(parent, args, context, info) {
 
   const token = jwt.sign({ userId: user.id }, APP_SECRET);
 
-  // 3
   return {
     token,
     user
   };
 }
 
+async function followUser(parent, args, context, info) {
+  const user = await addFollow(context, args.userId, args.relationship);
+  return user;
+}
+
+async function unFollowUser(parent, args, context, info) {
+  return await unFollow(context, args.userId);
+}
+
 export default {
   signup,
-  login
+  login,
+  followUser,
+  unFollowUser
 };

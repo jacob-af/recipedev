@@ -18,7 +18,7 @@ function App() {
   return (
     <Router>
       <Fragment>
-        <Box sx={{ width: 1, minHeight: 667, bgcolor: "#88e", p: 2 }}>
+        <Box sx={{ width: 1, bgcolor: "#88e", p: 2 }}>
           <Routes>
             <Route
               exact

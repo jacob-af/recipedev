@@ -10,7 +10,7 @@ async function createRecipeBook(context, name, description, userId) {
     }
   });
   console.log(recipeBook.id);
-  const recipeBookUser = await permissionOnRecipeBook(
+  const recipeBookUser = await createPermissionOnRecipeBook(
     context,
     userId,
     recipeBook.id,
@@ -114,7 +114,8 @@ async function deleteBuildFromRecipeBook(
   console.log(resolvePermission(permission, "Manager"));
   if (!resolvePermission(permission, "Manager")) {
     return {
-      message: "You don't have permission to add to this Recipe Book",
+      message:
+        "You don't have permission to remove anything from this Recipe Book",
       code: "Failure"
     };
   }

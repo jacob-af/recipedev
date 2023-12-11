@@ -11,6 +11,8 @@ const query = gql`
     allBuilds: [Build]
     allTouches: [Touch]
     allRecipeBookUsers: [RecipeBookUser]
+    completeBuild(userId: String): [CompleteBuild]
+    userRecipeBook(userId: String): [RecipeBook]
   }
 `;
 

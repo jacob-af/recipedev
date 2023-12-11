@@ -22,8 +22,15 @@ const util = gql`
   enum Permission {
     View
     Edit
-    Manage
+    Manager
     Owner
+    Blocked
+  }
+
+  enum Relationship {
+    Favorite
+    Close
+    Following
     Blocked
   }
 

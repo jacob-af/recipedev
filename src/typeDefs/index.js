@@ -6,6 +6,7 @@ import inventory from "./inventory.js";
 import mutations from "./mutations.js";
 import recipeBook from "./recipeBook.js";
 import recipe from "./recipe.js";
+import storage from "./storage.js";
 import user from "./user.js";
 import util from "./util.js";
 import query from "./query.js";
@@ -20,6 +21,7 @@ const typeDefs = [
   mutations,
   recipeBook,
   recipe,
+  storage,
   util,
   query
 ];

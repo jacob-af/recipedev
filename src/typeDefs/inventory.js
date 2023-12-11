@@ -9,50 +9,68 @@ const inventory = gql`
     editedAt: DateTimeResolver
     createdBy: User
     editedBy: User
-    inventoryStorage: [InventoryStorage]
+    inventoryStorage: [Storage]
   }
 
   type InventoryUser {
-    user: User
-    inventory: Inventory
+    user: [User]
+    inventory: [Inventory]
     permission: Permission
-  }
-
-  type Storage {
-    id: ID!
-    name: String!
-    createdAt: DateTimeResolver
-    editedAt: DateTimeResolver
-    createdBy: User
-    editedBy: User
-    inventoryStorage: [InventoryStorage]
-    ingredientStorage: [IngredientStorage]
-    storageUser: [StorageUser]
   }
 
   type InventoryStorage {
-    inventory: Inventory
-    storage: Storage
-  }
-
-  type IngredientStorage {
-    ingredient: SpecificIngredient
-    storage: Storage
-  }
-
-  type StorageUser {
-    storage: Storage
-    user: User
-    permission: Permission
+    inventory: [Inventory]
+    storage: [Storage]
   }
 
   type InventoryReturn {
-    status: String
+    status: StatusMessage
     inventory: Inventory
+    permission: Permission
   }
-  type StorageReturn {
-    status: String
-    storage: Storage
+
+  type InventoryShareReturn {
+    status: StatusMessage
+    inventoryId: String
+  }
+
+  type Mutation {
+    newInventory(name: String!, description: String): InventoryReturn
+
+    editInventory(
+      inventoryId: String!
+      name: String!
+      description: String
+      permission: Permission!
+    ): InventoryReturn
+
+    trashInventory(inventoryId: String!, permission: Permission!): StatusMessage
+
+    addStorageToInventory(
+      inventoryId: String!
+      storageId: String!
+      storagePermission: Permission
+      inventoryPermission: Permission
+    ): StatusMessage
+
+    removeStorageFromInventory(
+      inventoryId: String!
+      storageId: String!
+      permission: Permission
+    ): StatusMessage
+
+    changeInventoryPermission(
+      userId: String!
+      inventoryId: String!
+      permission: Permission
+      userPermission: Permission
+    ): InventoryShareReturn
+
+    removeInventoryPermission(
+      userId: String!
+      inventoryId: String!
+      permission: Permission
+    ): StatusMessage
   }
 `;
 

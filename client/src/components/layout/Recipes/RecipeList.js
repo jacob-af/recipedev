@@ -1,15 +1,19 @@
-import React, { Fragment } from "react";
-import { Container, Fab } from "@mui/material";
-import { userData, recipeData } from "../../../state/User";
+import React from "react";
+import { Container, Fab, Box } from "@mui/material";
+import { recipeData } from "../../../state/User";
 import Navbar from "../NavBar";
 import BottomNavBar from "../BottomNavBar";
 import Recipe from "./Recipe";
 import { Link as RouterLink } from "react-router-dom";
 
 function RecipeList(props) {
+  // const structuredRecipes = useQuery(LOAD_BUILDS);
+  // console.log(structuredRecipes);
   const recipeStack = recipeData();
   return (
-    <Fragment>
+    <Container
+      sx={{ bgcolor: "#FFF", width: 1, display: "flex", alignItems: "center" }}
+    >
       <Navbar />
       <Fab
         component={RouterLink}
@@ -18,15 +22,15 @@ function RecipeList(props) {
       >
         +
       </Fab>
-      <Container sx={{ mt: 2, overflow: "auto", height: 0.9 }}>
+      <Box sx={{ mt: 5, overflow: "auto", height: 0.9, maxHeight: 600 }}>
         {recipeStack.length > 0
           ? recipeStack.map(b => {
               return <Recipe recipe={b} key={b.recipeId} />;
             })
           : "you have no recipes"}
-      </Container>
+      </Box>
       <BottomNavBar />
-    </Fragment>
+    </Container>
   );
 }
 

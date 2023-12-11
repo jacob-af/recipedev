@@ -22,7 +22,6 @@ const recipeBook = gql`
   type RecipeBookBuild {
     recipeBook: [RecipeBook]
     build: [Build]
-    permission: Permission
   }
 
   type BookReturn {

@@ -81,3 +81,35 @@ export const LOAD_GENERIC = gql`
     }
   }
 `;
+
+export const LOAD_BUILDS = gql`
+  query CompleteBuild {
+    completeBuild {
+      id
+      recipeName
+      buildName
+      recipeId
+      recipeOrigin
+      recipeCreatedBy {
+        id
+        userName
+      }
+      recipeHistory
+      instructions
+      notes
+      glassware
+      ice
+      completeTouch {
+        id
+        order
+        genericIngredientId
+        genericIngredientName
+        specificIngredientId
+        specificIngredientName
+        amount
+        unit
+        cost
+      }
+    }
+  }
+`;

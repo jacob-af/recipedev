@@ -15,6 +15,7 @@ const user = gql`
     recipeBookUser: [RecipeBookUser]
     recipeBook: [RecipeBook]
     recipeBookEditedBy: [RecipeBook]
+
     recipe: [Recipe!]
     recipeEditedBy: [Recipe!]
 
@@ -22,6 +23,9 @@ const user = gql`
     build: [Build]
     buildEditedBy: [Build]
     completeBuild: [CompleteBuild]
+    "to be removed"
+    following: [User]
+    followedBy: [User]
 
     crewUser: [CrewUser]
     crew: [Crew]
@@ -30,7 +34,7 @@ const user = gql`
     specificIngredient: [SpecificIngredient]
     ingredientPreference: [IngredientPreference]
 
-    storageUser: [StorageUser]
+    storageUser: [Storage]
     storage: [Storage]
     storageEditedBy: [Storage]
 
@@ -50,6 +54,24 @@ const user = gql`
     storage: Storage
     user: User
     permission: Permission
+  }
+
+  type Follower {
+    following: User
+    followedBy: User
+    relationship: Relationship
+  }
+
+  type FollowReturn {
+    following: String
+    relationship: Relationship
+    status: StatusMessage
+  }
+
+  type Mutation {
+    followUser(userId: String!, relationship: Relationship): FollowReturn
+
+    unFollowUser(userId: String): StatusMessage
   }
 `;
 export default user;

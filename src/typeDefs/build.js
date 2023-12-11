@@ -57,6 +57,34 @@ const build = gql`
     build: Build
     status: String
   }
+
+  type Mutation {
+    addBuild(
+      recipe: ID
+      buildName: String
+      instructions: String
+      glassware: String
+      ice: String
+      postedBy: String
+      touchArray: [TouchInput]
+    ): BuildResponse
+
+    updateBuild(
+      buildId: String
+      recipeId: String
+      buildName: String
+      instructions: String
+      glassware: String
+      ice: String
+    ): Build
+
+    changeBuildPermission(
+      userId: String
+      buildId: String
+      userPermission: Permission
+      permission: Permission
+    ): StatusMessage
+  }
 `;
 
 export default build;

@@ -81,8 +81,10 @@ async function changeRecipeBookPermission(parent, args, context, info) {
     context,
     args.userId,
     args.recipeBookId,
-    args.permission
+    args.permission,
+    args.userPermission
   );
+  console.log(recipeBook);
   return {
     status: { message: "barf", code: "success" },
     recipeBookId: recipeBook.recipeBookId

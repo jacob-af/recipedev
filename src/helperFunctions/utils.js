@@ -45,7 +45,10 @@ function resolvePermission(userPermission, desiredPermission) {
         return 0;
     }
   }
+
   if (toNumber(userPermission) < 2) {
+    console.log(userPermission);
+    console.log(toNumber(userPermission));
     return false;
   } else if (toNumber(desiredPermission) - toNumber(userPermission) > 0) {
     return false;

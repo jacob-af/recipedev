@@ -29,42 +29,9 @@ const mutation = gql`
       touchArray: [TouchInput]
     ): RecipeResponse
 
-    addBuild(
-      recipe: ID
-      buildName: String
-      instructions: String
-      glassware: String
-      ice: String
-      postedBy: String
-      touchArray: [TouchInput]
-    ): BuildResponse
-
-    addBuildPermissions(
-      fromUser: String
-      toUser: String
-      buildId: String
-      userPermission: Permission
-      toUserPermission: Permission
-    ): StatusMessage
-
     createInventory(name: String!, description: String): InventoryReturn
     createStorage(name: String!, description: String): StorageReturn
     createCrew(name: String!, description: String): Crew
-
-    changeBuildPermission(
-      fromUser: String
-      toUser: String
-      buildId: String
-    ): StatusMessage
-
-    updateBuild(
-      buildId: String
-      recipeId: String
-      buildName: String
-      instructions: String
-      glassware: String
-      ice: String
-    ): Build
 
     updateSingleTouch(input: TouchUpdate, specId: String): Touch
     updateTouch(input: [TouchUpdate], specId: String): [Touch]

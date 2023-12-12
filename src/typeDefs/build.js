@@ -14,6 +14,7 @@ const build = gql`
     glassware: String
     ice: String
     touch: [Touch]
+    archivedTouch: [ArchivedTouch]
     completeTouch: [CompleteTouch]
     recipeBook: [RecipeBook]
     buildUser: [BuildUser]
@@ -50,7 +51,7 @@ const build = gql`
   type BuildResponse {
     build: Build
     permission: Permission
-    status: String
+    status: StatusMessage
   }
   type RecipeResponse {
     recipe: Recipe
@@ -60,12 +61,11 @@ const build = gql`
 
   type Mutation {
     addBuild(
-      recipe: ID
+      recipeId: String
       buildName: String
       instructions: String
       glassware: String
       ice: String
-      postedBy: String
       touchArray: [TouchInput]
     ): BuildResponse
 
@@ -76,9 +76,19 @@ const build = gql`
       instructions: String
       glassware: String
       ice: String
+      touchArray: [TouchInput]
     ): Build
 
+    deleteBuild(buildId: String, permission: Permission): StatusMessage
+
     changeBuildPermission(
+      userId: String
+      buildId: String
+      userPermission: Permission
+      permission: Permission
+    ): StatusMessage
+
+    removeBuildPermission(
       userId: String
       buildId: String
       userPermission: Permission

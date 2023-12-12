@@ -1,9 +1,9 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 //const { UserInputError } = require("apollo-server");
-import { APP_SECRET, getUserId } from "../helperFunctions/utils.js";
-import { createRecipeBook } from "../helperFunctions/recipeBook.js";
-import { addFollow, unFollow } from "../helperFunctions/user.js";
+import { APP_SECRET, getUserId } from "../actions/utils.js";
+import { createRecipeBook } from "../actions/recipeBook.js";
+import { addFollow, unFollow } from "../actions/user.js";
 
 async function signup(parent, args, context, info) {
   // 1

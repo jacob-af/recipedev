@@ -7,20 +7,25 @@ const touch = gql`
     order: Int
     amount: Float
     unit: String
+    version: Int
+    genericIngredient: GenericIngredient
+    specificIngredient: SpecificIngredient
+  }
+
+  type ArchivedTouch {
+    id: ID!
+    build: Build
+    order: Int
+    amount: Float
+    unit: String
+    version: Int
     genericIngredient: GenericIngredient
     specificIngredient: SpecificIngredient
   }
 
   input TouchInput {
-    order: Int
     genericIngredientId: String
     specificIngredientId: String
-    amount: Float
-    unit: String
-  }
-
-  input TouchUpdate {
-    ingredientId: String
     amount: Float
     unit: String
   }
@@ -37,6 +42,15 @@ const touch = gql`
     amount: Float
     unit: String
     cost: Float
+  }
+
+  type Mutation {
+    updateTouch(
+      newTouchArray: [TouchInput]
+      permission: Permission
+      buildId: String
+      version: Int
+    ): [Touch]
   }
 `;
 

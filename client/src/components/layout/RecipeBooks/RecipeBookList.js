@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { Container, Typography, Fab, Box, Grid } from "@mui/material";
-import { recipeData, recipeBookData } from "../../../state/User";
+import { recipeBookData } from "../../../state/User";
 import Navbar from "../NavBar";
 import BottomNavBar from "../BottomNavBar";
 import { Link as RouterLink } from "react-router-dom";

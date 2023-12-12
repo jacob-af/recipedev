@@ -32,10 +32,7 @@ const mutation = gql`
     createInventory(name: String!, description: String): InventoryReturn
     createStorage(name: String!, description: String): StorageReturn
     createCrew(name: String!, description: String): Crew
-
-    updateSingleTouch(input: TouchUpdate, specId: String): Touch
-    updateTouch(input: [TouchUpdate], specId: String): [Touch]
-
+    
     login(email: String!, password: String!): AuthPayload
 
     signup(

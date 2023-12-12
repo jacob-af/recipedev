@@ -6,7 +6,7 @@ import {
   deleteStorageFromInventory,
   createPermissionOnInventory,
   deleteInventoryPermission
-} from "../helperFunctions/inventory.js";
+} from "../actions/inventory.js";
 
 async function newInventory(parent, args, context, info) {
   const { userId } = context;

@@ -169,10 +169,9 @@ async function deleteRecipeBookPermission(
   recipeBookId,
   permission
 ) {
-  console.log(resolvePermission(permission, "Manager"));
   if (!resolvePermission(permission, "Manager")) {
     return {
-      message: "You don't have permission to remove recipes from this book!",
+      message: "You don't have permission to remove users from this book!",
       code: "Failure"
     };
   }

@@ -13,7 +13,7 @@ import {
   deleteBuildFromRecipeBook,
   createPermissionOnRecipeBook,
   deleteRecipeBookPermission
-} from "../helperFunctions/recipeBook.js";
+} from "../actions/recipeBook.js";
 
 async function newRecipeBook(parent, args, context, info) {
   const { userId } = context;

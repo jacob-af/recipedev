@@ -1,28 +1,54 @@
-import { resolvePermission } from "../helperFunctions/utils.js";
+import { resolvePermission } from "../actions/utils.js";
+import {
+  createBuild,
+  editBuildPermission,
+  deleteBuildPermission
+} from "../actions/build.js";
+
+async function addBuild(parent, args, context) {
+  const { build, permission, status } = await createBuild(
+    context,
+    args.recipeId,
+    args.buildName,
+    args.instructions,
+    args.glassware,
+    args.ice,
+    args.touchArray
+  );
+  return {
+    permission,
+    build,
+    status
+  };
+}
 
 async function changeBuildPermission(parent, args, context, info) {
-  if (resolvePermission(args.userPermission, args.permission)) {
-    const build = await context.prisma.buildUser.upsert({
-      where: {
-        userId_buildId: { userId: args.userId, buildId: args.buildId }
-      },
-      update: {
-        permission: args.permission
-      },
-      create: {
-        userId: args.userId,
-        buildId: args.buildId,
-        permission: args.permission
-      }
-    });
-    console.log(build);
-    return {
-      code: "Success",
-      message: "you gave access to the build, or changed it, whatever"
-    };
-  }
+  const buildingPermit = await editBuildPermission(
+    context,
+    args.buildId,
+    args.userId,
+    args.permission,
+    args.userPermission
+  );
+  console.log(buildingPermit);
+  return {
+    code: "Success",
+    message: "you gave access to the build, or changed it, whatever"
+  };
+}
+
+async function removeBuildPermission(parent, args, context, info) {
+  return deleteBuildPermission(
+    context,
+    args.buildId,
+    args.userId,
+    args.permission,
+    args.userPermission
+  );
 }
 
 export default {
-  changeBuildPermission
+  addBuild,
+  changeBuildPermission,
+  removeBuildPermission
 };

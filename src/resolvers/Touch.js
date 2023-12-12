@@ -7,6 +7,7 @@ function genericIngredient(parent, args, context) {
     .findUnique({ where: { id: parent.id } })
     .genericIngredient();
 }
+
 function specificIngredient(parent, args, context) {
   console.log(parent);
   return context.prisma.touch

@@ -118,6 +118,7 @@ model Build {
   glassware       String?           @db.VarChar()
   ice             String?           @db.VarChar(100)
   touch           Touch[]
+  archivedTouch   ArchivedTouch[]
   RecipeBookBuild RecipeBookBuild[]
   buildUser       BuildUser[]
 }
@@ -166,6 +167,21 @@ model Touch {
   genericIngredient    GenericIngredient   @relation(fields: [genericIngredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   specificIngredientId String?
   specificIngredient   SpecificIngredient? @relation(fields: [specificIngredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  version              Int?                @default(0)
+}
+
+model ArchivedTouch {
+  id                   String              @id @default(uuid())
+  build                Build               @relation(fields: [buildId], references: [id], onDelete: Cascade)
+  buildId              String
+  order                Int?
+  amount               Float?              @db.Real
+  unit                 String?             @db.VarChar(50)
+  genericIngredientId  String
+  genericIngredient    GenericIngredient   @relation(fields: [genericIngredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  specificIngredientId String?
+  specificIngredient   SpecificIngredient? @relation(fields: [specificIngredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  version              Int?
 }
 
 model GenericIngredient {
@@ -173,6 +189,7 @@ model GenericIngredient {
   name                 String
   description          String?
   touch                Touch[]
+  archivedTouch        ArchivedTouch[]
   specificIngredient   SpecificIngredient[]
   ingredientPreference IngredientPreference[]
 }
@@ -191,6 +208,7 @@ model SpecificIngredient {
   unit                 String?
   source               String?
   touch                Touch[]
+  archivedTouch        ArchivedTouch[]
   ingredientStorage    IngredientStorage[]
   ingredientPreference IngredientPreference[] @relation("userSpecPreference")
 }

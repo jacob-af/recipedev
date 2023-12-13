@@ -69,6 +69,16 @@ const user = gql`
   }
 
   type Mutation {
+    login(email: String!, password: String!): AuthPayload
+
+    signup(
+      userName: String!
+      firstName: String
+      lastName: String
+      email: String!
+      password: String!
+    ): AuthPayload
+
     followUser(userId: String!, relationship: Relationship): FollowReturn
 
     unFollowUser(userId: String): StatusMessage

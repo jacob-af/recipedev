@@ -17,6 +17,10 @@ const crew = gql`
     user: User
     permission: Permission
   }
+
+  type Mutation {
+    createCrew(name: String!, description: String): Crew
+  }
 `;
 
 export default crew;

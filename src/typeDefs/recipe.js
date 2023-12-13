@@ -21,6 +21,19 @@ const recipe = gql`
     recipeHistory: String
     builds: CompleteBuild
   }
+  type Mutation {
+    addRecipe(
+      name: String
+      origin: String
+      createdById: String
+      history: String
+      buildName: String
+      instructions: String
+      glassware: String
+      ice: String
+      touchArray: [TouchInput]
+    ): RecipeResponse
+  }
 `;
 
 export default recipe;

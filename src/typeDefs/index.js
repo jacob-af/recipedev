@@ -3,7 +3,6 @@ import build from "./build.js";
 import touch from "./touch.js";
 import ingredient from "./ingredient.js";
 import inventory from "./inventory.js";
-import mutations from "./mutations.js";
 import recipeBook from "./recipeBook.js";
 import recipe from "./recipe.js";
 import storage from "./storage.js";
@@ -18,7 +17,6 @@ const typeDefs = [
   crew,
   ingredient,
   inventory,
-  mutations,
   recipeBook,
   recipe,
   storage,

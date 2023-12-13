@@ -25,3 +25,4 @@ export const newRecipe = cache.makeVar([
     unit: "oz"
   }
 ]);
+export const newIngredient = cache.makeVar();

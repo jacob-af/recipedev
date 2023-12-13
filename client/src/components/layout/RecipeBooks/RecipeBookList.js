@@ -1,11 +1,19 @@
 import React, { Fragment } from "react";
 import { Container, Typography, Fab, Box, Grid } from "@mui/material";
-import { recipeBookData } from "../../../state/User";
 import Navbar from "../NavBar";
 import BottomNavBar from "../BottomNavBar";
 import { Link as RouterLink } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import { LOAD_BOOKS } from "../../../reducers/query.js";
+import { recipeBookData, userData } from "../../../state/User";
 
 function RecipeBookList(props) {
+  const { data, loading, error } = useQuery(LOAD_BOOKS, {
+    variables: { userId: userData().id }
+  });
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error.message}`;
+  recipeBookData(data.userRecipeBook);
   const recipeBookStack = recipeBookData();
   return (
     <Fragment>

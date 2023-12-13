@@ -1,15 +1,24 @@
 import React from "react";
+import { Link as RouterLink } from "react-router-dom";
 import { Container, Fab, Box } from "@mui/material";
-import { recipeData } from "../../../state/User";
 import Navbar from "../NavBar";
 import BottomNavBar from "../BottomNavBar";
 import Recipe from "./Recipe";
-import { Link as RouterLink } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import { LOAD_BUILDS } from "../../../reducers/query.js";
+import { buildData, recipeData, userData } from "../../../state/User";
+import { restructure } from "../../../utils.js";
 
-function RecipeList(props) {
-  // const structuredRecipes = useQuery(LOAD_BUILDS);
-  // console.log(structuredRecipes);
+function RecipeList() {
+  const { data, loading, error } = useQuery(LOAD_BUILDS, {
+    variables: { userId: userData().id }
+  });
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error.message}`;
+  buildData(data.completeBuild);
+  recipeData(data.completeBuild.reduce(restructure, []));
   const recipeStack = recipeData();
+
   return (
     <Container
       sx={{ bgcolor: "#FFF", width: 1, display: "flex", alignItems: "center" }}

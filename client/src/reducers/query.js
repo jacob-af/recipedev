@@ -9,64 +9,6 @@ export const LOAD_USER = gql`
         firstName
         lastName
         userName
-        completeBuild {
-          id
-          recipeName
-          buildName
-          recipeId
-          recipeOrigin
-          recipeCreatedBy {
-            id
-            userName
-          }
-          recipeHistory
-          instructions
-          notes
-          glassware
-          ice
-          completeTouch {
-            id
-            order
-            genericIngredientId
-            genericIngredientName
-            specificIngredientId
-            specificIngredientName
-            amount
-            unit
-            cost
-          }
-        }
-        recipeBook {
-          id
-          name
-          completeBuild {
-            id
-            recipeName
-            buildName
-            recipeId
-            recipeOrigin
-            recipeCreatedBy {
-              id
-              userName
-            }
-            recipeHistory
-            instructions
-            notes
-            glassware
-            ice
-            completeTouch {
-              id
-              order
-              genericIngredientId
-              genericIngredientName
-              specificIngredientId
-              specificIngredientName
-              amount
-              unit
-              cost
-            }
-          }
-        }
       }
     }
   }
@@ -83,32 +25,73 @@ export const LOAD_GENERIC = gql`
 `;
 
 export const LOAD_BUILDS = gql`
-  query CompleteBuild {
-    completeBuild {
-      id
-      recipeName
+  query CompleteBuild($userId: String) {
+    completeBuild(userId: $userId) {
       buildName
-      recipeId
-      recipeOrigin
-      recipeCreatedBy {
-        id
-        userName
-      }
-      recipeHistory
-      instructions
-      notes
-      glassware
-      ice
       completeTouch {
-        id
-        order
+        amount
+        cost
+        genericIngredientDescription
         genericIngredientId
         genericIngredientName
+        id
+        order
+        specificIngredientDescription
         specificIngredientId
         specificIngredientName
-        amount
         unit
-        cost
+      }
+      createdAt
+      createdBy {
+        userName
+      }
+      glassware
+      ice
+      id
+      instructions
+      notes
+      permission
+      recipeHistory
+      recipeId
+      recipeName
+      recipeOrigin
+    }
+  }
+`;
+
+export const LOAD_BOOKS = gql`
+  query RecipeBooks($userId: String) {
+    userRecipeBook(userId: $userId) {
+      id
+      name
+      description
+      completeBuild {
+        id
+        recipeName
+        buildName
+        completeTouch {
+          amount
+          cost
+          genericIngredientId
+          genericIngredientName
+          id
+          order
+          specificIngredientId
+          unit
+          specificIngredientName
+        }
+        recipeOrigin
+        recipeId
+        recipeHistory
+        permission
+        notes
+        instructions
+        ice
+        glassware
+        createdBy {
+          id
+          userName
+        }
       }
     }
   }

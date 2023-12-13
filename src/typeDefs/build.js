@@ -40,10 +40,10 @@ const build = gql`
     recipeOrigin: String
     recipeCreatedBy: User
     recipeHistory: String
-    instructions: String
     notes: String
     glassware: String
     ice: String
+    instructions: String
     permission: Permission
     completeTouch: [CompleteTouch]
   }

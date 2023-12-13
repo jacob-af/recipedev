@@ -1,14 +1,17 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material/styles";
-import MobileStepper from "@mui/material/MobileStepper";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import {
+  Box,
+  MobileStepper,
+  Paper,
+  Typography,
+  Button,
+  Collapse
+} from "@mui/material";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 
-export default function Build({ builds }) {
+export default function Build({ builds, viewDetail }) {
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
   const maxSteps = builds.length;
@@ -26,7 +29,7 @@ export default function Build({ builds }) {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, alignItems: "center" }}>
+    <Box sx={{ alignItems: "center", width: 1 }}>
       <Paper
         square
         elevation={0}
@@ -39,10 +42,57 @@ export default function Build({ builds }) {
       >
         <Typography align="center">{builds[activeStep].buildName}</Typography>
       </Paper>
-      <Box sx={{ height: 100, maxWidth: 400, p: 2, alignItems: "center" }}>
+      {builds.length === 1 ? (
+        ""
+      ) : (
+        <Box sx={{ display: "block", width: 400 }}>
+          <MobileStepper
+            variant="dots"
+            steps={maxSteps}
+            activeStep={activeStep}
+            sx={{ width: 400 }}
+            nextButton={
+              <Button
+                size="small"
+                onClick={handleNext}
+                //   disabled={activeStep === maxSteps - 1}
+              >
+                {theme.direction === "rtl" ? (
+                  <KeyboardArrowLeft />
+                ) : (
+                  <KeyboardArrowRight />
+                )}
+              </Button>
+            }
+            backButton={
+              <Button size="small" onClick={handleBack}>
+                {theme.direction === "rtl" ? (
+                  <KeyboardArrowRight />
+                ) : (
+                  <KeyboardArrowLeft />
+                )}
+              </Button>
+            }
+          />
+        </Box>
+      )}
+      <Box
+        sx={{
+          height: 100,
+          width: 1,
+          maxWidth: 400,
+          p: 2,
+          alignItems: "center"
+        }}
+      >
         {builds[activeStep].completeTouch.map(touch => {
           return (
-            <Typography variant="body1" gutterBottom key={touch.id}>
+            <Typography
+              align="center"
+              variant="body1"
+              gutterBottom
+              key={touch.id}
+            >
               {touch.amount} {touch.unit}{" "}
               {touch.specificIngredientName === null
                 ? touch.genericIngredientName
@@ -50,39 +100,19 @@ export default function Build({ builds }) {
             </Typography>
           );
         })}
+        <Collapse in={viewDetail}>
+          <Typography>
+            {"Instructions: "}
+            {builds[activeStep].instructions}
+          </Typography>
+          <Typography>
+            {"Glassware: "}
+            {builds[activeStep].glassware}
+            {"Ice "}
+            {builds[activeStep].ice}
+          </Typography>
+        </Collapse>
       </Box>
-      {builds.length === 1 ? (
-        ""
-      ) : (
-        <MobileStepper
-          variant="dots"
-          steps={maxSteps}
-          position="static"
-          activeStep={activeStep}
-          nextButton={
-            <Button
-              size="small"
-              onClick={handleNext}
-              //   disabled={activeStep === maxSteps - 1}
-            >
-              {theme.direction === "rtl" ? (
-                <KeyboardArrowLeft />
-              ) : (
-                <KeyboardArrowRight />
-              )}
-            </Button>
-          }
-          backButton={
-            <Button size="small" onClick={handleBack}>
-              {theme.direction === "rtl" ? (
-                <KeyboardArrowRight />
-              ) : (
-                <KeyboardArrowLeft />
-              )}
-            </Button>
-          }
-        />
-      )}
     </Box>
   );
 }

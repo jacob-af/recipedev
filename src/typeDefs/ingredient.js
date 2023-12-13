@@ -41,6 +41,23 @@ const ingredient = gql`
     name: String!
     description: String
   }
+
+  type Mutation {
+    addGenericIngredient(name: String, description: String): GenericIngredient!
+
+    addManyGenericIngredients(dat: [GenericIngredientInput]): StatusMessage
+
+    addSpecificIngredient(
+      name: String
+      description: String
+      amount: Int
+      unit: String
+      price: Float
+      source: String
+      genericIngredientId: String
+      createdBy: String
+    ): SpecificIngredient!
+  }
 `;
 
 export default ingredient;

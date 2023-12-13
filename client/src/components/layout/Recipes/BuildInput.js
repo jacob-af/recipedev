@@ -7,7 +7,7 @@ import {
   MenuItem,
   CssBaseline
 } from "@mui/material";
-import { genericIngredients, newRecipe } from "../../state/User";
+import { genericIngredients, newRecipe } from "../../../state/User";
 import { useReactiveVar } from "@apollo/client";
 
 function BuildInput(props) {

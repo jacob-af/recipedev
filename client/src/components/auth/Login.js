@@ -12,17 +12,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import {
-  token,
-  userData,
-  buildData,
-  recipeData,
-  recipeBookData,
-  genericIngredients
-} from "../../state/User";
+import { token, userData } from "../../state/User";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery } from "@apollo/client";
-import { LOAD_USER, LOAD_GENERIC } from "../../reducers/query.js";
+import { useMutation } from "@apollo/client";
+import { LOAD_USER } from "../../reducers/query.js";
 
 function Copyright(props) {
   return (
@@ -44,27 +37,8 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-function restructure(accumulator, currentvalue) {
-  const index = accumulator.findIndex(
-    i => i.recipeId === currentvalue.recipeId
-  );
-  if (index === -1) {
-    //console.log(currentvalue, "beep");
-    accumulator.push({
-      recipeId: currentvalue.recipeId,
-      recipeName: currentvalue.recipeName,
-      builds: [currentvalue]
-    });
-  } else {
-    accumulator[index].builds.push(currentvalue);
-  }
-  return accumulator;
-}
-
 export default function LogIn() {
-  //console.log(data, loading, error);
   const [loadUser] = useMutation(LOAD_USER);
-  const genericIngredientResponse = useQuery(LOAD_GENERIC);
   const navigate = useNavigate();
   // if (loading) return "Submitting...";
   // if (error) alertMessage(error);
@@ -86,10 +60,6 @@ export default function LogIn() {
       lastName: data.login.user.lastName,
       userName: data.login.user.userName
     });
-    buildData(data.login.user.completeBuild);
-    recipeBookData(data.login.user.recipeBook);
-    recipeData(data.login.user.completeBuild.reduce(restructure, []));
-    genericIngredients(genericIngredientResponse.data.allGenericIngredients);
 
     navigate("/");
   };

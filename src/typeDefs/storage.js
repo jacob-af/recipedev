@@ -20,13 +20,17 @@ const storage = gql`
   }
 
   type StorageReturn {
-    status: String
+    status: StatusMessage
     storage: Storage
   }
 
   type IngredientStorage {
     ingredient: SpecificIngredient
     storage: Storage
+  }
+
+  type Mutation {
+    createStorage(name: String!, description: String): StorageReturn
   }
 `;
 

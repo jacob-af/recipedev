@@ -8,6 +8,9 @@ import React, { Fragment } from "react";
 import Landing from "./components/layout/Landing";
 import RecipeList from "./components/layout/Recipes/RecipeList";
 import RecipeBookList from "./components/layout/RecipeBooks/RecipeBookList";
+import Inventory from "./components/layout/Inventory/Inventory";
+import AddIngredient from "./components/layout/Inventory/AddIngredient";
+import Crew from "./components/layout/Crew/Crew";
 import AddRecipe from "./components/layout/Recipes/AddRecipe";
 import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
@@ -31,15 +34,6 @@ function App() {
             />
             <Route
               exact
-              path="/recipe"
-              element={
-                <PrivateRoute>
-                  <RecipeList />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              exact
               path="/recipeBook"
               element={
                 <PrivateRoute>
@@ -48,11 +42,48 @@ function App() {
               }
             />
             <Route
+              path="recipe"
+              element={
+                <PrivateRoute>
+                  <RecipeList />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
               exact
               path="/addrecipe"
               element={
                 <PrivateRoute>
                   <AddRecipe />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              exact
+              path="/inventory"
+              element={
+                <PrivateRoute>
+                  <Inventory />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              exact
+              path="/addingredient"
+              element={
+                <PrivateRoute>
+                  <AddIngredient />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              exact
+              path="/crew"
+              element={
+                <PrivateRoute>
+                  <Crew />
                 </PrivateRoute>
               }
             />

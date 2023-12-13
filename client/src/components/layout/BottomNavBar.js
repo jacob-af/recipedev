@@ -41,8 +41,18 @@ function BottomNavBar() {
           to="/recipe"
           icon={<LocalBarIcon />}
         />
-        <BottomNavigationAction label="Inventory" icon={<LiquorIcon />} />
-        <BottomNavigationAction label="Crew" icon={<GroupsIcon />} />
+        <BottomNavigationAction
+          label="Inventory"
+          component={RouterLink}
+          to="/inventory"
+          icon={<LiquorIcon />}
+        />
+        <BottomNavigationAction
+          label="Crew"
+          component={RouterLink}
+          to="/crew"
+          icon={<GroupsIcon />}
+        />
       </BottomNavigation>
     </Paper>
   );

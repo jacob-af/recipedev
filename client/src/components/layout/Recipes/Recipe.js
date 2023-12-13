@@ -1,13 +1,16 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import { Paper, Typography, Grid, Box, Button, Collapse } from "@mui/material/";
+import { ExpandMore, ExpandLess } from "@mui/icons-material/";
 import Build from "./Build";
 
 function Recipe(props) {
   const { recipe } = props;
+  const [viewDetail, setViewDetail] = React.useState(false);
+
+  const handleChange = () => {
+    setViewDetail(!viewDetail);
+  };
 
   return (
     <Paper
@@ -40,6 +43,9 @@ function Recipe(props) {
               pr: { md: 0 }
             }}
           >
+            <Button onClick={handleChange}>
+              {viewDetail ? <ExpandLess /> : <ExpandMore />}
+            </Button>
             <Typography
               component="h6"
               variant="h6"
@@ -48,7 +54,11 @@ function Recipe(props) {
             >
               {recipe.recipeName}
             </Typography>
-            <Build builds={recipe.builds} />
+            <Collapse in={viewDetail}>
+              <Typography>{recipe.history} HIIIIII</Typography>
+            </Collapse>
+
+            <Build builds={recipe.builds} viewDetail={viewDetail} />
           </Box>
         </Grid>
       </Grid>

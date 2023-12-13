@@ -6,67 +6,53 @@ import {
   Typography,
   Box,
   Grid,
-  TextField
+  TextField,
+  Autocomplete
   //Checkbox
 } from "@mui/material";
 import Navbar from "../NavBar";
 import BottomNavBar from "../BottomNavBar";
-import BuildInput from "./BuildInput";
 import { useMutation, useReactiveVar } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
-import { newRecipe } from "../../../state/User";
-import { ADD_RECIPE } from "../../../reducers/mutations";
+import { newIngredient, genericIngredients } from "../../../state/User";
+import { ADD_SPEC_ING } from "../../../reducers/mutations";
 
-function AddRecipe(props) {
-  const touches = useReactiveVar(newRecipe);
-  const [addRecipe] = useMutation(ADD_RECIPE);
+function AddIngredient(props) {
+  const ingredient = useReactiveVar(newIngredient);
+  const [addIngredient] = useMutation(ADD_SPEC_ING);
   const navigate = useNavigate();
 
   const handleSubmit = async event => {
     event.preventDefault();
     // console.log(touches);
     const formData = new FormData(event.currentTarget);
-    const response = await addRecipe({
+    const response = await addIngredient({
       variables: {
         name: formData.get("name"),
-        origin: formData.get("origin"),
-        history: formData.get("history"),
-        buildName: formData.get("buildName"),
-        instructions: formData.get("instructions"),
-        glassware: formData.get("glassware"),
-        ice: formData.get("ice"),
-        touchArray: touches.map(touch => {
-          return {
-            order: touch.order,
-            amount: touch.amount,
-            unit: touch.unit,
-            genericIngredientId: touch.genericIngredient.id,
-            specificIngredientId: touch.specificIngredient.id
-              ? touch.specificIngredient.id
-              : null
-          };
-        })
+        amount: parseInt(formData.get("amount")),
+        unit: formData.get("unit"),
+        price: parseInt(formData.get("price")),
+        source: formData.get("source"),
+        description: formData.get("description"),
+        genericIngredientId: newIngredient().id
       }
     });
     console.log(response);
-    navigate("/recipe");
+    navigate("/inventory");
   };
 
-  const addTouch = event => {
-    const rec = [
-      ...touches,
-      {
-        order: touches.length,
-        genericIngredient: {},
-        specificIngredient: {},
-        amount: 0,
-        unit: "oz"
-      }
-    ];
-
-    newRecipe(rec);
+  const handleIngredientChange = value => {
+    console.log(value);
+    newIngredient(value);
   };
+
+  const genericIngredientInput = genericIngredients().map(ingredient => {
+    return {
+      ...ingredient,
+      label: ingredient.name
+    };
+  });
 
   return (
     <Fragment>
@@ -94,14 +80,36 @@ function AddRecipe(props) {
           >
             <Grid container spacing={2}>
               <Typography component="h1" variant="h5">
-                New Build
+                New Ingredient
               </Typography>
+              <Grid item xs={12}>
+                <Autocomplete
+                  required
+                  disablePortal
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  onChange={(event, newValue) => {
+                    handleIngredientChange(newValue);
+                    console.log(newValue);
+                  }}
+                  id={`ingredient${props.index}`}
+                  options={
+                    !genericIngredientInput
+                      ? [{ label: "Loading...", id: 0 }]
+                      : genericIngredientInput
+                  }
+                  renderInput={params => (
+                    <TextField {...params} label="Base Ingredient" />
+                  )}
+                />
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
                   id="name"
-                  label="Recipe Name"
+                  label="Ingredient Name"
                   name="name"
                 />
               </Grid>
@@ -109,18 +117,18 @@ function AddRecipe(props) {
                 <TextField
                   required
                   fullWidth
-                  id="origin"
-                  label="Origin"
-                  name="origin"
+                  id="amount"
+                  label="Amount"
+                  name="amount"
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="history"
-                  label="History"
-                  name="history"
+                  id="unit"
+                  label="Unit"
+                  name="unit"
                   multiline
                   rows={4}
                 />
@@ -129,30 +137,29 @@ function AddRecipe(props) {
                 <TextField
                   required
                   fullWidth
-                  id="buildName"
-                  label="Build Name"
-                  name="buildName"
+                  id="price"
+                  label="Price"
+                  name="price"
                 />
               </Grid>
               <Grid item xs={6}>
                 <TextField
                   required
                   fullWidth
-                  id="glassware"
-                  label="Glassware"
-                  name="glassware"
+                  id="source"
+                  label="Source"
+                  name="source"
                 />
               </Grid>
               <Grid item xs={6}>
-                <TextField required fullWidth id="ice" label="Ice" name="ice" />
+                <TextField
+                  required
+                  fullWidth
+                  id="description"
+                  label="Description"
+                  name="description"
+                />
               </Grid>
-              {touches.map((touch, index) => (
-                <Grid item xs={12} key={index}>
-                  <BuildInput index={index} touch={touch} />
-                </Grid>
-              ))}
-
-              <Fab onClick={addTouch}>-</Fab>
 
               <Button
                 type="submit"
@@ -171,4 +178,4 @@ function AddRecipe(props) {
   );
 }
 
-export default AddRecipe;
+export default AddIngredient;

@@ -19,7 +19,7 @@ import { newIngredient, genericIngredients } from "../../../state/User";
 import { ADD_SPEC_ING } from "../../../reducers/mutations";
 
 function AddIngredient(props) {
-  const ingredient = useReactiveVar(newIngredient);
+  //const ingredient = useReactiveVar(newIngredient);
   const [addIngredient] = useMutation(ADD_SPEC_ING);
   const navigate = useNavigate();
 
@@ -167,7 +167,7 @@ function AddIngredient(props) {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Create Recipe
+                Create Ingredient
               </Button>
             </Grid>
           </Box>

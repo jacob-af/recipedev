@@ -21,6 +21,13 @@ const recipe = gql`
     recipeHistory: String
     builds: CompleteBuild
   }
+
+  type RecipeResponse {
+    recipe: Recipe
+    build: Build
+    status: StatusMessage
+  }
+
   type Mutation {
     addRecipe(
       name: String

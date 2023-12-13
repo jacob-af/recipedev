@@ -7,6 +7,7 @@ import Mutation from "./mutations/index.js";
 import User from "./resolvers/User.js";
 import Recipe from "./resolvers/Recipe.js";
 import Inventory from "./resolvers/Inventory.js";
+import IngredientUser from "./resolvers/IngredientUser.js";
 import RecipeBook from "./resolvers/RecipeBook.js";
 import RecipeBookUser from "./resolvers/RecipeBookUser.js";
 import GenericIngredient from "./resolvers/GenericIngredient.js";
@@ -22,6 +23,7 @@ const resolvers = {
   User,
   GenericIngredient,
   Inventory,
+  IngredientUser,
   Touch,
   Build
 };

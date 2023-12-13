@@ -48,15 +48,21 @@ const build = gql`
     completeTouch: [CompleteTouch]
   }
 
+  type BuildUser {
+    build: Build
+    user: User
+    permission: Permission
+  }
+
   type BuildResponse {
     build: Build
     permission: Permission
     status: StatusMessage
   }
-  type RecipeResponse {
-    recipe: Recipe
-    build: Build
-    status: String
+
+  type BuildPermissionResponse {
+    buildUser: BuildUser
+    status: StatusMessage
   }
 
   type Mutation {

@@ -18,6 +18,17 @@ const crew = gql`
     permission: Permission
   }
 
+  type CrewResponse {
+    crew: Crew
+    permission: Permission
+    status: StatusMessage
+  }
+
+  type CrewPermissionResponse {
+    crewUser: CrewUser
+    status: StatusMessage
+  }
+
   type Mutation {
     createCrew(name: String!, description: String): Crew
   }

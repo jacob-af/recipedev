@@ -13,14 +13,14 @@ const inventory = gql`
   }
 
   type InventoryUser {
-    user: [User]
-    inventory: [Inventory]
+    user: User
+    inventory: Inventory
     permission: Permission
   }
 
   type InventoryStorage {
-    inventory: [Inventory]
-    storage: [Storage]
+    inventory: Inventory
+    storage: Storage
   }
 
   type InventoryReturn {
@@ -29,9 +29,9 @@ const inventory = gql`
     permission: Permission
   }
 
-  type InventoryShareReturn {
+  type InventoryPermissionReturn {
+    inventoryUser: InventoryUser
     status: StatusMessage
-    inventoryId: String
   }
 
   type Mutation {
@@ -44,13 +44,17 @@ const inventory = gql`
       permission: Permission!
     ): InventoryReturn
 
-    trashInventory(inventoryId: String!, permission: Permission!): StatusMessage
+    trashInventory(
+      inventoryId: String!
+      permission: Permission!
+      userPermission: Permission!
+    ): StatusMessage
 
     addStorageToInventory(
       inventoryId: String!
       storageId: String!
-      storagePermission: Permission
-      inventoryPermission: Permission
+      storagePermission: Permission!
+      inventoryPermission: Permission!
     ): StatusMessage
 
     removeStorageFromInventory(
@@ -64,7 +68,7 @@ const inventory = gql`
       inventoryId: String!
       permission: Permission
       userPermission: Permission
-    ): InventoryShareReturn
+    ): InventoryPermissionReturn
 
     removeInventoryPermission(
       userId: String!

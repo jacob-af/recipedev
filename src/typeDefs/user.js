@@ -12,16 +12,16 @@ const user = gql`
     password: String!
     profile: Profile
 
-    recipeBookUser: [RecipeBookUser]
-    recipeBook: [RecipeBook]
-    recipeBookEditedBy: [RecipeBook]
+    recipeBookUser: RecipeBookUser
+    recipeBook: RecipeBook
+    recipeBookEditedBy: User
 
     recipe: [Recipe!]
-    recipeEditedBy: [Recipe!]
+    recipeEditedBy: User
 
     buildUser: [BuildUser]
     build: [Build]
-    buildEditedBy: [Build]
+    buildEditedBy: User
     completeBuild: [CompleteBuild]
     "to be removed"
     following: [User]
@@ -32,16 +32,17 @@ const user = gql`
     crewEditedBy: [Crew]
 
     specificIngredient: [SpecificIngredient]
+    ingredientUser: [IngredientUser]
     ingredientPreference: [IngredientPreference]
 
     storageUser: [Storage]
     storage: [Storage]
-    storageEditedBy: [Storage]
+    storageEditedBy: [User]
 
     inventory: [Inventory]
     inventoryUser: [InventoryUser]
-    inventoryCreatedBy: [Inventory]
-    inventoryEditedBy: [Inventory]
+    inventoryCreatedBy: [User]
+    inventoryEditedBy: [User]
   }
 
   type Profile {

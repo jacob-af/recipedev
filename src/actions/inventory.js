@@ -184,7 +184,7 @@ async function deleteInventoryPermission(
   });
   console.log(deletePermission);
   return {
-    message: "You have removed this storage from the recipe inventory!",
+    message: "You have removed permission for this user!",
     code: "Success"
   };
 }

@@ -22,6 +22,15 @@ function inventory(parent, args, context) {
   return inv.inventory();
 }
 
+async function ingredientUser(parent, args, context) {
+  console.log("ding");
+  const ing = await context.prisma.ingredientUser.findMany({
+    where: { userId: parent.id }
+  });
+  console.log(ing);
+  return ing;
+}
+
 async function following(parent, args, context) {
   const followDatum = await context.prisma.follow.findMany({
     where: { followedById: parent.id }
@@ -184,6 +193,7 @@ export default {
   build,
   buildUser,
   completeBuild,
+  ingredientUser,
   inventory,
   storage,
   storageUser,

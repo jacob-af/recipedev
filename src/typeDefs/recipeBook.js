@@ -14,25 +14,25 @@ const recipeBook = gql`
   }
 
   type RecipeBookUser {
-    user: [User]
-    recipeBook: [RecipeBook]
+    recipeBook: RecipeBook
+    user: User
     permission: Permission
   }
 
   type RecipeBookBuild {
-    recipeBook: [RecipeBook]
-    build: [Build]
+    recipeBook: RecipeBook
+    build: Build
   }
 
   type BookReturn {
-    status: StatusMessage
     recipeBook: RecipeBook
     permission: Permission
+    status: StatusMessage
   }
 
   type BookShareReturn {
+    recipeBookUser: RecipeBookUser
     status: StatusMessage
-    recipeBookId: String
   }
 
   type Mutation {

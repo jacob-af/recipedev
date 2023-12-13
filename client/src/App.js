@@ -9,7 +9,7 @@ import Landing from "./components/layout/Landing";
 import RecipeList from "./components/layout/Recipes/RecipeList";
 import RecipeBookList from "./components/layout/RecipeBooks/RecipeBookList";
 import Inventory from "./components/layout/Inventory/Inventory";
-import AddIngredient from "./components/layout/Inventory/AddIngredient";
+import AddIngredient from "./components/layout/Inventory/AddIngredient.js";
 import Crew from "./components/layout/Crew/Crew";
 import AddRecipe from "./components/layout/Recipes/AddRecipe";
 import Login from "./components/auth/Login";

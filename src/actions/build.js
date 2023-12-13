@@ -33,7 +33,7 @@ async function createBuild(
       }
     }
   });
-  console.log(build);
+
   const { permission } = await editBuildPermission(
     context,
     build.id,

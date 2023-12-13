@@ -24,6 +24,11 @@ const storage = gql`
     storage: Storage
   }
 
+  type StorageShareReturn {
+    storageUser: StorageUser
+    status: StatusMessage
+  }
+
   type IngredientStorage {
     ingredient: SpecificIngredient
     storage: Storage

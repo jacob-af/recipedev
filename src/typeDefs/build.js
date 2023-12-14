@@ -31,6 +31,7 @@ const build = gql`
     notes: String
     glassware: String
     ice: String
+    version: Int
     archivedTouch: [ArchivedTouch]
   }
 

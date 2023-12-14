@@ -6,6 +6,12 @@ function createdBy(parent, args, context) {
     .createdBy();
 }
 
+function archivedBuild(parent, args, context) {
+  return context.prisma.archivedBuild.findMany({
+    where: { buildId: parent.id }
+  });
+}
+
 function recipe(parent, args, context) {
   return context.prisma.recipe.findUnique({ where: { id: parent.recipeId } });
 }
@@ -51,6 +57,7 @@ async function completeTouch(parent, args, context) {
 
 export default {
   createdBy,
+  archivedBuild,
   recipe,
   touch,
   completeTouch

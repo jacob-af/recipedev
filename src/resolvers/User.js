@@ -14,6 +14,12 @@ function storage(parent, args, context) {
     where: { id: parent.id }
   }).storage();
 }
+function crew(parent, args, context) {
+  return context.prisma.User.findUnique({
+    where: { id: parent.id }
+  }).crew();
+}
+
 function inventory(parent, args, context) {
   const inv = context.prisma.User.findUnique({
     where: { id: parent.id }
@@ -22,13 +28,15 @@ function inventory(parent, args, context) {
   return inv.inventory();
 }
 
-async function ingredientUser(parent, args, context) {
-  console.log("ding");
-  const ing = await context.prisma.ingredientUser.findMany({
+function ingredientUser(parent, args, context) {
+  return context.prisma.ingredientUser.findMany({
     where: { userId: parent.id }
   });
-  console.log(ing);
-  return ing;
+}
+function crewUser(parent, args, context) {
+  return context.prisma.crewUser.findMany({
+    where: { userId: parent.id }
+  });
 }
 
 async function following(parent, args, context) {
@@ -195,6 +203,8 @@ export default {
   completeBuild,
   ingredientUser,
   inventory,
+  crew,
+  crewUser,
   storage,
   storageUser,
   specificIngredient

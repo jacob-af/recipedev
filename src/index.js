@@ -13,6 +13,7 @@ import RecipeBookUser from "./resolvers/RecipeBookUser.js";
 import GenericIngredient from "./resolvers/GenericIngredient.js";
 import Build from "./resolvers/Build.js";
 import Touch from "./resolvers/Touch.js";
+import CrewUser from "./resolvers/CrewUser.js";
 
 const resolvers = {
   Query,
@@ -25,7 +26,8 @@ const resolvers = {
   Inventory,
   IngredientUser,
   Touch,
-  Build
+  Build,
+  CrewUser
 };
 
 const server = new ApolloServer({

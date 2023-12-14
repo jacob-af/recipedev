@@ -1,22 +1,32 @@
 async function addFollow(context, userId, relationship) {
-  console.log("ding");
-  const user = await context.prisma.follow.upsert({
-    where: {
-      followingId_followedById: {
+  let user = {};
+  try {
+    user = await context.prisma.follow.upsert({
+      where: {
+        followingId_followedById: {
+          followedById: context.userId,
+          followingId: userId
+        }
+      },
+      update: {
+        relationship
+      },
+      create: {
         followedById: context.userId,
-        followingId: userId
+        followingId: userId,
+        relationship
       }
-    },
-    update: {
-      relationship
-    },
-    create: {
-      followedById: context.userId,
-      followingId: userId,
-      relationship
-    }
-  });
-  console.log(user);
+    });
+  } catch (err) {
+    console.log(err);
+    return {
+      status: {
+        code: err.code,
+        message: err.message
+      }
+    };
+  }
+
   return {
     following: user.followingId,
     relationship: user.relationship,
@@ -28,14 +38,26 @@ async function addFollow(context, userId, relationship) {
 }
 
 async function unFollow(context, userId) {
-  const unfriend = await context.prisma.follow.delete({
-    where: {
-      followingId_followedById: {
-        followedById: context.userId,
-        followingId: userId
+  let unfriend = {};
+  try {
+    unfriend = await context.prisma.follow.delete({
+      where: {
+        followingId_followedById: {
+          followedById: context.userId,
+          followingId: userId
+        }
       }
-    }
-  });
+    });
+  } catch {
+    console.log(err);
+    return {
+      status: {
+        code: err.code,
+        message: err.message
+      }
+    };
+  }
+
   console.log(unfriend);
   return {
     message: "You are no longer following",

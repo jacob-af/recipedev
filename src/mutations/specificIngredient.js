@@ -27,34 +27,30 @@ async function addSpecificIngredient(parent, args, context, info) {
 }
 
 async function editSpecificIngredient(parent, args, context, info) {
-  if (resolvePermission(args.permission, "Manager")) {
-    console.log("ding");
-    const ingredient = updateSpecificIngredient(
-      context,
-      args.id,
-      args.name,
-      args.description,
-      args.amount,
-      args.unit,
-      args.price,
-      args.source,
-      args.genericIngredientId
-    );
-
+  if (!resolvePermission(args.permission, "Manager")) {
     return {
-      ingredient,
-      permission: args.permission,
       status: {
-        message: "It works!",
-        code: "Success"
+        message: "You do not have permission to do that",
+        code: "Failure"
       }
     };
   }
+  const { ingredient, status } = await updateSpecificIngredient(
+    context,
+    args.id,
+    args.name,
+    args.description,
+    args.amount,
+    args.unit,
+    args.price,
+    args.source,
+    args.genericIngredientId
+  );
+
   return {
-    status: {
-      message: "You do not have permission to do that",
-      code: "Failure"
-    }
+    ingredient,
+    permission: args.permission,
+    status
   };
 }
 
@@ -65,8 +61,14 @@ async function trashSpecificIngredient(parent, args, context, info) {
       args.id
     );
 
-    return { ingredient, status };
+    return { ingredient, permission: args.permission, status };
   }
+  return {
+    status: {
+      message: "You do not have permission to do that",
+      code: "Failure"
+    }
+  };
 }
 
 async function changeIngredientPermission(parent, args, context, info) {

@@ -9,7 +9,14 @@ const crew = gql`
     editedAt: DateTimeResolver
     createdBy: User
     editedBy: User
+    build: [Build]
     crewUser: [CrewUser]
+  }
+
+  type CrewReturn {
+    crew: Crew
+    permission: Permission
+    status: StatusMessage
   }
 
   type CrewUser {
@@ -18,19 +25,58 @@ const crew = gql`
     permission: Permission
   }
 
-  type CrewResponse {
+  type CrewBuild {
     crew: Crew
-    permission: Permission
+    build: Build
+  }
+
+  type CrewBuildReturn {
+    crewBuild: CrewBuild
     status: StatusMessage
   }
 
-  type CrewPermissionResponse {
+  type CrewShareReturn {
     crewUser: CrewUser
     status: StatusMessage
   }
 
   type Mutation {
-    createCrew(name: String!, description: String): Crew
+    newCrew(name: String!, description: String): CrewReturn
+
+    editCrew(
+      crewId: String!
+      name: String!
+      description: String
+      permission: Permission!
+    ): CrewReturn
+
+    trashCrew(crewId: String!, permission: Permission!): CrewReturn
+
+    addBuildToCrew(
+      crewId: String!
+      buildId: String!
+      buildPermission: Permission
+      bookPermission: Permission
+    ): CrewBuildReturn
+
+    removeBuildFromCrew(
+      crewId: String!
+      buildId: String!
+      permission: Permission
+    ): CrewBuildReturn
+
+    changeCrewPermission(
+      userId: String!
+      crewId: String!
+      permission: Permission
+      userPermission: Permission
+    ): CrewShareReturn
+
+    removeCrewPermission(
+      userId: String!
+      crewId: String!
+      permission: Permission
+    ): CrewShareReturn
   }
 `;
 

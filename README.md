@@ -15,6 +15,7 @@ All routes need:
 1. type def for mutation with proper return (object and status)
 2. mutation with permission handling and proper return
 3. action with proper error handling
+4. Working test in apollo explorer
 
 ## User
 
@@ -74,22 +75,24 @@ All routes need:
 
 #### Specific Ingredient
 
-1. Create Specific Ingredient
-2. Edit Specific Ingredient
-3. Delete Specific Ingredient
-4. Share Specific Ingredient
-5. UnShare Specific Ingredient
+1. Create Specific Ingredient 2. Edit Specific Ingredient 3. Delete Specific Ingredient 4. Share Specific Ingredient 5. UnShare Specific Ingredient~~
 
 ### Crew
 
 1. Create Crew
 2. Edit Crew
 3. Delete Crew
-4. Add user
-5. Change User Permission
-6. Remove User
-7. Add Inventory
+4. Change User Permission
+5. Remove User
+6. Add Inventory
+
+- remove Inventory
+
 8. Add Storage
+   remove storage
 9. Add Specific Ingredient
+   remove ingredient
 10. Add Recipe Book
+    remove book
 11. Add Build
+    remove build

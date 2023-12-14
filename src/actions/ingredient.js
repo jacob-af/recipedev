@@ -10,29 +10,40 @@ async function createSpecificIngredient(
   source,
   genericIngredientId
 ) {
-  const ingredient = await context.prisma.specificIngredient.create({
-    data: {
-      name,
-      description,
-      amount,
-      unit,
-      price,
-      source,
-      genericIngredientId,
-      createdById: context.userId
-    }
-  });
-  const ingredientUser = await createIngredientPermission(
-    context,
-    context.userId,
-    ingredient.id,
-    "Owner",
-    "Owner"
-  );
-  console.log(ingredientUser);
+  let ingredient = {};
+  let ingredientUser = {};
+  try {
+    ingredient = await context.prisma.specificIngredient.create({
+      data: {
+        name,
+        description,
+        amount,
+        unit,
+        price,
+        source,
+        genericIngredientId,
+        createdById: context.userId
+      }
+    });
+    ingredientUser = await createIngredientPermission(
+      context,
+      context.userId,
+      ingredient.id,
+      "Owner",
+      "Owner"
+    );
+  } catch (err) {
+    return {
+      status: {
+        code: "Failure",
+        message: err.meta.cause
+      }
+    };
+  }
+
   return {
     ingredient,
-    permissiom: ingredientUser.permission,
+    permission: ingredientUser.ingredientUser.permission,
     status: {
       message: "Ingredient successfully Created",
       code: "Success"
@@ -51,22 +62,38 @@ async function updateSpecificIngredient(
   source,
   genericIngredientId
 ) {
-  const ingredient = await context.prisma.specificIngredient.update({
-    where: {
-      id: id
-    },
-    data: {
-      name,
-      description,
-      amount,
-      unit,
-      price,
-      source,
-      genericIngredientId
-    }
-  });
+  let ingredient = {};
+  try {
+    ingredient = await context.prisma.specificIngredient.update({
+      where: {
+        id: id
+      },
+      data: {
+        name,
+        description,
+        amount,
+        unit,
+        price,
+        source,
+        genericIngredientId
+      }
+    });
+  } catch {
+    return {
+      status: {
+        code: "Failure",
+        message: err.meta.cause
+      }
+    };
+  }
 
-  return ingredient;
+  return {
+    ingredient,
+    status: {
+      message: "It works!",
+      code: "Success"
+    }
+  };
 }
 
 async function deleteSpecificIngredient(context, ingredientId) {
@@ -84,7 +111,6 @@ async function deleteSpecificIngredient(context, ingredientId) {
       }
     };
   }
-  console.log(ingredient);
   return {
     ingredient,
     status: {
@@ -120,7 +146,7 @@ async function createIngredientPermission(
     return {
       status: {
         code: err.code,
-        message: err.meta.cause ? err.meta.cause : null
+        message: err.message
       }
     };
   }

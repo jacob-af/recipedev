@@ -24,6 +24,11 @@ const recipeBook = gql`
     build: Build
   }
 
+  type BookBuildReturn {
+    recipeBookBuild: RecipeBookBuild
+    status: StatusMessage
+  }
+
   type BookReturn {
     recipeBook: RecipeBook
     permission: Permission
@@ -45,23 +50,20 @@ const recipeBook = gql`
       permission: Permission!
     ): BookReturn
 
-    trashRecipeBook(
-      recipeBookId: String!
-      permission: Permission!
-    ): StatusMessage
+    trashRecipeBook(recipeBookId: String!, permission: Permission!): BookReturn
 
     addBuildToRecipeBook(
       recipeBookId: String!
       buildId: String!
       buildPermission: Permission
       bookPermission: Permission
-    ): StatusMessage
+    ): BookBuildReturn
 
     removeBuildFromRecipeBook(
       recipeBookId: String!
       buildId: String!
       permission: Permission
-    ): StatusMessage
+    ): BookBuildReturn
 
     changeRecipeBookPermission(
       userId: String!
@@ -74,7 +76,7 @@ const recipeBook = gql`
       userId: String!
       recipeBookId: String!
       permission: Permission
-    ): StatusMessage
+    ): BookShareReturn
   }
 `;
 

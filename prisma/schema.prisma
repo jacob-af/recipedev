@@ -320,8 +320,8 @@ model Crew {
 model CrewUser {
   userId     String
   crewId     String
-  user       User   @relation(fields: [userId], references: [id])
-  crew       Crew   @relation(fields: [crewId], references: [id])
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  crew       Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   permission String
 
   @@id([userId, crewId])

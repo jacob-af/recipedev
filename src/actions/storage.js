@@ -101,8 +101,7 @@ async function createPermissionOnStorage(
   context,
   userId,
   storageId,
-  permission,
-  userPermission
+  permission
 ) {
   try {
     const storageUser = await context.prisma.storageUser.upsert({

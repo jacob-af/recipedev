@@ -23,21 +23,27 @@ async function addBuild(parent, args, context) {
 }
 
 async function changeBuildPermission(parent, args, context, info) {
-  const buildingPermit = await editBuildPermission(
+  if (!resolvePermission(args.userPermission, args.permission)) {
+    return {
+      message: "You don't have permission to add to this Recipe Book",
+      code: "Failure"
+    };
+  }
+  return await editBuildPermission(
     context,
     args.buildId,
     args.userId,
-    args.permission,
-    args.userPermission
+    args.permission
   );
-  console.log(buildingPermit);
-  return {
-    code: "Success",
-    message: "you gave access to the build, or changed it, whatever"
-  };
 }
 
 async function removeBuildPermission(parent, args, context, info) {
+  if (!resolvePermission(args.permission, "Manager")) {
+    return {
+      message: "You don't have permission to remove users from this build!",
+      code: "Failure"
+    };
+  }
   return deleteBuildPermission(
     context,
     args.buildId,

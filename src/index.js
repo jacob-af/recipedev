@@ -15,6 +15,7 @@ import RecipeBook from "./resolvers/RecipeBook.js";
 import RecipeBookUser from "./resolvers/RecipeBookUser.js";
 import GenericIngredient from "./resolvers/GenericIngredient.js";
 import Build from "./resolvers/Build.js";
+import BuildUser from "./resolvers/BuildUser.js";
 import Touch from "./resolvers/Touch.js";
 import CrewUser from "./resolvers/CrewUser.js";
 import StorageUser from "./resolvers/StorageUser.js";
@@ -34,6 +35,7 @@ const resolvers = {
   IngredientStorage,
   Touch,
   Build,
+  BuildUser,
   CrewUser,
   StorageUser
 };

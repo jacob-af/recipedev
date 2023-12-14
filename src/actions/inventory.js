@@ -38,7 +38,6 @@ async function createInventory(context, name, description, userId) {
 }
 
 async function updateInventory(context, inventoryId, name, description) {
-  console.log(context.userId);
   try {
     const inventory = await context.prisma.inventory.update({
       where: {
@@ -59,7 +58,6 @@ async function updateInventory(context, inventoryId, name, description) {
       }
     };
   } catch (err) {
-    console.log(err);
     return {
       status: {
         code: err.code,

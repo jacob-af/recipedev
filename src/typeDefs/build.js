@@ -21,11 +21,9 @@ const build = gql`
   }
 
   type BuildUser {
-    id: ID!
     user: User!
     build: Build!
     permission: Permission
-    recipeStack: RecipeStack
   }
 
   type CompleteBuild {
@@ -83,23 +81,23 @@ const build = gql`
       glassware: String
       ice: String
       touchArray: [TouchInput]
-    ): Build
+    ): BuildResponse
 
-    deleteBuild(buildId: String, permission: Permission): StatusMessage
+    deleteBuild(buildId: String, permission: Permission): BuildResponse
 
     changeBuildPermission(
       userId: String
       buildId: String
       userPermission: Permission
       permission: Permission
-    ): StatusMessage
+    ): BuildPermissionResponse
 
     removeBuildPermission(
       userId: String
       buildId: String
       userPermission: Permission
       permission: Permission
-    ): StatusMessage
+    ): BuildPermissionResponse
   }
 `;
 

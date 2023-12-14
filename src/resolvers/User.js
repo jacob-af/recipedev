@@ -9,123 +9,6 @@ function build(parent, args, context) {
     where: { id: parent.id }
   }).build();
 }
-function storage(parent, args, context) {
-  return context.prisma.User.findUnique({
-    where: { id: parent.id }
-  }).storage();
-}
-function crew(parent, args, context) {
-  return context.prisma.User.findUnique({
-    where: { id: parent.id }
-  }).crew();
-}
-
-function inventory(parent, args, context) {
-  const inv = context.prisma.User.findUnique({
-    where: { id: parent.id }
-  });
-  console.log(inv);
-  return inv.inventory();
-}
-
-function ingredientUser(parent, args, context) {
-  return context.prisma.ingredientUser.findMany({
-    where: { userId: parent.id }
-  });
-}
-function crewUser(parent, args, context) {
-  return context.prisma.crewUser.findMany({
-    where: { userId: parent.id }
-  });
-}
-function inventoryUser(parent, args, context) {
-  return context.prisma.inventoryUser.findMany({
-    where: { userId: parent.id }
-  });
-}
-
-async function following(parent, args, context) {
-  const followDatum = await context.prisma.follow.findMany({
-    where: { followedById: parent.id }
-  });
-
-  const user = await followDatum.map(async followData => {
-    if (followData.followingId) {
-      return await context.prisma.user.findUnique({
-        where: { id: followData.followingId }
-      });
-    }
-  });
-  return user;
-}
-async function followedBy(parent, args, context) {
-  const followDatum = await context.prisma.follow.findMany({
-    where: { followingId: parent.id }
-  });
-
-  const user = await followDatum.map(async followData => {
-    if (followData.followedById) {
-      return await context.prisma.user.findUnique({
-        where: { id: followData.followedById }
-      });
-    }
-  });
-  return user;
-}
-
-async function storageUser(parent, args, context) {
-  const storageIds = await context.prisma.storageUser.findMany({
-    where: { userId: parent.id }
-  });
-  console.log(storageIds);
-  const storage = await storageIds.map(async storageId => {
-    return context.prisma.storage.findUnique({
-      where: { id: storageId.storageId }
-    });
-  });
-  return storage;
-}
-
-function specificIngredient(parent, args, context) {
-  return context.prisma.User.findUnique({
-    where: { id: parent.id }
-  }).ingredient();
-}
-
-// async function recipeBook(parent, args, context) {
-//   return await context.prisma.User.findUnique({
-//     where: { id: parent.id }
-//   }).recipeBook();
-// }
-
-async function recipeBook(parent, args, context) {
-  const recipeBookIds = await context.prisma.recipeBookUser.findMany({
-    where: { userId: parent.id }
-  });
-
-  const recipeBooks = await recipeBookIds.map(async recipeBookId => {
-    const recipeBook = await context.prisma.recipeBook.findUnique({
-      where: { id: recipeBookId.recipeBookId }
-    });
-    const buildIds = await context.prisma.recipeBookBuild.findMany({
-      where: { recipeBookId: recipeBook.id }
-    });
-
-    const builds = await completeBuilds(buildIds, context);
-    return {
-      ...recipeBook,
-      completeBuild: builds
-    };
-  });
-  return recipeBooks;
-}
-
-async function recipeBookUser(parent, args, context) {
-  return await context.prisma.recipeBookUser.findMany({
-    where: { userId: parent.id }
-  });
-}
-
 async function completeBuild(parent, args, context) {
   const userBuildIds = await context.prisma.buildUser.findMany({
     where: { userId: parent.id }
@@ -195,6 +78,116 @@ async function buildUser(parent, args, context) {
   return await context.prisma.User.findUnique({
     where: { id: parent.id }
   }).buildUser();
+}
+
+function storage(parent, args, context) {
+  return context.prisma.User.findUnique({
+    where: { id: parent.id }
+  }).storage();
+}
+async function storageUser(parent, args, context) {
+  const storageIds = await context.prisma.storageUser.findMany({
+    where: { userId: parent.id }
+  });
+  console.log(storageIds);
+  const storage = await storageIds.map(async storageId => {
+    return context.prisma.storage.findUnique({
+      where: { id: storageId.storageId }
+    });
+  });
+  return storage;
+}
+
+function crew(parent, args, context) {
+  return context.prisma.User.findUnique({
+    where: { id: parent.id }
+  }).crew();
+}
+function crewUser(parent, args, context) {
+  return context.prisma.crewUser.findMany({
+    where: { userId: parent.id }
+  });
+}
+function inventory(parent, args, context) {
+  const inv = context.prisma.User.findUnique({
+    where: { id: parent.id }
+  });
+  console.log(inv);
+  return inv.inventory();
+}
+function inventoryUser(parent, args, context) {
+  return context.prisma.inventoryUser.findMany({
+    where: { userId: parent.id }
+  });
+}
+
+function specificIngredient(parent, args, context) {
+  return context.prisma.User.findUnique({
+    where: { id: parent.id }
+  }).ingredient();
+}
+
+function ingredientUser(parent, args, context) {
+  return context.prisma.ingredientUser.findMany({
+    where: { userId: parent.id }
+  });
+}
+
+async function following(parent, args, context) {
+  const followDatum = await context.prisma.follow.findMany({
+    where: { followedById: parent.id }
+  });
+
+  const user = await followDatum.map(async followData => {
+    if (followData.followingId) {
+      return await context.prisma.user.findUnique({
+        where: { id: followData.followingId }
+      });
+    }
+  });
+  return user;
+}
+async function followedBy(parent, args, context) {
+  const followDatum = await context.prisma.follow.findMany({
+    where: { followingId: parent.id }
+  });
+
+  const user = await followDatum.map(async followData => {
+    if (followData.followedById) {
+      return await context.prisma.user.findUnique({
+        where: { id: followData.followedById }
+      });
+    }
+  });
+  return user;
+}
+
+async function recipeBook(parent, args, context) {
+  const recipeBookIds = await context.prisma.recipeBookUser.findMany({
+    where: { userId: parent.id }
+  });
+
+  const recipeBooks = await recipeBookIds.map(async recipeBookId => {
+    const recipeBook = await context.prisma.recipeBook.findUnique({
+      where: { id: recipeBookId.recipeBookId }
+    });
+    const buildIds = await context.prisma.recipeBookBuild.findMany({
+      where: { recipeBookId: recipeBook.id }
+    });
+
+    const builds = await completeBuilds(buildIds, context);
+    return {
+      ...recipeBook,
+      completeBuild: builds
+    };
+  });
+  return recipeBooks;
+}
+
+async function recipeBookUser(parent, args, context) {
+  return await context.prisma.recipeBookUser.findMany({
+    where: { userId: parent.id }
+  });
 }
 
 export default {

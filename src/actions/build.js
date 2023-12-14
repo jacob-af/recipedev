@@ -1,5 +1,3 @@
-import { resolvePermission } from "./utils.js";
-
 async function createBuild(
   context,
   recipeId,
@@ -58,58 +56,62 @@ async function editBuildPermission(
   permission,
   userPermission
 ) {
-  if (!resolvePermission(userPermission, permission)) {
-    return {
-      message: "You don't have permission to add to this Recipe Book",
-      code: "Failure"
-    };
-  }
-  const buildPermission = await context.prisma.buildUser.upsert({
-    where: {
-      userId_buildId: { userId, buildId }
-    },
-    update: {
-      permission: permission
-    },
-    create: {
-      userId,
-      buildId,
-      permission
-    }
-  });
-  console.log(buildPermission);
-  return buildPermission;
-}
-
-async function deleteBuildPermission(
-  context,
-  buildId,
-  userId,
-  permission,
-  userPermission
-) {
-  if (
-    !resolvePermission(userPermission, "Manager") ||
-    !resolvePermission(userPermission, permission)
-  ) {
-    return {
-      message: "You don't have permission to remove users from this build!",
-      code: "Failure"
-    };
-  }
-  const deletePermission = await context.prisma.buildUser.delete({
-    where: {
-      userId_buildId: {
+  try {
+    const buildUser = await context.prisma.buildUser.upsert({
+      where: {
+        userId_buildId: { userId, buildId }
+      },
+      update: {
+        permission: permission
+      },
+      create: {
         userId,
-        buildId
+        buildId,
+        permission
       }
-    }
-  });
-  console.log(deletePermission);
-  return {
-    message: "user no longer has access to this build!",
-    code: "Success"
-  };
+    });
+    console.log(buildUser);
+    return {
+      buildUser,
+      status: { code: "Success", message: "Build is Shared" }
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      status: {
+        code: err.code,
+        message: err.message
+      }
+    };
+  }
 }
 
+async function deleteBuildPermission(context, buildId, userId, permission) {
+  try {
+    const buildUser = await context.prisma.buildUser.delete({
+      where: {
+        userId_buildId: {
+          userId,
+          buildId
+        }
+      }
+    });
+    console.log(buildUser);
+    return {
+      buildUser,
+      status: {
+        message: "user no longer has access to this build!",
+        code: "Success"
+      }
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      status: {
+        code: err.code,
+        message: err.message
+      }
+    };
+  }
+}
 export { createBuild, editBuildPermission, deleteBuildPermission };

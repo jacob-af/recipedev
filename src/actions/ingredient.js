@@ -1,5 +1,3 @@
-import { resolvePermission } from "./utils.js";
-
 async function createSpecificIngredient(
   context,
   name,
@@ -10,10 +8,8 @@ async function createSpecificIngredient(
   source,
   genericIngredientId
 ) {
-  let ingredient = {};
-  let ingredientUser = {};
   try {
-    ingredient = await context.prisma.specificIngredient.create({
+    const ingredient = await context.prisma.specificIngredient.create({
       data: {
         name,
         description,
@@ -25,13 +21,21 @@ async function createSpecificIngredient(
         createdById: context.userId
       }
     });
-    ingredientUser = await createIngredientPermission(
+    const ingredientUser = await createIngredientPermission(
       context,
       context.userId,
       ingredient.id,
       "Owner",
       "Owner"
     );
+    return {
+      ingredient,
+      permission: ingredientUser.ingredientUser.permission,
+      status: {
+        message: "Ingredient successfully Created",
+        code: "Success"
+      }
+    };
   } catch (err) {
     return {
       status: {
@@ -40,15 +44,6 @@ async function createSpecificIngredient(
       }
     };
   }
-
-  return {
-    ingredient,
-    permission: ingredientUser.ingredientUser.permission,
-    status: {
-      message: "Ingredient successfully Created",
-      code: "Success"
-    }
-  };
 }
 
 async function updateSpecificIngredient(
@@ -62,9 +57,8 @@ async function updateSpecificIngredient(
   source,
   genericIngredientId
 ) {
-  let ingredient = {};
   try {
-    ingredient = await context.prisma.specificIngredient.update({
+    const ingredient = await context.prisma.specificIngredient.update({
       where: {
         id: id
       },
@@ -78,6 +72,14 @@ async function updateSpecificIngredient(
         genericIngredientId
       }
     });
+
+    return {
+      ingredient,
+      status: {
+        message: "It works!",
+        code: "Success"
+      }
+    };
   } catch {
     return {
       status: {
@@ -86,22 +88,20 @@ async function updateSpecificIngredient(
       }
     };
   }
-
-  return {
-    ingredient,
-    status: {
-      message: "It works!",
-      code: "Success"
-    }
-  };
 }
 
 async function deleteSpecificIngredient(context, ingredientId) {
-  let ingredient = {};
   try {
-    ingredient = await context.prisma.specificIngredient.delete({
+    const ingredient = await context.prisma.specificIngredient.delete({
       where: { id: ingredientId }
     });
+    return {
+      ingredient,
+      status: {
+        message: "It works!",
+        code: "Success"
+      }
+    };
   } catch (err) {
     console.log(err);
     return {
@@ -111,13 +111,6 @@ async function deleteSpecificIngredient(context, ingredientId) {
       }
     };
   }
-  return {
-    ingredient,
-    status: {
-      message: "It works!",
-      code: "Success"
-    }
-  };
 }
 
 async function createIngredientPermission(
@@ -126,9 +119,8 @@ async function createIngredientPermission(
   ingredientId,
   permission
 ) {
-  let ingredientUser = {};
   try {
-    ingredientUser = await context.prisma.ingredientUser.upsert({
+    const ingredientUser = await context.prisma.ingredientUser.upsert({
       where: {
         ingredientId_userId: { userId, ingredientId }
       },
@@ -141,6 +133,13 @@ async function createIngredientPermission(
         permission
       }
     });
+    return {
+      ingredientUser,
+      status: {
+        message: "Ingredient has been shared",
+        code: "Success"
+      }
+    };
   } catch (err) {
     console.log(err);
     return {
@@ -150,13 +149,6 @@ async function createIngredientPermission(
       }
     };
   }
-  return {
-    ingredientUser,
-    status: {
-      message: "Ingredient has been shared",
-      code: "Success"
-    }
-  };
 }
 
 async function deleteSpecificIngredientPermission(

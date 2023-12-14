@@ -13,11 +13,25 @@ const build = gql`
     notes: String
     glassware: String
     ice: String
+    version: Int
     touch: [Touch]
-    archivedTouch: [ArchivedTouch]
+    archivedBuild: [ArchivedBuild]
     completeTouch: [CompleteTouch]
     recipeBook: [RecipeBook]
     buildUser: [BuildUser]
+  }
+  type ArchivedBuild {
+    id: ID!
+    buildId: ID!
+    buildName: String!
+    createdAt: DateTimeResolver
+    createdBy: User
+    recipe: Recipe
+    instructions: String
+    notes: String
+    glassware: String
+    ice: String
+    archivedTouch: [ArchivedTouch]
   }
 
   type BuildUser {
@@ -58,6 +72,13 @@ const build = gql`
     status: StatusMessage
   }
 
+  type ArchiveResponse {
+    build: Build
+    archivedBuild: ArchivedBuild
+    permission: Permission
+    status: StatusMessage
+  }
+
   type BuildPermissionResponse {
     buildUser: BuildUser
     status: StatusMessage
@@ -73,7 +94,8 @@ const build = gql`
       touchArray: [TouchInput]
     ): BuildResponse
 
-    updateBuild(
+    editBuild(
+      permission: Permission
       buildId: String
       recipeId: String
       buildName: String
@@ -81,9 +103,9 @@ const build = gql`
       glassware: String
       ice: String
       touchArray: [TouchInput]
-    ): BuildResponse
+    ): ArchiveResponse
 
-    deleteBuild(buildId: String, permission: Permission): BuildResponse
+    removeBuild(buildId: String, permission: Permission): BuildResponse
 
     changeBuildPermission(
       userId: String

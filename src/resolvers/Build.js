@@ -19,7 +19,6 @@ async function completeTouch(parent, args, context) {
   const basicTouches = await context.prisma.touch.findMany({
     where: { buildId: parent.id }
   });
-  console.log(basicTouches);
   const completeTouches = await basicTouches.map(async basicTouch => {
     const genericIngredient =
       await context.prisma.genericIngredientId.findUnique({

@@ -46,6 +46,7 @@ model User {
   buildUser            BuildUser[]
   build                Build[]
   buildEditedBy        Build[]                @relation("buildEditedById")
+  archivedBuild        ArchivedBuild[]
   CrewUser             CrewUser[]
   crew                 Crew[]
   crewEditedBy         Crew[]                 @relation("crewEditedById")
@@ -118,10 +119,29 @@ model Build {
   notes           String?
   glassware       String?           @db.VarChar()
   ice             String?           @db.VarChar(100)
+  version         Int               @default(0)
   touch           Touch[]
-  archivedTouch   ArchivedTouch[]
+  archivedBuild   ArchivedBuild[]
   RecipeBookBuild RecipeBookBuild[]
   buildUser       BuildUser[]
+}
+
+model ArchivedBuild {
+  id            String          @id @default(uuid())
+  buildName     String          @default("")
+  createdAt     DateTime        @default(now())
+  createdById   String?
+  createdBy     User?           @relation(fields: [createdById], references: [id])
+  build         Build           @relation(fields: [buildId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  buildId       String
+  recipe        Recipe?         @relation(fields: [recipeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  recipeId      String?
+  instructions  String?
+  notes         String?
+  glassware     String?         @db.VarChar()
+  ice           String?         @db.VarChar(100)
+  version       Int
+  archivedTouch ArchivedTouch[]
 }
 
 model BuildUser {
@@ -135,17 +155,18 @@ model BuildUser {
 }
 
 model Recipe {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  editedAt    DateTime @default(now())
-  name        String   @db.VarChar(255)
-  origin      String?  @db.VarChar(255)
-  history     String?
-  createdBy   User?    @relation(fields: [createdById], references: [id])
-  createdById String?
-  editedBy    User?    @relation("recipeEditedById", fields: [editedById], references: [id])
-  editedById  String?
-  build       Build[]
+  id            String          @id @default(uuid())
+  createdAt     DateTime        @default(now())
+  editedAt      DateTime        @default(now())
+  name          String          @db.VarChar(255)
+  origin        String?         @db.VarChar(255)
+  history       String?
+  createdBy     User?           @relation(fields: [createdById], references: [id])
+  createdById   String?
+  editedBy      User?           @relation("recipeEditedById", fields: [editedById], references: [id])
+  editedById    String?
+  build         Build[]
+  archivedBuild ArchivedBuild[]
 }
 
 model RecipeBookBuild {
@@ -173,8 +194,8 @@ model Touch {
 
 model ArchivedTouch {
   id                   String              @id @default(uuid())
-  build                Build               @relation(fields: [buildId], references: [id], onDelete: Cascade)
-  buildId              String
+  archivedBuild        ArchivedBuild       @relation(fields: [archivedBuildId], references: [id], onDelete: Cascade)
+  archivedBuildId      String
   order                Int?
   amount               Float?              @db.Real
   unit                 String?             @db.VarChar(50)

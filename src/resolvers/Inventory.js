@@ -8,8 +8,8 @@ function createdBy(parent, args, context) {
 
 async function inventoryStorage(parent, args, context) {
   console.log(parent);
-  const storageIds = await context.prisma.insventoryStorage.findMany({
-    where: { inventoryId: parent.inventoryId }
+  const storageIds = await context.prisma.inventoryStorage.findMany({
+    where: { inventoryId: parent.id }
   });
   console.log(storageIds);
   const storage = await storageIds.map(async storageId => {

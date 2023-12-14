@@ -18,19 +18,23 @@ const inventory = gql`
     permission: Permission
   }
 
-  type InventoryStorage {
-    inventory: Inventory
-    storage: Storage
-  }
-
   type InventoryReturn {
     status: StatusMessage
     inventory: Inventory
     permission: Permission
   }
+  type InventoryStorage {
+    inventory: Inventory
+    storage: Storage
+  }
 
   type InventoryPermissionReturn {
     inventoryUser: InventoryUser
+    status: StatusMessage
+  }
+
+  type InventoryStorageReturn {
+    inventoryStorage: InventoryStorage
     status: StatusMessage
   }
 
@@ -47,21 +51,20 @@ const inventory = gql`
     trashInventory(
       inventoryId: String!
       permission: Permission!
-      userPermission: Permission!
-    ): StatusMessage
+    ): InventoryReturn
 
     addStorageToInventory(
       inventoryId: String!
       storageId: String!
       storagePermission: Permission!
       inventoryPermission: Permission!
-    ): StatusMessage
+    ): InventoryStorageReturn
 
     removeStorageFromInventory(
       inventoryId: String!
       storageId: String!
       permission: Permission
-    ): StatusMessage
+    ): InventoryStorageReturn
 
     changeInventoryPermission(
       userId: String!
@@ -74,7 +77,7 @@ const inventory = gql`
       userId: String!
       inventoryId: String!
       permission: Permission
-    ): StatusMessage
+    ): InventoryPermissionReturn
   }
 `;
 

@@ -8,6 +8,7 @@ import specificIngredient from "./specificIngredient.js";
 import user from "./user.js";
 import build from "./build.js";
 import touch from "./touch.js";
+import storage from "./storage.js";
 
 export default {
   ...crew,
@@ -18,5 +19,6 @@ export default {
   ...specificIngredient,
   ...user,
   ...build,
-  ...touch
+  ...touch,
+  ...storage
 };

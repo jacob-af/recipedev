@@ -30,7 +30,7 @@ async function editCrew(parent, args, context, info) {
     return {
       status: {
         code: "Failure",
-        message: ""
+        message: "Leave the crew alone"
       }
     };
   }

@@ -7,6 +7,7 @@ import {
   createPermissionOnInventory,
   deleteInventoryPermission
 } from "../actions/inventory.js";
+import { resolvePermission } from "../actions/utils.js";
 
 async function newInventory(parent, args, context, info) {
   const { userId } = context;
@@ -26,64 +27,100 @@ async function newInventory(parent, args, context, info) {
 }
 
 async function editInventory(parent, args, context, info) {
-  const { inventory, permission, status } = await updateInventory(
+  if (!resolvePermission(args.permission, "Manager")) {
+    return {
+      status: {
+        code: "Failure",
+        message: "You dont have permission to change this"
+      }
+    };
+  }
+  const { inventory, status } = await updateInventory(
     context,
     args.inventoryId,
     args.name,
-    args.description,
-    args.permission
+    args.description
   );
 
-  return {
-    status,
-    permission,
-    inventory
-  };
+  return { inventory, status, permission: args.permission };
 }
 
 async function trashInventory(parent, args, context, info) {
-  const statusMessage = await deleteInventory(
+  if (!resolvePermission(args.permission, "Owner")) {
+    return {
+      status: {
+        code: "Failure",
+        message: "You dont have permission to change this"
+      }
+    };
+  }
+  const { inventory, status } = await deleteInventory(
     context,
-    args.inventoryId,
-    args.permission
+    args.inventoryId
   );
-  return statusMessage;
+  return { inventory, status, permission: args.permission };
 }
 
 async function addStorageToInventory(parent, args, context, info) {
+  if (
+    !resolvePermission(args.inventoryPermission, "Manager") ||
+    !resolvePermission(args.storagePermission, "Manager")
+  ) {
+    return {
+      status: {
+        code: "Failure",
+        message: "You dont have permission to change this"
+      }
+    };
+  }
   return await createStorageOnInventory(
     context,
     args.storageId,
-    args.inventoryId,
-    args.inventoryPermission,
-    args.storagePermission
+    args.inventoryId
   );
 }
 
 async function removeStorageFromInventory(parent, args, context, info) {
+  if (!resolvePermission(args.permission, "Manager")) {
+    return {
+      status: {
+        code: "Failure",
+        message: "You dont have permission to change this"
+      }
+    };
+  }
   return await deleteStorageFromInventory(
     context,
     args.storageId,
+    args.inventoryId
+  );
+}
+
+async function changeInventoryPermission(parent, args, context, info) {
+  if (!resolvePermission(args.userPermission, args.permission)) {
+    return {
+      status: {
+        code: "Failure",
+        message: "You dont have permission to change this"
+      }
+    };
+  }
+  return await createPermissionOnInventory(
+    context,
+    args.userId,
     args.inventoryId,
     args.permission
   );
 }
 
-async function changeInventoryPermission(parent, args, context, info) {
-  const inventory = await createPermissionOnInventory(
-    context,
-    args.userId,
-    args.inventoryId,
-    args.permission,
-    args.userPermission
-  );
-  return {
-    status: { message: "barf", code: "success" },
-    inventoryId: inventory.inventoryId
-  };
-}
-
 async function removeInventoryPermission(parent, args, context, info) {
+  if (!resolvePermission(args.permission, "Manager")) {
+    return {
+      message:
+        "You don't have permission to remove recipes from this inventory!",
+      code: "Failure"
+    };
+  }
   const response = await deleteInventoryPermission(
     context,
     args.userId,
@@ -102,35 +139,3 @@ export default {
   changeInventoryPermission,
   removeInventoryPermission
 };
-
-// async function createInventory(parent, args, context, info) {
-//   const { userId } = context;
-//   const inventory = await context.prisma.inventory.create({
-//     data: {
-//       name: args.name,
-//       description: args.description,
-//       createdById: userId,
-//       editedById: userId
-//     }
-//   });
-
-//   return { status: `${args.name} Created`, inventory };
-// }
-
-// async function createStorage(parent, args, context, info) {
-//   const { userId } = context;
-//   const storage = await context.prisma.storage.create({
-//     data: {
-//       name: args.name,
-//       description: args.description,
-//       createdById: userId,
-//       editedById: userId
-//     }
-//   });
-//   return { status: `${args.name} Created`, storage };
-// }
-
-// export default {
-//   createInventory,
-//   createStorage
-// };

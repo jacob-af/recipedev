@@ -4,6 +4,7 @@ const storage = gql`
   type Storage {
     id: ID!
     name: String!
+    desciprtion: String
     createdAt: DateTimeResolver
     editedAt: DateTimeResolver
     createdBy: User
@@ -22,11 +23,7 @@ const storage = gql`
   type StorageReturn {
     status: StatusMessage
     storage: Storage
-  }
-
-  type StorageShareReturn {
-    storageUser: StorageUser
-    status: StatusMessage
+    permission: Permission
   }
 
   type IngredientStorage {
@@ -34,8 +31,53 @@ const storage = gql`
     storage: Storage
   }
 
+  type StoragePermissionReturn {
+    storageUser: StorageUser
+    status: StatusMessage
+  }
+
+  type StorageIngredientReturn {
+    ingredientStorage: IngredientStorage
+    status: StatusMessage
+  }
+
   type Mutation {
-    createStorage(name: String!, description: String): StorageReturn
+    newStorage(name: String!, description: String): StorageReturn
+
+    editStorage(
+      storageId: String!
+      name: String!
+      description: String
+      permission: Permission!
+    ): StorageReturn
+
+    trashStorage(storageId: String!, permission: Permission!): StorageReturn
+
+    addIngredientToStorage(
+      storageId: String!
+      ingredientId: String!
+      ingredientPermission: Permission!
+      storagePermission: Permission!
+    ): StorageIngredientReturn
+
+    removeIngredientFromStorage(
+      storageId: String!
+      ingredientId: String!
+      permission: Permission
+    ): StorageIngredientReturn
+
+    changeStoragePermission(
+      userId: String!
+      storageId: String!
+      permission: Permission
+      userPermission: Permission
+    ): StoragePermissionReturn
+
+    removeStoragePermission(
+      userId: String!
+      storageId: String!
+      permission: Permission
+    ): StoragePermissionReturn
   }
 `;
 

@@ -254,8 +254,8 @@ model Inventory {
 model InventoryUser {
   userId      String
   inventoryId String
-  user        User      @relation(fields: [userId], references: [id])
-  inventory   Inventory @relation(fields: [inventoryId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  inventory   Inventory @relation(fields: [inventoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   permission  String
 
   @@id([userId, inventoryId])
@@ -264,6 +264,7 @@ model InventoryUser {
 model Storage {
   id                String              @id @default(uuid())
   name              String              @db.VarChar(255)
+  description       String              @default("") @db.VarChar(255)
   createdAt         DateTime            @default(now())
   editedAt          DateTime            @default(now())
   createdById       String
@@ -278,8 +279,8 @@ model Storage {
 model InventoryStorage {
   inventoryId String
   storageId   String
-  storage     Storage   @relation(fields: [storageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  inventory   Inventory @relation(fields: [inventoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  storage     Storage   @relation(fields: [storageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  inventory   Inventory @relation(fields: [inventoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([inventoryId, storageId])
 }
@@ -296,9 +297,9 @@ model IngredientStorage {
 
 model StorageUser {
   userId     String
-  user       User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   storageId  String
-  Storage    Storage @relation(fields: [storageId], references: [id])
+  Storage    Storage @relation(fields: [storageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   permission String
 
   @@id([userId, storageId])

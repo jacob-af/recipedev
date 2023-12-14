@@ -38,6 +38,11 @@ function crewUser(parent, args, context) {
     where: { userId: parent.id }
   });
 }
+function inventoryUser(parent, args, context) {
+  return context.prisma.inventoryUser.findMany({
+    where: { userId: parent.id }
+  });
+}
 
 async function following(parent, args, context) {
   const followDatum = await context.prisma.follow.findMany({
@@ -203,6 +208,7 @@ export default {
   completeBuild,
   ingredientUser,
   inventory,
+  inventoryUser,
   crew,
   crewUser,
   storage,

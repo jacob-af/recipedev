@@ -1,42 +1,45 @@
 import { resolvePermission } from "./utils.js";
 
 async function createInventory(context, name, description, userId) {
-  const inventory = await context.prisma.inventory.create({
-    data: {
-      name,
-      description,
-      createdById: userId,
-      editedById: userId
-    }
-  });
+  try {
+    const inventory = await context.prisma.inventory.create({
+      data: {
+        name,
+        description,
+        createdById: userId,
+        editedById: userId
+      }
+    });
 
-  const inventoryUser = await createPermissionOnInventory(
-    context,
-    userId,
-    inventory.id,
-    "Owner",
-    "Owner"
-  );
+    const inventoryUser = await createPermissionOnInventory(
+      context,
+      userId,
+      inventory.id,
+      "Owner"
+    );
 
-  return {
-    inventory,
-    permission: inventoryUser.permission,
-    status: {
-      message: "It works!",
-      code: "Success"
-    }
-  };
+    return {
+      inventory,
+      permission: inventoryUser.inventoryUser.permission,
+      status: {
+        message: "It works!",
+        code: "Success"
+      }
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      status: {
+        code: err.code,
+        message: err.message
+      }
+    };
+  }
 }
 
-async function updateInventory(
-  context,
-  inventoryId,
-  name,
-  description,
-  userPermission
-) {
+async function updateInventory(context, inventoryId, name, description) {
   console.log(context.userId);
-  if (resolvePermission(userPermission, "Manager")) {
+  try {
     const inventory = await context.prisma.inventory.update({
       where: {
         id: inventoryId
@@ -50,74 +53,72 @@ async function updateInventory(
 
     return {
       inventory,
-      permission: userPermission,
       status: {
         message: "It works!",
         code: "Success"
       }
     };
+  } catch (err) {
+    console.log(err);
+    return {
+      status: {
+        code: err.code,
+        message: err.message
+      }
+    };
   }
 }
 
-async function deleteInventory(context, inventoryId, permission) {
-  if (resolvePermission(permission, "Owner")) {
+async function deleteInventory(context, inventoryId) {
+  try {
     const inventory = await context.prisma.inventory.delete({
       where: { id: inventoryId }
     });
 
     return {
-      message: "It works!",
-      code: "Success"
+      inventory,
+      status: { message: "It works!", code: "Success" }
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      status: {
+        code: err.code,
+        message: err.message
+      }
     };
   }
 }
 
-async function createStorageOnInventory(
-  context,
-  storageId,
-  inventoryId,
-  inventoryPermission,
-  storagePermission
-) {
-  if (!resolvePermission(inventoryPermission, "Manager")) {
-    return {
-      message: "You don't have permission to add to this Inventory",
-      code: "Failure"
-    };
-  }
-  if (!resolvePermission(storagePermission, "Manager")) {
-    return {
-      message: "You don't have permission to add this storage to an inventory",
-      code: "Failure"
-    };
-  }
-  const inventoryOnStorage = await context.prisma.inventoryStorage.create({
-    data: {
-      storageId,
-      inventoryId
-    }
-  });
+async function createStorageOnInventory(context, storageId, inventoryId) {
+  try {
+    const inventoryStorage = await context.prisma.inventoryStorage.create({
+      data: {
+        storageId,
+        inventoryId
+      }
+    });
 
-  return {
-    message: "You have added this storage to the recipe inventory!",
-    code: "Success"
-  };
+    return {
+      inventoryStorage,
+      status: {
+        message: "You have added this storage to the recipe inventory!",
+        code: "Success"
+      }
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      status: {
+        code: err.code,
+        message: err.message
+      }
+    };
+  }
 }
 
-async function deleteStorageFromInventory(
-  context,
-  storageId,
-  inventoryId,
-  permission
-) {
-  if (!resolvePermission(permission, "Manager")) {
-    return {
-      message:
-        "You don't have permission to remove anything from this inventory",
-      code: "Failure"
-    };
-  }
-  const deleteStorage = await context.prisma.inventoryStorage.delete({
+async function deleteStorageFromInventory(context, storageId, inventoryId) {
+  const invenetoryStorage = await context.prisma.inventoryStorage.delete({
     where: {
       inventoryId_storageId: {
         storageId,
@@ -126,8 +127,11 @@ async function deleteStorageFromInventory(
     }
   });
   return {
-    message: "You have removed this storage from the inventory!",
-    code: "Success"
+    invenetoryStorage,
+    status: {
+      message: "You have removed this storage from the inventory!",
+      code: "Success"
+    }
   };
 }
 
@@ -135,46 +139,33 @@ async function createPermissionOnInventory(
   context,
   userId,
   inventoryId,
-  permission,
-  userPermission
-) {
-  if (resolvePermission(userPermission, permission)) {
-    const inventoryUser = await context.prisma.inventoryUser.upsert({
-      where: {
-        userId_inventoryId: {
-          userId,
-          inventoryId
-        }
-      },
-      update: {
-        permission
-      },
-      create: {
-        userId,
-        inventoryId,
-        permission
-      }
-    });
-
-    return inventoryUser;
-  }
-}
-
-async function deleteInventoryPermission(
-  context,
-  userId,
-  inventoryId,
   permission
 ) {
-  console.log(resolvePermission(permission, "Manager"));
-  if (!resolvePermission(permission, "Manager")) {
-    return {
-      message:
-        "You don't have permission to remove recipes from this inventory!",
-      code: "Failure"
-    };
-  }
-  const deletePermission = await context.prisma.inventoryUser.delete({
+  const inventoryUser = await context.prisma.inventoryUser.upsert({
+    where: {
+      userId_inventoryId: {
+        userId,
+        inventoryId
+      }
+    },
+    update: {
+      permission
+    },
+    create: {
+      userId,
+      inventoryId,
+      permission
+    }
+  });
+
+  return {
+    inventoryUser,
+    status: { code: "Success", message: "Permission CHanged" }
+  };
+}
+
+async function deleteInventoryPermission(context, userId, inventoryId) {
+  const inventoryUser = await context.prisma.inventoryUser.delete({
     where: {
       userId_inventoryId: {
         userId,
@@ -182,10 +173,12 @@ async function deleteInventoryPermission(
       }
     }
   });
-  console.log(deletePermission);
   return {
-    message: "You have removed permission for this user!",
-    code: "Success"
+    inventoryUser,
+    status: {
+      message: "You have removed permission for this user!",
+      code: "Success"
+    }
   };
 }
 

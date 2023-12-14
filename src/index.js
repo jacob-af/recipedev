@@ -7,6 +7,9 @@ import Mutation from "./mutations/index.js";
 import User from "./resolvers/User.js";
 import Recipe from "./resolvers/Recipe.js";
 import Inventory from "./resolvers/Inventory.js";
+import InventoryUser from "./resolvers/InventoryUser.js";
+import InventoryStorage from "./resolvers/InventoryStorage.js";
+import IngredientStorage from "./resolvers/IngredientStorage.js";
 import IngredientUser from "./resolvers/IngredientUser.js";
 import RecipeBook from "./resolvers/RecipeBook.js";
 import RecipeBookUser from "./resolvers/RecipeBookUser.js";
@@ -14,6 +17,7 @@ import GenericIngredient from "./resolvers/GenericIngredient.js";
 import Build from "./resolvers/Build.js";
 import Touch from "./resolvers/Touch.js";
 import CrewUser from "./resolvers/CrewUser.js";
+import StorageUser from "./resolvers/StorageUser.js";
 
 const resolvers = {
   Query,
@@ -24,10 +28,14 @@ const resolvers = {
   User,
   GenericIngredient,
   Inventory,
+  InventoryUser,
+  InventoryStorage,
   IngredientUser,
+  IngredientStorage,
   Touch,
   Build,
-  CrewUser
+  CrewUser,
+  StorageUser
 };
 
 const server = new ApolloServer({

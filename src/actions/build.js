@@ -10,33 +10,42 @@ async function createBuild(
   touchArray
 ) {
   const { userId } = context;
-
-  const build = await context.prisma.build.create({
-    data: {
-      recipeId,
-      buildName,
-      instructions,
-      glassware,
-      ice,
-      createdById: userId,
-      editedById: userId,
-      touch: {
-        create: touchArrayWithIndex(touchArray, 0)
+  try {
+    const build = await context.prisma.build.create({
+      data: {
+        recipeId,
+        buildName,
+        instructions,
+        glassware,
+        ice,
+        createdById: userId,
+        editedById: userId,
+        touch: {
+          create: touchArrayWithIndex(touchArray, 0)
+        }
       }
-    }
-  });
-  const {
-    buildUser: { permission }
-  } = await editBuildPermission(context, build.id, userId, "Owner");
-  console.log(permission);
-  return {
-    build,
-    permission,
-    status: {
-      code: "Success",
-      message: "update this message"
-    }
-  };
+    });
+    const {
+      buildUser: { permission }
+    } = await editBuildPermission(context, build.id, userId, "Owner");
+    console.log(permission);
+    return {
+      build,
+      permission,
+      status: {
+        code: "Success",
+        message: "update this message"
+      }
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      status: {
+        code: err.code,
+        message: err.message
+      }
+    };
+  }
 }
 
 async function updateBuild(
@@ -88,16 +97,26 @@ async function updateBuild(
 }
 
 async function deleteBuild(context, buildId) {
-  const build = await context.prisma.build.delete({
-    where: { id: buildId }
-  });
-  return {
-    build,
-    status: {
-      code: "Success",
-      message: "You have archived this build"
-    }
-  };
+  try {
+    const build = await context.prisma.build.delete({
+      where: { id: buildId }
+    });
+    return {
+      build,
+      status: {
+        code: "Success",
+        message: "You have archived this build"
+      }
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      status: {
+        code: err.code,
+        message: err.message
+      }
+    };
+  }
 }
 
 function touchArrayWithIndex(touchArray, version) {

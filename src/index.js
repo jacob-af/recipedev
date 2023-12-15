@@ -17,7 +17,13 @@ import GenericIngredient from "./resolvers/GenericIngredient.js";
 import Build from "./resolvers/Build.js";
 import BuildUser from "./resolvers/BuildUser.js";
 import Touch from "./resolvers/Touch.js";
+import Crew from "./resolvers/Crew.js";
 import CrewUser from "./resolvers/CrewUser.js";
+import CrewIngredient from "./resolvers/CrewIngredient.js";
+import CrewBuild from "./resolvers/CrewBuild.js";
+import CrewInventory from "./resolvers/CrewInventory.js";
+import CrewStorage from "./resolvers/CrewStorage.js";
+import CrewRecipeBook from "./resolvers/CrewRecipeBook.js";
 import StorageUser from "./resolvers/StorageUser.js";
 
 const resolvers = {
@@ -36,7 +42,13 @@ const resolvers = {
   Touch,
   Build,
   BuildUser,
+  Crew,
   CrewUser,
+  CrewIngredient,
+  CrewBuild,
+  CrewInventory,
+  CrewStorage,
+  CrewRecipeBook,
   StorageUser
 };
 

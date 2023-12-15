@@ -1,4 +1,5 @@
 import crew from "./crew.js";
+import crewAsset from "./crewAsset.js";
 
 import genericIngredient from "./genericIngredient.js";
 import inventory from "./inventory.js";
@@ -12,6 +13,7 @@ import storage from "./storage.js";
 
 export default {
   ...crew,
+  ...crewAsset,
   ...genericIngredient,
   ...inventory,
   ...recipe,

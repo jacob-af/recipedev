@@ -10,7 +10,11 @@ const crew = gql`
     createdBy: User
     editedBy: User
     build: [Build]
-    crewUser: [CrewUser]
+    User: [User]
+    inventory: [Inventory]
+    storage: [Storage]
+    ingredient: [SpecificIngredient]
+    recipeBook: [RecipeBook]
   }
 
   type CrewReturn {

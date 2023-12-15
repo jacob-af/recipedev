@@ -87,61 +87,6 @@ async function deleteCrew(context, crewId) {
   }
 }
 
-async function createBuildOnCrew(context, buildId, crewId) {
-  try {
-    const crewBuild = await context.prisma.crewBuild.create({
-      data: {
-        buildId,
-        crewId
-      }
-    });
-    console.log(crewBuild);
-    return {
-      crewBuild,
-      status: {
-        message: "You have added this build to the crew!",
-        code: "Success"
-      }
-    };
-  } catch (err) {
-    console.log(err);
-    return {
-      status: {
-        code: err.code,
-        message: err.message
-      }
-    };
-  }
-}
-
-async function deleteBuildFromCrew(context, buildId, crewId) {
-  try {
-    const crewBuild = await context.prisma.crewBuild.delete({
-      where: {
-        buildId_crewId: {
-          buildId,
-          crewId
-        }
-      }
-    });
-    return {
-      crewBuild,
-      status: {
-        message: "You have removed this build from the Crew!",
-        code: "Success"
-      }
-    };
-  } catch (err) {
-    console.log(err);
-    return {
-      status: {
-        code: err.code,
-        message: err.message
-      }
-    };
-  }
-}
-
 async function createPermissionOnCrew(context, userId, crewId, permission) {
   try {
     const crewUser = await context.prisma.crewUser.upsert({
@@ -210,8 +155,6 @@ export {
   createCrew,
   updateCrew,
   deleteCrew,
-  createBuildOnCrew,
-  deleteBuildFromCrew,
   createPermissionOnCrew,
   deleteCrewPermission
 };

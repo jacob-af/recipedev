@@ -364,9 +364,8 @@ model CrewInventory {
   inventoryId String
   inventory   Inventory @relation(fields: [inventoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  crewId     String
-  crew       Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  permission String
+  crewId String
+  crew   Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([inventoryId, crewId])
 }
@@ -375,9 +374,8 @@ model CrewStorage {
   storageId String
   storage   Storage @relation(fields: [storageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  crewId     String
-  crew       Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  permission String
+  crewId String
+  crew   Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([storageId, crewId])
 }
@@ -386,9 +384,8 @@ model CrewIngredient {
   ingredientId String
   ingredient   SpecificIngredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  crewId     String
-  crew       Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  permission String
+  crewId String
+  crew   Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([ingredientId, crewId])
 }
@@ -397,9 +394,8 @@ model CrewRecipeBook {
   recipeBookId String
   recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  crewId     String
-  crew       Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  permission String
+  crewId String
+  crew   Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([recipeBookId, crewId])
 }
@@ -408,9 +404,8 @@ model CrewBuild {
   buildId String
   build   Build  @relation(fields: [buildId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  crewId     String
-  crew       Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  permission String
+  crewId String
+  crew   Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([buildId, crewId])
 }

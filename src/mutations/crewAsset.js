@@ -1,67 +1,45 @@
 import {
-  createCrew,
-  updateCrew,
-  deleteCrew,
-  createPermissionOnCrew,
-  deleteCrewPermission
-} from "../actions/crew.js";
+  createInventoryOnCrew,
+  deleteInventoryFromCrew,
+  createStorageOnCrew,
+  deleteStorageFromCrew,
+  createIngredientOnCrew,
+  deleteIngredientFromCrew,
+  createRecipeBookOnCrew,
+  deleteRecipeBookFromCrew,
+  createBuildOnCrew,
+  deleteBuildFromCrew
+} from "../actions/crewAsset.js";
 import { resolvePermission } from "../actions/utils.js";
 
-async function newCrew(parent, args, context, info) {
-  const { userId } = context;
-  const { status, permission, crew } = await createCrew(
-    context,
-    args.name,
-    args.description,
-    userId
+async function addBuildToCrew(parent, args, context, info) {
+  console.log(
+    "ding",
+    resolvePermission(args.crewPermission, "Manager"),
+    resolvePermission(args.buildPermission, "Manager")
   );
-
-  return {
-    status,
-    permission,
-    crew
-  };
+  if (
+    !resolvePermission(args.crewPermission, "Manager") ||
+    !resolvePermission(args.buildPermission, "Manager")
+  ) {
+    return {
+      status: {
+        message: "You don't have permission to add to this Crew",
+        code: "Failure"
+      }
+    };
+  }
+  return await createBuildOnCrew(
+    context,
+    args.buildId,
+    args.crewId,
+    args.crewPermission,
+    args.buildPermission
+  );
 }
 
-async function editCrew(parent, args, context, info) {
+async function removeBuildFromCrew(parent, args, context, info) {
   if (!resolvePermission(args.permission, "Manager")) {
-    return {
-      status: {
-        code: "Failure",
-        message: "Leave the crew alone"
-      }
-    };
-  }
-  const { status, crew } = await updateCrew(
-    context,
-    args.crewId,
-    args.name,
-    args.description,
-    args.permission
-  );
-
-  return { status, permission: args.permission, crew };
-}
-
-async function trashCrew(parent, args, context, info) {
-  if (!resolvePermission(args.permission, "Owner")) {
-    return {
-      status: {
-        code: "Failure",
-        message: ""
-      }
-    };
-  }
-  const { crew, status } = await deleteCrew(
-    context,
-    args.crewId,
-    args.permission
-  );
-  return { crew, status, permission: args.permission };
-}
-
-async function changeCrewPermission(parent, args, context, info) {
-  if (!resolvePermission(args.userPermission, args.permission)) {
     return {
       status: {
         message: "You don't have permission to remove anything from this Crew",
@@ -69,36 +47,13 @@ async function changeCrewPermission(parent, args, context, info) {
       }
     };
   }
-  const crew = await createPermissionOnCrew(
-    context,
-    args.userId,
-    args.crewId,
-    args.permission
-  );
-  console.log(crew);
-  return crew;
-}
-
-async function removeCrewPermission(parent, args, context, info) {
-  if (!resolvePermission(args.permission, "Manager")) {
-    return {
-      message: "You don't have permission to remove users from this crew!",
-      code: "Failure"
-    };
-  }
-  const response = await deleteCrewPermission(
-    context,
-    args.userId,
-    args.crewId
-  );
-  console.log(response);
-  return response;
+  return await deleteBuildFromCrew(context, args.buildId, args.crewId);
 }
 
 async function addRecipeBookToCrew(parent, args, context, info) {
   if (
     !resolvePermission(args.crewPermission, "Manager") ||
-    !resolvedPermission(args.recipeBookPermission, "Manager")
+    !resolvePermission(args.recipeBookPermission, "Manager")
   ) {
     return {
       status: {
@@ -136,7 +91,7 @@ async function removeRecipeBookFromCrew(parent, args, context, info) {
 async function addIngredientToCrew(parent, args, context, info) {
   if (
     !resolvePermission(args.crewPermission, "Manager") ||
-    !resolvedPermission(args.ingredientPermission, "Manager")
+    !resolvePermission(args.ingredientPermission, "Manager")
   ) {
     return {
       status: {
@@ -174,7 +129,7 @@ async function removeIngredientFromCrew(parent, args, context, info) {
 async function addStorageToCrew(parent, args, context, info) {
   if (
     !resolvePermission(args.crewPermission, "Manager") ||
-    !resolvedPermission(args.storagePermission, "Manager")
+    !resolvePermission(args.storagePermission, "Manager")
   ) {
     return {
       status: {
@@ -212,7 +167,7 @@ async function removeStorageFromCrew(parent, args, context, info) {
 async function addInventoryToCrew(parent, args, context, info) {
   if (
     !resolvePermission(args.crewPermission, "Manager") ||
-    !resolvedPermission(args.inventoryPermission, "Manager")
+    !resolvePermission(args.inventoryPermission, "Manager")
   ) {
     return {
       status: {
@@ -248,9 +203,14 @@ async function removeInventoryFromCrew(parent, args, context, info) {
 }
 
 export default {
-  newCrew,
-  editCrew,
-  trashCrew,
-  changeCrewPermission,
-  removeCrewPermission
+  addInventoryToCrew,
+  removeInventoryFromCrew,
+  addStorageToCrew,
+  removeStorageFromCrew,
+  addIngredientToCrew,
+  removeIngredientFromCrew,
+  addRecipeBookToCrew,
+  removeRecipeBookFromCrew,
+  addBuildToCrew,
+  removeBuildFromCrew
 };

@@ -1,18 +1,15 @@
 function createdBy(parent, args, context) {
-  return context.prisma.recipeBook
-    .findUnique({
-      where: { id: parent.id }
-    })
-    .createdBy();
+  return context.prisma.user.findUnique({
+    where: { id: parent.createdById }
+  });
 }
 
-async function inventoryStorage(parent, args, context) {
-  console.log(parent);
+async function storage(parent, args, context) {
   const storageIds = await context.prisma.inventoryStorage.findMany({
     where: { inventoryId: parent.id }
   });
-  console.log(storageIds);
-  const storage = await storageIds.map(async storageId => {
+
+  const storage = await storageIds.map(storageId => {
     return context.prisma.storage.findUnique({
       where: { id: storageId.storageId }
     });
@@ -20,7 +17,21 @@ async function inventoryStorage(parent, args, context) {
   return storage;
 }
 
+async function ingredient(parent, args, context) {
+  const ingredientIds = await context.prisma.inventoryIngredient.findMany({
+    where: { inventoryId: parent.id }
+  });
+
+  const ingredient = await ingredientIds.map(ingredientId => {
+    return context.prisma.ingredient.findUnique({
+      where: { id: ingredientId.ingredientId }
+    });
+  });
+  return ingredient;
+}
+
 export default {
   createdBy,
-  inventoryStorage
+  storage,
+  ingredient
 };

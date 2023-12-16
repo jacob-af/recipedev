@@ -9,6 +9,7 @@ const storage = gql`
     editedAt: DateTimeResolver
     createdBy: User
     editedBy: User
+    permission: Permission
     inventoryStorage: [Storage]
     ingredientStorage: [IngredientStorage]
     storageUser: [StorageUser]

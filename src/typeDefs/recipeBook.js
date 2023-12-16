@@ -9,6 +9,7 @@ const recipeBook = gql`
     editedAt: DateTimeResolver
     createdBy: User
     editedBy: User
+    permission: Permission
     build: [Build]
     completeBuild: [CompleteBuild]
   }

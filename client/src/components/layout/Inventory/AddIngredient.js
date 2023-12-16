@@ -117,17 +117,6 @@ function AddIngredient(props) {
                   )}
                 />
               </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  multi
-                  required
-                  fullWidth
-                  id="description"
-                  label="Description"
-                  name="description"
-                />
-              </Grid>
               <Grid item xs={7}>
                 <TextField
                   required
@@ -149,7 +138,8 @@ function AddIngredient(props) {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  multi
+                  multiline
+                  minRows={3}
                   required
                   fullWidth
                   id="description"

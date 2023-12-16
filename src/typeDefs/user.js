@@ -33,7 +33,7 @@ const user = gql`
     crewEditedBy: [Crew]
 
     myIngredient: [Ingredient]
-    allIngredient: [IngredientUser]
+    allIngredient: [Ingredient]
     ingredientPreference: [IngredientPreference]
 
     allStorage: [Storage]

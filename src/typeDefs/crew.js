@@ -9,6 +9,7 @@ const crew = gql`
     editedAt: DateTimeResolver
     createdBy: User
     editedBy: User
+    permission: Permission
     build: [Build]
     User: [User]
     inventory: [Inventory]

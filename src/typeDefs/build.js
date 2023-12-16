@@ -14,6 +14,7 @@ const build = gql`
     glassware: String
     ice: String
     version: Int
+    permission: Permission
     touch: [Touch]
     archivedBuild: [ArchivedBuild]
     completeTouch: [CompleteTouch]

@@ -9,7 +9,9 @@ const inventory = gql`
     editedAt: DateTimeResolver
     createdBy: User
     editedBy: User
-    inventoryStorage: [Storage]
+    permission: Permission
+    ingredient: [Ingredient]
+    storage: [Storage]
   }
 
   type InventoryUser {

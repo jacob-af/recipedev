@@ -8,6 +8,7 @@ import {
 import { resolvePermission } from "../actions/utils.js";
 
 async function addIngredient(parent, args, context, info) {
+  console.log("ding");
   const { ingredient, permission, status } = await createIngredient(
     context,
     args.name,

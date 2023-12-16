@@ -19,7 +19,9 @@ function allRecipeBookUsers(parent, args, context) {
 }
 
 function allIngredientTypes(parent, args, context) {
-  return context.prisma.ingredientType.findMany({});
+  return context.prisma.ingredientType.findMany({
+    orderBy: { name: "asc" }
+  });
 }
 
 function allIngredients(parent, args, context) {

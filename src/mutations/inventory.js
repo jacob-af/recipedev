@@ -96,6 +96,41 @@ async function removeStorageFromInventory(parent, args, context, info) {
   );
 }
 
+async function addIngredientToInventory(parent, args, context, info) {
+  if (
+    !resolvePermission(args.inventoryPermission, "Manager") ||
+    !resolvePermission(args.ingredientPermission, "Manager")
+  ) {
+    return {
+      status: {
+        code: "Failure",
+        message: "You dont have permission to change this"
+      }
+    };
+  }
+  return await createIngredientOnInventory(
+    context,
+    args.ingredientId,
+    args.inventoryId
+  );
+}
+
+async function removeIngredientFromInventory(parent, args, context, info) {
+  if (!resolvePermission(args.permission, "Manager")) {
+    return {
+      status: {
+        code: "Failure",
+        message: "You dont have permission to change this"
+      }
+    };
+  }
+  return await deleteIngredientFromInventory(
+    context,
+    args.IngredientId,
+    args.inventoryId
+  );
+}
+
 async function changeInventoryPermission(parent, args, context, info) {
   if (!resolvePermission(args.userPermission, args.permission)) {
     return {

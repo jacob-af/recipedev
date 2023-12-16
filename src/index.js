@@ -13,6 +13,7 @@ import IngredientStorage from "./resolvers/IngredientStorage.js";
 import IngredientUser from "./resolvers/IngredientUser.js";
 import RecipeBook from "./resolvers/RecipeBook.js";
 import RecipeBookUser from "./resolvers/RecipeBookUser.js";
+import Ingredient from "./resolvers/Ingredient.js";
 import IngredientType from "./resolvers/IngredientType.js";
 import Build from "./resolvers/Build.js";
 import BuildUser from "./resolvers/BuildUser.js";
@@ -33,6 +34,7 @@ const resolvers = {
   RecipeBook,
   RecipeBookUser,
   User,
+  Ingredient,
   IngredientType,
   Inventory,
   InventoryUser,

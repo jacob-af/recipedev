@@ -25,9 +25,11 @@ const ingredient = gql`
     amount: Float
     unit: String
     source: String
+    permission: Permission
     touch: [Touch]
     ingredientType: IngredientType!
-    ingredientStorage: [IngredientStorage]
+    storage: [Storage]
+    inventory: [Inventory]
     ingredientPreference: [IngredientPreference]
   }
 
@@ -72,7 +74,6 @@ const ingredient = gql`
       price: Float
       source: String
       ingredientTypeId: String
-      createdBy: String
     ): IngredientResponse
 
     editIngredient(

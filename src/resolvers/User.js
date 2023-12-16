@@ -1,16 +1,16 @@
-function recipe(parent, args, context) {
+function myRecipe(parent, args, context) {
   return context.prisma.User.findUnique({
     where: { id: parent.id }
   }).recipe();
 }
 
-function build(parent, args, context) {
+function myBuild(parent, args, context) {
   return context.prisma.User.findUnique({
     where: { id: parent.id }
   }).build();
 }
 async function completeBuild(parent, args, context) {
-  const userBuildIds = await context.prisma.buildUser.findMany({
+  const userBuildIds = await context.prisma.allBuild.findMany({
     where: { userId: parent.id }
   });
 
@@ -44,48 +44,45 @@ async function completeTouch(parent, context) {
   });
 
   const completeTouches = await basicTouches.map(async basicTouch => {
-    const genericIngredient = await context.prisma.genericIngredient.findUnique(
-      {
-        where: { id: basicTouch.genericIngredientId }
-      }
-    );
-    if (basicTouch.specificIngredientId) {
-      const specificIngredient =
-        await context.prisma.specificIngredient.findUnique({
-          where: { id: basicTouch.specificIngredientId }
-        });
+    const ingredientType = await context.prisma.ingredientType.findUnique({
+      where: { id: basicTouch.ingredientTypeId }
+    });
+    if (basicTouch.ingredientId) {
+      const ingredient = await context.prisma.ingredient.findUnique({
+        where: { id: basicTouch.ingredientId }
+      });
 
       return {
         ...basicTouch,
-        genericIngredientName: genericIngredient.name,
-        genericIngredientDescription: genericIngredient.description,
-        specificIngredientName: specificIngredient.name,
-        specificIngredientDescription: specificIngredient.description,
-        cost: specificIngredient.amount / specificIngredient.price
+        ingredientTypeName: ingredientType.name,
+        ingredientTypeDescription: ingredientType.description,
+        ingredientName: ingredient.name,
+        ingredientDescription: ingredient.description,
+        cost: ingredient.amount / ingredient.price
       };
     }
 
     return {
       ...basicTouch,
-      genericIngredientName: genericIngredient.name,
-      genericIngredientDescription: genericIngredient.description
+      ingredientTypeName: ingredientType.name,
+      ingredientTypeDescription: ingredientType.description
     };
   });
   return completeTouches;
 }
 
-async function buildUser(parent, args, context) {
+async function allBuild(parent, args, context) {
   return await context.prisma.User.findUnique({
     where: { id: parent.id }
-  }).buildUser();
+  }).allBuild();
 }
 
-function storage(parent, args, context) {
+function myStorage(parent, args, context) {
   return context.prisma.User.findUnique({
     where: { id: parent.id }
   }).storage();
 }
-async function storageUser(parent, args, context) {
+async function allStorage(parent, args, context) {
   const storageIds = await context.prisma.storageUser.findMany({
     where: { userId: parent.id }
   });
@@ -98,36 +95,44 @@ async function storageUser(parent, args, context) {
   return storage;
 }
 
-function crew(parent, args, context) {
+async function allCrew(parent, args, context) {
+  const all = await context.prisma.crewUser.findMany({
+    where: { userId: parent.id }
+  });
+  return all.map(async each => {
+    return await context.prisma.crew.findUnique({
+      where: { id: each.crewId }
+    });
+  });
+}
+
+function myCrew(parent, args, context) {
   return context.prisma.User.findUnique({
     where: { id: parent.id }
   }).crew();
 }
-function crewUser(parent, args, context) {
-  return context.prisma.crewUser.findMany({
-    where: { userId: parent.id }
-  });
-}
-function inventory(parent, args, context) {
+
+function myInventory(parent, args, context) {
   const inv = context.prisma.User.findUnique({
     where: { id: parent.id }
   });
   console.log(inv);
   return inv.inventory();
 }
-function inventoryUser(parent, args, context) {
+
+function allInventory(parent, args, context) {
   return context.prisma.inventoryUser.findMany({
     where: { userId: parent.id }
   });
 }
 
-function specificIngredient(parent, args, context) {
+function myIngredient(parent, args, context) {
   return context.prisma.User.findUnique({
     where: { id: parent.id }
   }).ingredient();
 }
 
-function ingredientUser(parent, args, context) {
+function allIngredient(parent, args, context) {
   return context.prisma.ingredientUser.findMany({
     where: { userId: parent.id }
   });
@@ -162,7 +167,7 @@ async function followedBy(parent, args, context) {
   return user;
 }
 
-async function recipeBook(parent, args, context) {
+async function myRecipeBook(parent, args, context) {
   const recipeBookIds = await context.prisma.recipeBookUser.findMany({
     where: { userId: parent.id }
   });
@@ -184,7 +189,7 @@ async function recipeBook(parent, args, context) {
   return recipeBooks;
 }
 
-async function recipeBookUser(parent, args, context) {
+async function allRecipeBook(parent, args, context) {
   return await context.prisma.recipeBookUser.findMany({
     where: { userId: parent.id }
   });
@@ -193,18 +198,18 @@ async function recipeBookUser(parent, args, context) {
 export default {
   following,
   followedBy,
-  recipeBook,
-  recipeBookUser,
-  recipe,
-  build,
-  buildUser,
+  myRecipeBook,
+  allRecipeBook,
+  myRecipe,
+  myBuild,
+  allBuild,
   completeBuild,
-  ingredientUser,
-  inventory,
-  inventoryUser,
-  crew,
-  crewUser,
-  storage,
-  storageUser,
-  specificIngredient
+  allIngredient,
+  myInventory,
+  allInventory,
+  allCrew,
+  myCrew,
+  myStorage,
+  allStorage,
+  myIngredient
 };

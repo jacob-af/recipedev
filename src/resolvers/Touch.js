@@ -2,21 +2,21 @@ function build(parent, args, context) {
   return context.prisma.touch.findUnique({ where: { id: parent.id } }).build();
 }
 
-function genericIngredient(parent, args, context) {
+function ingredientType(parent, args, context) {
   return context.prisma.touch
     .findUnique({ where: { id: parent.id } })
-    .genericIngredient();
+    .ingredientType();
 }
 
-function specificIngredient(parent, args, context) {
+function ingredient(parent, args, context) {
   console.log(parent);
   return context.prisma.touch
     .findUnique({ where: { id: parent.id } })
-    .specificIngredient();
+    .ingredient();
 }
 
 export default {
   build,
-  specificIngredient,
-  genericIngredient
+  ingredient,
+  ingredientType
 };

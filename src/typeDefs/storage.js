@@ -27,7 +27,7 @@ const storage = gql`
   }
 
   type IngredientStorage {
-    ingredient: SpecificIngredient
+    ingredient: Ingredient
     storage: Storage
   }
 

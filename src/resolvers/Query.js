@@ -18,12 +18,16 @@ function allRecipeBookUsers(parent, args, context) {
   return context.prisma.recipeBookUser.findMany({});
 }
 
-function allGenericIngredients(parent, args, context) {
-  return context.prisma.genericIngredient.findMany({});
+function allIngredientTypes(parent, args, context) {
+  return context.prisma.ingredientType.findMany({
+    orderBy: {
+      name: "asc"
+    }
+  });
 }
 
-function allSpecificIngredients(parent, args, context) {
-  return context.prisma.specificIngredient.findMany({});
+function allIngredients(parent, args, context) {
+  return context.prisma.ingredient.findMany({});
 }
 function allTouches(parent, args, context) {
   return context.prisma.touch.findMany({});
@@ -67,31 +71,28 @@ async function completeTouch(parent, context) {
   });
 
   const completeTouches = await basicTouches.map(async basicTouch => {
-    const genericIngredient = await context.prisma.genericIngredient.findUnique(
-      {
-        where: { id: basicTouch.genericIngredientId }
-      }
-    );
-    if (basicTouch.specificIngredientId) {
-      const specificIngredient =
-        await context.prisma.specificIngredient.findUnique({
-          where: { id: basicTouch.specificIngredientId }
-        });
+    const ingredientType = await context.prisma.ingredientType.findUnique({
+      where: { id: basicTouch.ingredientTypeId }
+    });
+    if (basicTouch.ingredientId) {
+      const ingredient = await context.prisma.ingredient.findUnique({
+        where: { id: basicTouch.ingredientId }
+      });
 
       return {
         ...basicTouch,
-        genericIngredientName: genericIngredient.name,
-        genericIngredientDescription: genericIngredient.description,
-        specificIngredientName: specificIngredient.name,
-        specificIngredientDescription: specificIngredient.description,
-        cost: specificIngredient.amount / specificIngredient.price
+        ingredientTypeName: ingredientType.name,
+        ingredientTypeDescription: ingredientType.description,
+        ingredientName: ingredient.name,
+        ingredientDescription: ingredient.description,
+        cost: ingredient.amount / ingredient.price
       };
     }
 
     return {
       ...basicTouch,
-      genericIngredientName: genericIngredient.name,
-      genericIngredientDescription: genericIngredient.description
+      ingredientTypeName: ingredientType.name,
+      ingredientTypeDescription: ingredientType.description
     };
   });
   return completeTouches;
@@ -123,8 +124,8 @@ export default {
   allCrews,
   allUsers,
   allRecipes,
-  allGenericIngredients,
-  allSpecificIngredients,
+  allIngredientTypes,
+  allIngredients,
   allRecipeBookUsers,
   allTouches,
   allBuilds,

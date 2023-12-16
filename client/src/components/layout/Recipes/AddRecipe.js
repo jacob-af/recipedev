@@ -25,7 +25,6 @@ function AddRecipe(props) {
 
   const handleSubmit = async event => {
     event.preventDefault();
-    // console.log(touches);
     const formData = new FormData(event.currentTarget);
     const response = await addRecipe({
       variables: {
@@ -41,10 +40,8 @@ function AddRecipe(props) {
             order: touch.order,
             amount: touch.amount,
             unit: touch.unit,
-            genericIngredientId: touch.genericIngredient.id,
-            specificIngredientId: touch.specificIngredient.id
-              ? touch.specificIngredient.id
-              : null
+            ingredientTypeId: touch.ingredientType.id,
+            ingredientId: touch.ingredient.id ? touch.ingredient.id : null
           };
         })
       }
@@ -58,8 +55,8 @@ function AddRecipe(props) {
       ...touches,
       {
         order: touches.length,
-        genericIngredient: {},
-        specificIngredient: {},
+        ingredientType: {},
+        ingredient: {},
         amount: 0,
         unit: "oz"
       }

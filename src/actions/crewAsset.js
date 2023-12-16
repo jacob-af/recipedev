@@ -53,7 +53,7 @@ async function deleteBuildFromCrew(context, buildId, crewId) {
   }
 }
 
-async function createStorageOnCrew(context, buildId, crewId) {
+async function createStorageOnCrew(context, storageId, crewId) {
   try {
     const crewStorage = await context.prisma.crewStorage.create({
       data: {
@@ -107,7 +107,7 @@ async function deleteStorageFromCrew(context, storageId, crewId) {
     };
   }
 }
-async function createInventoryOnCrew(context, buildId, crewId) {
+async function createInventoryOnCrew(context, inventoryId, crewId) {
   try {
     const crewInventory = await context.prisma.crewInventory.create({
       data: {
@@ -162,7 +162,7 @@ async function deleteInventoryFromCrew(context, inventoryId, crewId) {
   }
 }
 
-async function createIngredientOnCrew(context, buildId, crewId) {
+async function createIngredientOnCrew(context, ingredientId, crewId) {
   try {
     const crewIngredient = await context.prisma.crewIngredient.create({
       data: {
@@ -216,7 +216,7 @@ async function deleteIngredientFromCrew(context, ingredientId, crewId) {
     };
   }
 }
-async function createRecipeBookOnCrew(context, buildId, crewId) {
+async function createRecipeBookOnCrew(context, recipeBookId, crewId) {
   try {
     const crewRecipeBook = await context.prisma.crewRecipeBook.create({
       data: {

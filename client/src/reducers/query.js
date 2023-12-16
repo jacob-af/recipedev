@@ -15,8 +15,8 @@ export const LOAD_USER = gql`
 `;
 
 export const LOAD_GENERIC = gql`
-  query AllGenericIngredients {
-    allGenericIngredients {
+  query AllIngredientTypes(orderBy:{label:DESC}) {
+    allIngredientTypes {
       id
       name
       description
@@ -31,14 +31,14 @@ export const LOAD_BUILDS = gql`
       completeTouch {
         amount
         cost
-        genericIngredientDescription
-        genericIngredientId
-        genericIngredientName
+        ingredientTypeDescription
+        ingredientTypeId
+        ingredientTypeName
         id
         order
-        specificIngredientDescription
-        specificIngredientId
-        specificIngredientName
+        ingredientDescription
+        ingredientId
+        ingredientName
         unit
       }
       createdAt
@@ -72,13 +72,13 @@ export const LOAD_BOOKS = gql`
         completeTouch {
           amount
           cost
-          genericIngredientId
-          genericIngredientName
+          ingredientTypeId
+          ingredientTypeName
           id
           order
-          specificIngredientId
+          ingredientId
           unit
-          specificIngredientName
+          ingredientName
         }
         recipeOrigin
         recipeId

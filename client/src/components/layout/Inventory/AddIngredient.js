@@ -12,10 +12,10 @@ import {
 } from "@mui/material";
 import Navbar from "../NavBar";
 import BottomNavBar from "../BottomNavBar";
-import { useMutation, useReactiveVar } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
-import { newIngredient, genericIngredients } from "../../../state/User";
+import { newIngredient, ingredientTypes } from "../../../state/User";
 import { ADD_SPEC_ING } from "../../../reducers/mutations";
 
 function AddIngredient(props) {
@@ -25,21 +25,25 @@ function AddIngredient(props) {
 
   const handleSubmit = async event => {
     event.preventDefault();
-    // console.log(touches);
     const formData = new FormData(event.currentTarget);
-    const response = await addIngredient({
-      variables: {
-        name: formData.get("name"),
-        amount: parseInt(formData.get("amount")),
-        unit: formData.get("unit"),
-        price: parseInt(formData.get("price")),
-        source: formData.get("source"),
-        description: formData.get("description"),
-        genericIngredientId: newIngredient().id
-      }
-    });
-    console.log(response);
-    navigate("/inventory");
+    console.log(formData.get("name"));
+    try {
+      const response = await addIngredient({
+        variables: {
+          name: formData.get("name"),
+          amount: parseInt(formData.get("amount")),
+          unit: formData.get("unit"),
+          price: parseInt(formData.get("price")),
+          source: formData.get("source"),
+          description: formData.get("description"),
+          ingredientTypeId: newIngredient().id
+        }
+      });
+      console.log(response);
+      navigate("/inventory");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleIngredientChange = value => {
@@ -47,7 +51,7 @@ function AddIngredient(props) {
     newIngredient(value);
   };
 
-  const genericIngredientInput = genericIngredients().map(ingredient => {
+  const ingredientTypeInput = ingredientTypes().map(ingredient => {
     return {
       ...ingredient,
       label: ingredient.name
@@ -83,6 +87,15 @@ function AddIngredient(props) {
                 New Ingredient
               </Typography>
               <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="name"
+                  label="Ingredient Name"
+                  name="name"
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <Autocomplete
                   required
                   disablePortal
@@ -95,25 +108,27 @@ function AddIngredient(props) {
                   }}
                   id={`ingredient${props.index}`}
                   options={
-                    !genericIngredientInput
+                    !ingredientTypeInput
                       ? [{ label: "Loading...", id: 0 }]
-                      : genericIngredientInput
+                      : ingredientTypeInput
                   }
                   renderInput={params => (
-                    <TextField {...params} label="Base Ingredient" />
+                    <TextField {...params} label="Ingredient Type" />
                   )}
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <TextField
+                  multi
                   required
                   fullWidth
-                  id="name"
-                  label="Ingredient Name"
-                  name="name"
+                  id="description"
+                  label="Description"
+                  name="description"
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={7}>
                 <TextField
                   required
                   fullWidth
@@ -122,18 +137,27 @@ function AddIngredient(props) {
                   name="amount"
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={5}>
                 <TextField
                   required
                   fullWidth
                   id="unit"
                   label="Unit"
                   name="unit"
-                  multiline
                   rows={4}
                 />
               </Grid>
               <Grid item xs={12}>
+                <TextField
+                  multi
+                  required
+                  fullWidth
+                  id="description"
+                  label="Description"
+                  name="description"
+                />
+              </Grid>
+              <Grid item xs={6}>
                 <TextField
                   required
                   fullWidth
@@ -149,15 +173,6 @@ function AddIngredient(props) {
                   id="source"
                   label="Source"
                   name="source"
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="description"
-                  label="Description"
-                  name="description"
                 />
               </Grid>
 

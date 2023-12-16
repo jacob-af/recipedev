@@ -4,8 +4,8 @@ async function createTouchArray(context, buildId, touchArray, version) {
       data: {
         buildId,
         order: index,
-        genericIngredientId: touch.genericIngredientId,
-        specificIngredientId: touch.specificIngredientId,
+        ingredientTypeId: touch.ingredientTypeId,
+        ingredientId: touch.ingredientId,
         amount: touch.amount,
         unit: touch.unit,
         version
@@ -29,8 +29,8 @@ async function archiveTouchArray(context, buildId, version) {
       data: {
         buildId,
         order: index,
-        genericIngredientId: touch.genericIngredientId,
-        specificIngredientId: touch.specificIngredientId,
+        ingredientTypeId: touch.ingredientTypeId,
+        ingredientId: touch.ingredientId,
         amount: touch.amount,
         unit: touch.unit,
         version

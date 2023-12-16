@@ -1,21 +1,21 @@
 import { gql } from "graphql-tag";
 
 const ingredient = gql`
-  type GenericIngredient {
+  type IngredientType {
     id: ID!
     name: String!
     description: String
     touch: [Touch]
-    specificIngredient: [SpecificIngredient]
+    ingredient: [Ingredient]
     ingredientPreference: [IngredientPreference]
   }
 
-  input GenericIngredientInput {
+  input IngredientTypeInput {
     name: String!
     description: String
   }
 
-  type SpecificIngredient {
+  type Ingredient {
     id: ID!
     createdAt: DateTimeResolver
     createdBy: User
@@ -26,25 +26,25 @@ const ingredient = gql`
     unit: String
     source: String
     touch: [Touch]
-    genericIngredient: GenericIngredient!
+    ingredientType: IngredientType!
     ingredientStorage: [IngredientStorage]
     ingredientPreference: [IngredientPreference]
   }
 
   type IngredientPreference {
-    genericIngredient: GenericIngredient!
-    specificIngredient: SpecificIngredient!
+    ingredientType: IngredientType!
+    ingredient: Ingredient!
     user: User
   }
 
   type IngredientUser {
-    ingredient: SpecificIngredient
+    ingredient: Ingredient
     user: User
     permission: Permission
   }
 
   type IngredientResponse {
-    ingredient: SpecificIngredient
+    ingredient: Ingredient
     permission: Permission
     status: StatusMessage
   }
@@ -54,28 +54,28 @@ const ingredient = gql`
     status: StatusMessage
   }
 
-  input GenericIngredientInput {
+  input IngredientTypeInput {
     name: String!
     description: String
   }
 
   type Mutation {
-    addGenericIngredient(name: String, description: String): GenericIngredient!
+    addIngredientType(name: String, description: String): IngredientType!
 
-    addManyGenericIngredients(dat: [GenericIngredientInput]): StatusMessage
+    addManyIngredientTypes(dat: [IngredientTypeInput]): StatusMessage
 
-    addSpecificIngredient(
+    addIngredient(
       name: String
       description: String
       amount: Int
       unit: String
       price: Float
       source: String
-      genericIngredientId: String
+      ingredientTypeId: String
       createdBy: String
     ): IngredientResponse
 
-    editSpecificIngredient(
+    editIngredient(
       id: ID!
       name: String
       description: String
@@ -83,11 +83,11 @@ const ingredient = gql`
       unit: String
       price: Float
       source: String
-      genericIngredientId: String
+      ingredientTypeId: String
       permission: Permission
     ): IngredientResponse
 
-    trashSpecificIngredient(id: ID!, permission: Permission): IngredientResponse
+    trashIngredient(id: ID!, permission: Permission): IngredientResponse
 
     changeIngredientPermission(
       ingredientId: ID!

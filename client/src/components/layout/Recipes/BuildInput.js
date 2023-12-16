@@ -7,7 +7,7 @@ import {
   MenuItem,
   CssBaseline
 } from "@mui/material";
-import { genericIngredients, newRecipe } from "../../../state/User";
+import { ingredientTypes, newRecipe } from "../../../state/User";
 import { useReactiveVar } from "@apollo/client";
 
 function BuildInput(props) {
@@ -43,7 +43,7 @@ function BuildInput(props) {
       if (index === props.index) {
         return {
           ...touch,
-          genericIngredient: value
+          ingredientType: value
         };
       }
       return touch;
@@ -51,7 +51,7 @@ function BuildInput(props) {
     newRecipe(touchArray);
   };
 
-  const genericIngredientInput = genericIngredients().map(ingredient => {
+  const ingredientTypeInput = ingredientTypes().map(ingredient => {
     return {
       ...ingredient,
       label: ingredient.name
@@ -99,9 +99,9 @@ function BuildInput(props) {
           }}
           id={`ingredient${props.index}`}
           options={
-            !genericIngredientInput
+            !ingredientTypeInput
               ? [{ label: "Loading...", id: 0 }]
-              : genericIngredientInput
+              : ingredientTypeInput
           }
           renderInput={params => <TextField {...params} label="Ingredient" />}
         />

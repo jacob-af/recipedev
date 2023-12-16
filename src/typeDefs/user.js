@@ -12,35 +12,36 @@ const user = gql`
     password: String!
     profile: Profile
 
-    recipeBookUser: RecipeBookUser
-    recipeBook: RecipeBook
-    recipeBookEditedBy: User
+    myRecipeBook: [RecipeBook]
+    allRecipeBook: [RecipeBook]
+    recipeBookEditedBy: [RecipeBook]
 
-    recipe: [Recipe!]
-    recipeEditedBy: User
+    myRecipe: [Recipe]
+    allRecipe: [Recipe]
+    recipeEditedBy: [Recipe]
 
-    buildUser: [BuildUser]
-    build: [Build]
-    buildEditedBy: User
+    myBuild: [Build]
+    allBuild: [Build]
+    buildEditedBy: [Build]
     completeBuild: [CompleteBuild]
     "to be removed"
     following: [User]
     followedBy: [User]
 
-    crewUser: [CrewUser]
-    crew: [Crew]
+    myCrew: [Crew]
+    allCrew: [Crew]
     crewEditedBy: [Crew]
 
-    specificIngredient: [SpecificIngredient]
-    ingredientUser: [IngredientUser]
+    myIngredient: [Ingredient]
+    allIngredient: [IngredientUser]
     ingredientPreference: [IngredientPreference]
 
-    storageUser: [Storage]
-    storage: [Storage]
+    allStorage: [Storage]
+    myStorage: [Storage]
     storageEditedBy: [User]
 
-    inventory: [Inventory]
-    inventoryUser: [InventoryUser]
+    myInventory: [Inventory]
+    allInventory: [Inventory]
     inventoryCreatedBy: [User]
     inventoryEditedBy: [User]
   }

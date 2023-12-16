@@ -1,4 +1,4 @@
-async function createSpecificIngredient(
+async function createIngredient(
   context,
   name,
   description,
@@ -6,10 +6,11 @@ async function createSpecificIngredient(
   unit,
   price,
   source,
-  genericIngredientId
+  ingredientTypeId
 ) {
   try {
-    const ingredient = await context.prisma.specificIngredient.create({
+    console.log("hello");
+    const ingredient = await context.prisma.ingredient.create({
       data: {
         name,
         description,
@@ -17,7 +18,7 @@ async function createSpecificIngredient(
         unit,
         price,
         source,
-        genericIngredientId,
+        ingredientTypeId,
         createdById: context.userId
       }
     });
@@ -40,13 +41,13 @@ async function createSpecificIngredient(
     return {
       status: {
         code: "Failure",
-        message: err.meta.cause
+        message: err.message
       }
     };
   }
 }
 
-async function updateSpecificIngredient(
+async function updateIngredient(
   context,
   id,
   name,
@@ -55,10 +56,10 @@ async function updateSpecificIngredient(
   unit,
   price,
   source,
-  genericIngredientId
+  ingredientTypeId
 ) {
   try {
-    const ingredient = await context.prisma.specificIngredient.update({
+    const ingredient = await context.prisma.ingredient.update({
       where: {
         id: id
       },
@@ -69,7 +70,7 @@ async function updateSpecificIngredient(
         unit,
         price,
         source,
-        genericIngredientId
+        ingredientTypeId
       }
     });
 
@@ -90,9 +91,9 @@ async function updateSpecificIngredient(
   }
 }
 
-async function deleteSpecificIngredient(context, ingredientId) {
+async function deleteIngredient(context, ingredientId) {
   try {
-    const ingredient = await context.prisma.specificIngredient.delete({
+    const ingredient = await context.prisma.ingredient.delete({
       where: { id: ingredientId }
     });
     return {
@@ -151,11 +152,7 @@ async function createIngredientPermission(
   }
 }
 
-async function deleteSpecificIngredientPermission(
-  context,
-  userId,
-  ingredientId
-) {
+async function deleteIngredientPermission(context, userId, ingredientId) {
   let ingredientUser = {};
   try {
     ingredientUser = await context.prisma.ingredientUser.delete({
@@ -182,9 +179,9 @@ async function deleteSpecificIngredientPermission(
 }
 
 export {
-  createSpecificIngredient,
-  updateSpecificIngredient,
-  deleteSpecificIngredient,
+  createIngredient,
+  updateIngredient,
+  deleteIngredient,
   createIngredientPermission,
-  deleteSpecificIngredientPermission
+  deleteIngredientPermission
 };

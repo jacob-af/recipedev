@@ -1,26 +1,42 @@
 import { gql } from "@apollo/client";
 
 export const ADD_SPEC_ING = gql`
-  mutation AddSpecificIngredient(
+  mutation AddIngredient(
     $name: String
+    $description: String
     $amount: Int
     $unit: String
     $price: Float
     $source: String
-    $description: String
-    $genericIngredientId: String
+    $ingredientTypeId: String
   ) {
-    addSpecificIngredient(
+    addIngredient(
       name: $name
+      description: $description
       amount: $amount
       unit: $unit
       price: $price
       source: $source
-      description: $description
-      genericIngredientId: $genericIngredientId
+      ingredientTypeId: $ingredientTypeId
     ) {
-      id
-      name
+      {
+        ingredient {
+          id
+          description
+          name
+          price
+          source
+          ingredientType {
+            id
+            name
+          }
+        }
+      permission
+      status {
+        code
+        message
+      }
+    } 
     }
   }
 `;

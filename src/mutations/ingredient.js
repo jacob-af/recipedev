@@ -1,14 +1,14 @@
 import {
-  createSpecificIngredient,
-  updateSpecificIngredient,
-  deleteSpecificIngredient,
+  createIngredient,
+  updateIngredient,
+  deleteIngredient,
   createIngredientPermission,
-  deleteSpecificIngredientPermission
+  deleteIngredientPermission
 } from "../actions/ingredient.js";
 import { resolvePermission } from "../actions/utils.js";
 
-async function addSpecificIngredient(parent, args, context, info) {
-  const { ingredient, permission, status } = await createSpecificIngredient(
+async function addIngredient(parent, args, context, info) {
+  const { ingredient, permission, status } = await createIngredient(
     context,
     args.name,
     args.description,
@@ -16,7 +16,7 @@ async function addSpecificIngredient(parent, args, context, info) {
     args.unit,
     args.price,
     args.source,
-    args.genericIngredientId
+    args.ingredientTypeId
   );
 
   return {
@@ -26,7 +26,7 @@ async function addSpecificIngredient(parent, args, context, info) {
   };
 }
 
-async function editSpecificIngredient(parent, args, context, info) {
+async function editIngredient(parent, args, context, info) {
   if (!resolvePermission(args.permission, "Manager")) {
     return {
       status: {
@@ -35,7 +35,7 @@ async function editSpecificIngredient(parent, args, context, info) {
       }
     };
   }
-  const { ingredient, status } = await updateSpecificIngredient(
+  const { ingredient, status } = await updateIngredient(
     context,
     args.id,
     args.name,
@@ -44,7 +44,7 @@ async function editSpecificIngredient(parent, args, context, info) {
     args.unit,
     args.price,
     args.source,
-    args.genericIngredientId
+    args.ingredientTypeId
   );
 
   return {
@@ -54,12 +54,9 @@ async function editSpecificIngredient(parent, args, context, info) {
   };
 }
 
-async function trashSpecificIngredient(parent, args, context, info) {
+async function trashIngredient(parent, args, context, info) {
   if (resolvePermission(args.permission, "Owner")) {
-    const { ingredient, status } = await deleteSpecificIngredient(
-      context,
-      args.id
-    );
+    const { ingredient, status } = await deleteIngredient(context, args.id);
 
     return { ingredient, permission: args.permission, status };
   }
@@ -100,7 +97,7 @@ async function removeIngredientPermission(parent, args, context, info) {
       }
     };
   }
-  const { ingredientUser, status } = await deleteSpecificIngredientPermission(
+  const { ingredientUser, status } = await deleteIngredientPermission(
     context,
     args.userId,
     args.ingredientId
@@ -112,9 +109,9 @@ async function removeIngredientPermission(parent, args, context, info) {
 }
 
 export default {
-  addSpecificIngredient,
-  editSpecificIngredient,
-  trashSpecificIngredient,
+  addIngredient,
+  editIngredient,
+  trashIngredient,
   changeIngredientPermission,
   removeIngredientPermission
 };

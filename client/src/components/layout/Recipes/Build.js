@@ -94,9 +94,9 @@ export default function Build({ builds, viewDetail }) {
               key={touch.id}
             >
               {touch.amount} {touch.unit}{" "}
-              {touch.specificIngredientName === null
-                ? touch.genericIngredientName
-                : touch.specificIngredientName}
+              {touch.ingredientName === null
+                ? touch.ingredientTypeName
+                : touch.ingredientName}
             </Typography>
           );
         })}

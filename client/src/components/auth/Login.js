@@ -42,7 +42,7 @@ export default function LogIn() {
   const navigate = useNavigate();
   // if (loading) return "Submitting...";
   // if (error) alertMessage(error);
-
+  console.log("ding");
   const handleSubmit = async event => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);

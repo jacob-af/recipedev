@@ -1,5 +1,5 @@
 function touch(parent, args, context) {
-  return context.prisma.genericIngredient
+  return context.prisma.ingredientType
     .findUnique({
       where: { id: parent.id }
     })

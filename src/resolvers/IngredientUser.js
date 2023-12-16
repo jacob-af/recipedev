@@ -7,7 +7,7 @@ function user(parent, args, context) {
 
 function ingredient(parent, args, context) {
   console.log("ding");
-  return context.prisma.specificIngredient.findUnique({
+  return context.prisma.ingredient.findUnique({
     where: { id: parent.ingredientId }
   });
 }

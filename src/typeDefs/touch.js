@@ -8,8 +8,8 @@ const touch = gql`
     amount: Float
     unit: String
     version: Int
-    genericIngredient: GenericIngredient
-    specificIngredient: SpecificIngredient
+    ingredientType: IngredientType
+    ingredient: Ingredient
   }
 
   type ArchivedTouch {
@@ -19,13 +19,14 @@ const touch = gql`
     amount: Float
     unit: String
     version: Int
-    genericIngredient: GenericIngredient
-    specificIngredient: SpecificIngredient
+    ingredientType: IngredientType
+    ingredient: Ingredient
   }
 
   input TouchInput {
-    genericIngredientId: String
-    specificIngredientId: String
+    order: Int
+    ingredientTypeId: String
+    ingredientId: String
     amount: Float
     unit: String
   }
@@ -33,12 +34,12 @@ const touch = gql`
   type CompleteTouch {
     id: ID!
     order: Int
-    genericIngredientId: String
-    genericIngredientName: String
-    genericIngredientDescription: String
-    specificIngredientId: String
-    specificIngredientName: String
-    specificIngredientDescription: String
+    ingredientTypeId: String
+    ingredientTypeName: String
+    ingredientTypeDescription: String
+    ingredientId: String
+    ingredientName: String
+    ingredientDescription: String
     amount: Float
     unit: String
     cost: Float

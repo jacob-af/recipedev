@@ -21,7 +21,7 @@ const crewAsset = gql`
   }
   type CrewIngredient {
     crew: Crew
-    ingredient: SpecificIngredient
+    ingredient: Ingredient
   }
 
   type CrewIngredientReturn {
@@ -35,7 +35,7 @@ const crewAsset = gql`
   }
 
   type CrewStorageReturn {
-    crewInventory: CrewStorage
+    crewStorage: CrewStorage
     status: StatusMessage
   }
   type CrewInventory {

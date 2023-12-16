@@ -36,8 +36,8 @@ async function addBuild(parent, args, context, info) {
   const touchArrayWithId = args.touchArray.map((touch, index) => {
     return {
       order: index,
-      genericIngredientId: touch.genericIngredientId,
-      specificIngredientId: touch.specificIngredientId,
+      ingredientTypeId: touch.ingredientTypeId,
+      ingredientId: touch.ingredientId,
       amount: touch.amount,
       unit: touch.unit
     };

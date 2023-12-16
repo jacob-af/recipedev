@@ -72,7 +72,7 @@ async function addRecipeBookToCrew(parent, args, context, info) {
 }
 
 async function removeRecipeBookFromCrew(parent, args, context, info) {
-  if (!resolvePermission(permission, "Manager")) {
+  if (!resolvePermission(args.permission, "Manager")) {
     return {
       status: {
         message: "You don't have permission to remove anything from this Crew",
@@ -110,7 +110,7 @@ async function addIngredientToCrew(parent, args, context, info) {
 }
 
 async function removeIngredientFromCrew(parent, args, context, info) {
-  if (!resolvePermission(permission, "Manager")) {
+  if (!resolvePermission(args.permission, "Manager")) {
     return {
       status: {
         message: "You don't have permission to remove anything from this Crew",
@@ -148,7 +148,7 @@ async function addStorageToCrew(parent, args, context, info) {
 }
 
 async function removeStorageFromCrew(parent, args, context, info) {
-  if (!resolvePermission(permission, "Manager")) {
+  if (!resolvePermission(args.permission, "Manager")) {
     return {
       status: {
         message: "You don't have permission to remove anything from this Crew",
@@ -186,7 +186,7 @@ async function addInventoryToCrew(parent, args, context, info) {
 }
 
 async function removeInventoryFromCrew(parent, args, context, info) {
-  if (!resolvePermission(permission, "Manager")) {
+  if (!resolvePermission(args.permission, "Manager")) {
     return {
       status: {
         message: "You don't have permission to remove anything from this Crew",

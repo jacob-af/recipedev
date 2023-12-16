@@ -26,30 +26,27 @@ async function completeTouch(parent, args, context) {
     where: { buildId: parent.id }
   });
   const completeTouches = await basicTouches.map(async basicTouch => {
-    const genericIngredient =
-      await context.prisma.genericIngredientId.findUnique({
-        where: { id: basicTouch.genericIngedientId }
+    const ingredientType = await context.prisma.ingredientTypeId.findUnique({
+      where: { id: basicTouch.ingredientTypeId }
+    });
+    if (basicTouch.ingredientId) {
+      const ingredient = context.prisma.ingredientId.findUnique({
+        where: { id: basicTouch.specificIngedientId }
       });
-    if (basicTouch.specificIngredientId) {
-      const specificIngredient = context.prisma.specificIngredientId.findUnique(
-        {
-          where: { id: basicTouch.specificIngedientId }
-        }
-      );
       return {
         ...basicTouch,
-        genericIngredientName: genericIngredient.name,
-        genericIngredientDescription: genericIngredient.description,
-        specificIngredientName: specificIngredient.name,
-        specificIngredientDescription: specificIngredient.description,
-        cost: specificIngredient.amount / specificIngredient.price
+        ingredientTypeName: ingredientType.name,
+        ingredientTypeDescription: ingredientType.description,
+        ingredientName: ingredient.name,
+        ingredientDescription: ingredient.description,
+        cost: ingredient.amount / ingredient.price
       };
     }
 
     return {
       ...basicTouch,
-      genericIngredientName: genericIngredient.name,
-      genericIngredientDescription: genericIngredient.description
+      ingredientTypeName: ingredientType.name,
+      ingredientTypeDescription: ingredientType.description
     };
   });
   return completeTouches;

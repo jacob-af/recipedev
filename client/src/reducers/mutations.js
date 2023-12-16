@@ -8,19 +8,33 @@ export const ADD_SPEC_ING = gql`
     $price: Float
     $source: String
     $description: String
-    $genericIngredientId: String
+    $ingredientTypeId: String
   ) {
-    addSpecificIngredient(
+    addIngredient(
       name: $name
       amount: $amount
       unit: $unit
       price: $price
       source: $source
       description: $description
-      genericIngredientId: $genericIngredientId
+      ingredientTypeId: $ingredientTypeId
     ) {
-      id
-      name
+      ingredient {
+        id
+        description
+        name
+        price
+        source
+        ingredientType {
+          id
+          name
+        }
+      }
+      permission
+      status {
+        code
+        message
+      }
     }
   }
 `;

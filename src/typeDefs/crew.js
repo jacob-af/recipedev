@@ -13,7 +13,7 @@ const crew = gql`
     User: [User]
     inventory: [Inventory]
     storage: [Storage]
-    ingredient: [SpecificIngredient]
+    ingredient: [Ingredient]
     recipeBook: [RecipeBook]
   }
 

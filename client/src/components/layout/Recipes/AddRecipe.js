@@ -14,7 +14,7 @@ import BottomNavBar from "../BottomNavBar";
 import BuildInput from "./BuildInput";
 import { useMutation, useReactiveVar } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, Outlet } from "react-router-dom";
 import { newRecipe } from "../../../state/User";
 import { ADD_RECIPE } from "../../../reducers/mutations";
 
@@ -67,11 +67,10 @@ function AddRecipe(props) {
 
   return (
     <Fragment>
-      <Navbar />
       <Container sx={{ bgcolor: "#FFF", width: 1 }}>
         <Fab
           component={RouterLink}
-          to="/recipe"
+          to=".."
           sx={{ position: "absolute", top: 45, right: -15 }}
         >
           -
@@ -163,7 +162,6 @@ function AddRecipe(props) {
           </Box>
         </Box>
       </Container>
-      <BottomNavBar />
     </Fragment>
   );
 }

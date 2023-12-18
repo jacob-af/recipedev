@@ -1,7 +1,6 @@
 import React from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, Outlet } from "react-router-dom";
 import { Container, Fab, Box } from "@mui/material";
-import Navbar from "../NavBar";
 import BottomNavBar from "../BottomNavBar";
 import Recipe from "./Recipe";
 import { useQuery } from "@apollo/client";
@@ -21,12 +20,17 @@ function RecipeList() {
 
   return (
     <Container
-      sx={{ bgcolor: "#FFF", width: 1, display: "flex", alignItems: "center" }}
+      sx={{
+        bgcolor: "#FFF",
+        width: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
+      }}
     >
-      <Navbar />
       <Fab
         component={RouterLink}
-        to="/addrecipe"
+        to="add"
         sx={{ position: "absolute", top: 45, right: -15 }}
       >
         +
@@ -38,7 +42,7 @@ function RecipeList() {
             })
           : "you have no recipes"}
       </Box>
-      <BottomNavBar />
+      <Outlet />
     </Container>
   );
 }

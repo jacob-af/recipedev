@@ -20,7 +20,6 @@ function Inventory() {
     <Container
       sx={{ bgcolor: "#FFF", width: 1, display: "flex", alignItems: "center" }}
     >
-      <Navbar />
       <Fab
         component={RouterLink}
         to="/addIngredient"
@@ -31,7 +30,6 @@ function Inventory() {
       <Box sx={{ mt: 5, overflow: "auto", height: 0.9, maxHeight: 600 }}>
         HI
       </Box>
-      <BottomNavBar />
     </Container>
   );
 }

@@ -7,9 +7,9 @@ function PrivateRoute({ children, ...rest }) {
   const location = useLocation();
 
   if (!userToken) {
-    return <Navigate to="/login" state={{ from: location }} />;
+    return <Navigate to="login" state={{ from: location }} />;
   }
-  return children;
+  return children ? children : <Outlet />;
 }
 
 export default PrivateRoute;

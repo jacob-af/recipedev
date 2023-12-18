@@ -11,13 +11,14 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Badge from "@mui/material/Badge";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { Outlet } from "react-router-dom";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
 export default function NavBar() {
   return (
-    <Box sx={{ flexGrow: 1, width: 1 }}>
-      <AppBar position="static">
+    <Box sx={{ position: "static", flexGrow: 1, width: 1, zIndex: "tooltip" }}>
+      <AppBar sx={{ bgcolor: "#000" }}>
         <Toolbar>
           <IconButton
             size="large"
@@ -28,7 +29,12 @@ export default function NavBar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            alight="center"
+            sx={{ flexGrow: 1 }}
+          >
             Back Pocket
           </Typography>
           <Button color="inherit">Login</Button>

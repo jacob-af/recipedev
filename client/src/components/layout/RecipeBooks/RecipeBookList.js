@@ -1,7 +1,5 @@
 import React, { Fragment } from "react";
 import { Container, Typography, Fab, Box, Grid } from "@mui/material";
-import Navbar from "../NavBar";
-import BottomNavBar from "../BottomNavBar";
 import { Link as RouterLink } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { LOAD_BOOKS } from "../../../reducers/query.js";
@@ -17,7 +15,6 @@ function RecipeBookList(props) {
   const recipeBookStack = recipeBookData();
   return (
     <Fragment>
-      <Navbar />
       <Fab
         component={RouterLink}
         to="/addRecipeBook"
@@ -55,7 +52,6 @@ function RecipeBookList(props) {
           );
         })}
       </Container>
-      <BottomNavBar />
     </Fragment>
   );
 }

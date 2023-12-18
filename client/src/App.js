@@ -3,7 +3,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import React, { Fragment } from "react";
+import React from "react";
 import Landing from "./components/layout/Landing";
 import RecipeList from "./components/layout/Recipes/RecipeList";
 import RecipeBookList from "./components/layout/RecipeBooks/RecipeBookList";
@@ -15,77 +15,31 @@ import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
 import PrivateRoute from "./components/routing/PrivateRoute.js";
 import { Container } from "@mui/material";
+import NavBar from "./components/layout/NavBar.js";
+import ErrorPage from "./components/routing/ErrorPage.js";
+import Feed from "./components/layout/Feed/Feed.js";
 
 function App() {
   return (
     <Container sx={{ bgcolor: "#333", height: "100vh", px: 0 }}>
       <Routes>
-        <Route
-          exact
-          path="/"
-          element={
-            <PrivateRoute>
-              <Landing />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          exact
-          path="/recipeBook"
-          element={
-            <PrivateRoute>
-              <RecipeBookList />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="recipe"
-          element={
-            <PrivateRoute>
-              <RecipeList />
-            </PrivateRoute>
-          }
-        />
+        <Route exact path="signup" element={<SignUp />} />
+        <Route exact path="login" element={<Login />} />
+        <Route element={<PrivateRoute />}>
+          <Route element={<Landing />}>
+            <Route index element={<Feed />} />
+            <Route path="recipeBook" element={<RecipeBookList />} />
+            <Route path="recipe">
+              <Route index element={<RecipeList />} />
+              <Route path="add" element={<AddRecipe />} />
+            </Route>
+            <Route exact path="inventory" element={<Inventory />} />
+            <Route exact path="addingredient" element={<AddIngredient />} />
+            <Route exact path="crew" element={<Crew />} />
+          </Route>
+        </Route>
 
-        <Route
-          exact
-          path="/addrecipe"
-          element={
-            <PrivateRoute>
-              <AddRecipe />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          exact
-          path="/inventory"
-          element={
-            <PrivateRoute>
-              <Inventory />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          exact
-          path="/addingredient"
-          element={
-            <PrivateRoute>
-              <AddIngredient />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          exact
-          path="/crew"
-          element={
-            <PrivateRoute>
-              <Crew />
-            </PrivateRoute>
-          }
-        />
-        <Route exact path="/signup" element={<SignUp />} />
-        <Route exact path="/login" element={<Login />} />
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Container>
   );

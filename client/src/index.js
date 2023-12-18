@@ -7,6 +7,7 @@ import { ApolloClient, ApolloProvider, createHttpLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { cache } from "./cache";
 import { token } from "./state/User";
+import { BrowserRouter } from "react-router-dom";
 
 const httpLink = createHttpLink({
   uri: "http://localhost:4000/"
@@ -31,11 +32,13 @@ const client = new ApolloClient({
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <ApolloProvider client={client}>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </ApolloProvider>
+  <BrowserRouter>
+    <ApolloProvider client={client}>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </ApolloProvider>
+  </BrowserRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function

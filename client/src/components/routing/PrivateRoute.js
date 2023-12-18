@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, Outlet } from "react-router-dom";
 import { token } from "../../state/User";
 
 function PrivateRoute({ children, ...rest }) {

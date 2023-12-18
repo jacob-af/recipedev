@@ -1,7 +1,7 @@
-import React, { Fragment } from "react";
-import { Container } from "@mui/material";
+import React from "react";
+import { Container, Box, Typography } from "@mui/material";
 
-import Navbar from "./NavBar";
+import Navbar from "./NavBar.js";
 import BottomNavBar from "./BottomNavBar";
 import { useQuery } from "@apollo/client";
 import { LOAD_GENERIC } from "../../reducers/query.js";
@@ -14,11 +14,19 @@ function Landing(props) {
   ingredientTypes(data.allIngredientTypes);
 
   return (
-    <Fragment>
+    <Container sx={{ px: 0, width: 1 }}>
       <Navbar />
-      <Container></Container>
+      <Box sx={{ height: "100vh", bgcolor: "#080" }}>
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{ flexGrow: 1, textalign: "center" }}
+        >
+          Back Pocket
+        </Typography>
+      </Box>
       <BottomNavBar />
-    </Fragment>
+    </Container>
   );
 }
 

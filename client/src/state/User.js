@@ -7,6 +7,7 @@ export const buildData = cache.makeVar();
 export const recipeData = cache.makeVar();
 export const recipeBookData = cache.makeVar();
 export const ingredientTypes = cache.makeVar([]);
+export const ingredients = cache.makeVar([]);
 export const alertMessage = cache.makeVar();
 
 export const newRecipe = cache.makeVar([

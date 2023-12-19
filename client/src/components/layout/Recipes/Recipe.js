@@ -1,6 +1,13 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { Paper, Typography, Grid, Box, Button, Collapse } from "@mui/material/";
+import {
+  Typography,
+  Grid,
+  Box,
+  Button,
+  Collapse,
+  SvgIcon
+} from "@mui/material/";
 import { ExpandMore, ExpandLess } from "@mui/icons-material/";
 import Build from "./Build";
 
@@ -13,56 +20,63 @@ function Recipe(props) {
   };
 
   return (
-    <Paper
+    <Grid
+      container
       sx={{
-        position: "relative",
-        backgroundColor: "grey.800",
-        color: "#fff",
-        mb: 4,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center"
+        border: 2,
+        borderColor: "orange",
+        borderRadius: 3,
+        width: 1,
+        my: 4
       }}
     >
-      <Box
+      <Grid
+        item
         sx={{
-          position: "absolute",
-          top: 0,
-          bottom: 0,
-          right: 0,
-          left: 0,
-          backgroundColor: "rgba(0,0,0,.3)"
+          border: 1,
+          borderColor: "blue",
+          width: 1,
+          p: 4,
+          bgcolor: "white"
         }}
-      />
-      <Grid container>
-        <Grid item md={6}>
-          <Box
-            sx={{
-              position: "relative",
-              p: { xs: 3, md: 6 },
-              pr: { md: 0 }
-            }}
-          >
-            <Button onClick={handleChange}>
-              {viewDetail ? <ExpandLess /> : <ExpandMore />}
-            </Button>
-            <Typography
-              component="h6"
-              variant="h6"
-              color="white"
-              align="center"
-            >
-              {recipe.recipeName}
-            </Typography>
-            <Collapse in={viewDetail}>
-              <Typography>{recipe.history} HIIIIII</Typography>
-            </Collapse>
+      >
+        <Box
+          sx={{
+            width: 1,
+            justifyContent: "center",
+            border: 2,
+            borderColor: "silver"
+          }}
+        >
+          <Typography component="h6" variant="h6" color="black" align="center">
+            {recipe.recipeName}
+          </Typography>
+          <Collapse in={viewDetail}>
+            <Typography>{recipe.history} HIIIIII</Typography>
+          </Collapse>
 
-            <Build builds={recipe.builds} viewDetail={viewDetail} />
-          </Box>
-        </Grid>
+          <Build builds={recipe.builds} viewDetail={viewDetail} />
+
+          <Button
+            onClick={handleChange}
+            sx={{ width: 1, justifyContent: "center", height: 8 }}
+          >
+            <SvgIcon
+              viewBox="0 0 40 40"
+              width={1}
+              preserveAspectRatio="none"
+              sx={{ transform: "scale(18, 1.5)" }}
+            >
+              {viewDetail ? (
+                <ExpandLess sx={{ color: "#000" }} />
+              ) : (
+                <ExpandMore sx={{ color: "#000" }} />
+              )}
+            </SvgIcon>
+          </Button>
+        </Box>
       </Grid>
-    </Paper>
+    </Grid>
   );
 }
 

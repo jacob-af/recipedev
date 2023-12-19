@@ -1,11 +1,8 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Container, Fab, Box } from "@mui/material";
-import Navbar from "../NavBar";
-import BottomNavBar from "../BottomNavBar";
-// import { useQuery } from "@apollo/client";
-// import { LOAD_BUILDS } from "../../../reducers/query.js";
-// import { buildData, recipeData, userData } from "../../../state/User";
+import { Container, Fab, Box, Typography } from "@mui/material";
+
+import { ingredients } from "../../../state/User";
 
 function Inventory() {
   //   const { data, loading, error } = useQuery(LOAD_BUILDS, {
@@ -28,7 +25,9 @@ function Inventory() {
         +
       </Fab>
       <Box sx={{ mt: 5, overflow: "auto", height: 0.9, maxHeight: 600 }}>
-        HI
+        {ingredients().map(ingredient => {
+          return <Typography key={ingredient.id}>{ingredient.name}</Typography>;
+        })}
       </Box>
     </Container>
   );

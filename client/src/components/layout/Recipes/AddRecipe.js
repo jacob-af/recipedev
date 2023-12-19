@@ -1,20 +1,19 @@
 import React, { Fragment } from "react";
 import {
-  Container,
   Fab,
   Button,
   Typography,
   Box,
   Grid,
-  TextField
+  TextField,
+  Switch
   //Checkbox
 } from "@mui/material";
-import Navbar from "../NavBar";
-import BottomNavBar from "../BottomNavBar";
+
 import BuildInput from "./BuildInput";
 import { useMutation, useReactiveVar } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
-import { Link as RouterLink, Outlet } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { newRecipe } from "../../../state/User";
 import { ADD_RECIPE } from "../../../reducers/mutations";
 
@@ -67,31 +66,51 @@ function AddRecipe(props) {
 
   return (
     <Fragment>
-      <Container sx={{ bgcolor: "#FFF", width: 1 }}>
-        <Fab
-          component={RouterLink}
-          to=".."
-          sx={{ position: "absolute", top: 45, right: -15 }}
-        >
-          -
-        </Fab>
+      {/* <Fab
+        component={RouterLink}
+        to=".."
+        sx={{ position: "absolute", top: 45, right: -15 }}
+      >
+        -
+      </Fab> */}
+      <Box
+        sx={{
+          display: "flex",
+          bgcolor: "#FFF",
+          width: 1,
+          border: 2,
+          borderColor: "#000",
+          justifyContent: "center"
+        }}
+      >
         <Box
           sx={{
             marginTop: 2,
             display: "flex",
-            alignItems: "center"
+            // flexDirection: "column",
+            height: 1,
+            maxWidth: 400
           }}
         >
           <Box
             component="form"
             noValidate
-            sx={{ mt: 2, overflow: "auto", height: 0.9 }}
+            sx={{ mt: 2, overflow: "auto", height: 1 }}
             onSubmit={handleSubmit}
           >
             <Grid container spacing={2}>
-              <Typography component="h1" variant="h5">
-                New Build
-              </Typography>
+              <Grid item xs={4} sx={{ mt: 4 }}>
+                <Typography component="h1" variant="h5">
+                  New Build
+                </Typography>
+              </Grid>
+              <Grid item xs={4} sx={{ mt: 4, justifyContent: "center" }}>
+                <Switch label="use your inventory" defaultChecked />
+                <Typography component="h1" variant="caption">
+                  Use Inventory
+                </Typography>
+              </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   required
@@ -161,7 +180,7 @@ function AddRecipe(props) {
             </Grid>
           </Box>
         </Box>
-      </Container>
+      </Box>
     </Fragment>
   );
 }

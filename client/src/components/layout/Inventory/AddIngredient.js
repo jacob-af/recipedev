@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import {
   Container,
   Fab,
@@ -7,11 +7,10 @@ import {
   Box,
   Grid,
   TextField,
-  Autocomplete
+  Autocomplete,
+  Switch
   //Checkbox
 } from "@mui/material";
-import Navbar from "../NavBar";
-import BottomNavBar from "../BottomNavBar";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
@@ -59,127 +58,121 @@ function AddIngredient(props) {
   });
 
   return (
-    <Fragment>
-      <Navbar />
-      <Container sx={{ bgcolor: "#FFF", width: 1 }}>
-        <Fab
-          component={RouterLink}
-          to="/recipe"
-          sx={{ position: "absolute", top: 45, right: -15 }}
-        >
-          -
-        </Fab>
+    <Container sx={{ bgcolor: "#FFF", width: 1, maxWidth: 400 }}>
+      <Fab
+        component={RouterLink}
+        to="/recipe"
+        sx={{ position: "absolute", top: 45, right: -15 }}
+      >
+        -
+      </Fab>
+      <Box
+        sx={{
+          marginTop: 2,
+          display: "flex",
+          alignItems: "center"
+        }}
+      >
         <Box
-          sx={{
-            marginTop: 2,
-            display: "flex",
-            alignItems: "center"
-          }}
+          component="form"
+          noValidate
+          sx={{ mt: 4, overflow: "auto", height: 0.9 }}
+          onSubmit={handleSubmit}
         >
-          <Box
-            component="form"
-            noValidate
-            sx={{ mt: 2, overflow: "auto", height: 0.9 }}
-            onSubmit={handleSubmit}
-          >
-            <Grid container spacing={2}>
-              <Typography component="h1" variant="h5">
-                New Ingredient
-              </Typography>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="name"
-                  label="Ingredient Name"
-                  name="name"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Autocomplete
-                  required
-                  disablePortal
-                  isOptionEqualToValue={(option, value) =>
-                    option.id === value.id
-                  }
-                  onChange={(event, newValue) => {
-                    handleIngredientChange(newValue);
-                    console.log(newValue);
-                  }}
-                  id={`ingredient${props.index}`}
-                  options={
-                    !ingredientTypeInput
-                      ? [{ label: "Loading...", id: 0 }]
-                      : ingredientTypeInput
-                  }
-                  renderInput={params => (
-                    <TextField {...params} label="Ingredient Type" />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={7}>
-                <TextField
-                  required
-                  fullWidth
-                  id="amount"
-                  label="Amount"
-                  name="amount"
-                />
-              </Grid>
-              <Grid item xs={5}>
-                <TextField
-                  required
-                  fullWidth
-                  id="unit"
-                  label="Unit"
-                  name="unit"
-                  rows={4}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  multiline
-                  minRows={3}
-                  required
-                  fullWidth
-                  id="description"
-                  label="Description"
-                  name="description"
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="price"
-                  label="Price"
-                  name="price"
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="source"
-                  label="Source"
-                  name="source"
-                />
-              </Grid>
-
-              <Button
-                type="submit"
+          <Grid container spacing={2}>
+            <Typography component="h1" variant="h5">
+              New Ingredient
+            </Typography>
+            <Grid item xs={12}>
+              <TextField
+                required
                 fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Create Ingredient
-              </Button>
+                id="name"
+                label="Ingredient Name"
+                name="name"
+              />
             </Grid>
-          </Box>
+            <Grid item xs={12}>
+              <Autocomplete
+                required
+                disablePortal
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                onChange={(event, newValue) => {
+                  handleIngredientChange(newValue);
+                  console.log(newValue);
+                }}
+                id={`ingredient${props.index}`}
+                options={
+                  !ingredientTypeInput
+                    ? [{ label: "Loading...", id: 0 }]
+                    : ingredientTypeInput
+                }
+                renderInput={params => (
+                  <TextField {...params} label="Ingredient Type" />
+                )}
+              />
+            </Grid>
+            <Grid item xs={7}>
+              <TextField
+                required
+                fullWidth
+                id="amount"
+                label="Amount"
+                name="amount"
+              />
+            </Grid>
+            <Grid item xs={5}>
+              <TextField
+                required
+                fullWidth
+                id="unit"
+                label="Unit"
+                name="unit"
+                rows={4}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                multiline
+                minRows={3}
+                required
+                fullWidth
+                id="description"
+                label="Description"
+                name="description"
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                required
+                fullWidth
+                id="price"
+                label="Price"
+                name="price"
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                required
+                fullWidth
+                id="source"
+                label="Source"
+                name="source"
+              />
+            </Grid>
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Create Ingredient
+            </Button>
+          </Grid>
         </Box>
-      </Container>
-      <BottomNavBar />
-    </Fragment>
+      </Box>
+    </Container>
   );
 }
 

@@ -24,8 +24,20 @@ function allIngredientTypes(parent, args, context) {
   });
 }
 
-function allIngredients(parent, args, context) {
-  return context.prisma.ingredient.findMany({});
+async function allIngredients(parent, args, context) {
+  const ingredientList = await context.prisma.ingredientUser.findMany({
+    where: { userId: args.userId || context.userId }
+  });
+  const ingredients = await ingredientList.map(async ingredient => {
+    const ing = await context.prisma.ingredient.findUnique({
+      where: { id: ingredient.ingredientId }
+    });
+    return {
+      ...ing,
+      permission: ingredient.permission
+    };
+  });
+  return ingredients;
 }
 function allTouches(parent, args, context) {
   return context.prisma.touch.findMany({});

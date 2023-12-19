@@ -9,7 +9,6 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { token, userData } from "../../state/User";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
@@ -33,13 +32,9 @@ function Copyright(props) {
   );
 }
 
-const theme = createTheme();
-
 export default function LogIn() {
   const [loadUser] = useMutation(LOAD_USER);
   const navigate = useNavigate();
-  // if (loading) return "Submitting...";
-  // if (error) alertMessage(error);
   console.log("ding");
   const handleSubmit = async event => {
     event.preventDefault();

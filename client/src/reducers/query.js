@@ -14,8 +14,15 @@ export const LOAD_USER = gql`
   }
 `;
 
-export const LOAD_GENERIC = gql`
-  query AllIngredientTypes {
+//export const LOAD_GENERIC = gql``;
+
+export const LOAD_ING = gql`
+  query AllIngredients {
+    allIngredients {
+      id
+      name
+      description
+    }
     allIngredientTypes {
       id
       name

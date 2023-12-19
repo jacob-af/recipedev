@@ -12,7 +12,13 @@ import { Link as RouterLink } from "react-router-dom";
 function BottomNavBar() {
   return (
     <Paper
-      sx={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
+      sx={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        display: { sm: "none" }
+      }}
       elevation={3}
       z-index={5}
     >

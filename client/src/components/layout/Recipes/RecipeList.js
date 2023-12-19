@@ -1,7 +1,6 @@
 import React from "react";
 import { Link as RouterLink, Outlet } from "react-router-dom";
 import { Container, Fab, Box } from "@mui/material";
-import BottomNavBar from "../BottomNavBar";
 import Recipe from "./Recipe";
 import { useQuery } from "@apollo/client";
 import { LOAD_BUILDS } from "../../../reducers/query.js";
@@ -19,9 +18,12 @@ function RecipeList() {
   const recipeStack = recipeData();
 
   return (
-    <Container
+    <Box
       sx={{
-        bgcolor: "#FFF",
+        bgcolor: "#000",
+        border: 2,
+        borderColor: "#FFF",
+        height: 1,
         width: 1,
         display: "flex",
         flexDirection: "column",
@@ -31,11 +33,11 @@ function RecipeList() {
       <Fab
         component={RouterLink}
         to="add"
-        sx={{ position: "absolute", top: 45, right: -15 }}
+        sx={{ position: "fixed", top: 45, right: -15 }}
       >
         +
       </Fab>
-      <Box sx={{ mt: 5, overflow: "auto", height: 0.9, maxHeight: 600 }}>
+      <Box sx={{ mt: 0, overflow: "auto", height: 1 }}>
         {recipeStack.length > 0
           ? recipeStack.map(b => {
               return <Recipe recipe={b} key={b.recipeId} />;
@@ -43,7 +45,7 @@ function RecipeList() {
           : "you have no recipes"}
       </Box>
       <Outlet />
-    </Container>
+    </Box>
   );
 }
 

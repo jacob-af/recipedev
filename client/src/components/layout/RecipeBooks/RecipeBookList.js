@@ -22,7 +22,7 @@ function RecipeBookList(props) {
       >
         +
       </Fab>
-      <Container sx={{ mt: 2, overflow: "auto", height: 0.9 }}>
+      <Container sx={{ mt: 8, overflow: "auto", height: 1 }}>
         {recipeBookStack.map(b => {
           return (
             <Grid item md={6} key={b.id}>

@@ -29,15 +29,14 @@ export default function Build({ builds, viewDetail }) {
   };
 
   return (
-    <Box sx={{ alignItems: "center", width: 1 }}>
+    <Box sx={{ alignItems: "center", width: 1, bgcolor: "white" }}>
       <Paper
         square
         elevation={0}
         sx={{
           display: "flex",
-          alignItems: "center",
-          height: 20,
-          pl: 2
+          justifyContent: "center",
+          height: 20
         }}
       >
         <Typography align="center">{builds[activeStep].buildName}</Typography>

@@ -30,9 +30,9 @@ function BottomNavBar() {
       <BottomNavigation
         value={value}
         onChange={handleChange}
+        spacing={1}
         sx={{
           bgcolor: "#000",
-
           "&& .Mui-selected": {
             color: "orange"
           }
@@ -41,6 +41,7 @@ function BottomNavBar() {
         <BottomNavigationAction
           label="Home"
           value="home"
+          width={20}
           component={RouterLink}
           to="/"
           icon={<HomeIcon />}
@@ -55,7 +56,8 @@ function BottomNavBar() {
           to="/recipeBook"
           icon={<MenuBookIcon />}
           sx={{
-            color: "#FFF"
+            color: "#FFF",
+            px: 0
           }}
         />
         <BottomNavigationAction

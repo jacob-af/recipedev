@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import {
   Fab,
   Button,
@@ -13,14 +13,21 @@ import {
 import BuildInput from "./BuildInput";
 import { useMutation, useReactiveVar } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
-import { Link as RouterLink } from "react-router-dom";
-import { newRecipe } from "../../../state/User";
+//import { Link as RouterLink } from "react-router-dom";
+import { newBuild, blankBuild } from "../../../state/User";
 import { ADD_RECIPE } from "../../../reducers/mutations";
 
 function AddRecipe(props) {
-  const touches = useReactiveVar(newRecipe);
+  const touches = useReactiveVar(newBuild);
   const [addRecipe] = useMutation(ADD_RECIPE);
   const navigate = useNavigate();
+  const [checked, setChecked] = useState(true);
+
+  const handleChange = event => {
+    console.log(checked);
+    setChecked(event.target.checked);
+    newBuild(blankBuild);
+  };
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -61,7 +68,7 @@ function AddRecipe(props) {
       }
     ];
 
-    newRecipe(rec);
+    newBuild(rec);
   };
 
   return (
@@ -85,7 +92,6 @@ function AddRecipe(props) {
       >
         <Box
           sx={{
-            marginTop: 2,
             display: "flex",
             // flexDirection: "column",
             height: 1,
@@ -98,16 +104,21 @@ function AddRecipe(props) {
             sx={{ mt: 2, overflow: "auto", height: 1 }}
             onSubmit={handleSubmit}
           >
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
               <Grid item xs={4} sx={{ mt: 4 }}>
                 <Typography component="h1" variant="h5">
                   New Build
                 </Typography>
               </Grid>
               <Grid item xs={4} sx={{ mt: 4, justifyContent: "center" }}>
-                <Switch label="use your inventory" defaultChecked />
+                <Switch
+                  label="inventory toggle"
+                  checked={checked}
+                  onChange={handleChange}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
                 <Typography component="h1" variant="caption">
-                  Use Inventory
+                  {checked ? "Using Inventory" : "Using Ingredient Types"}
                 </Typography>
               </Grid>
 
@@ -163,7 +174,11 @@ function AddRecipe(props) {
               </Grid>
               {touches.map((touch, index) => (
                 <Grid item xs={12} key={index}>
-                  <BuildInput index={index} touch={touch} />
+                  <BuildInput
+                    index={index}
+                    touch={touch}
+                    ingredientSelect={checked}
+                  />
                 </Grid>
               ))}
 

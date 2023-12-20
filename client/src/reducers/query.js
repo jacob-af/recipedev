@@ -22,6 +22,9 @@ export const LOAD_ING = gql`
       id
       name
       description
+      ingredientType {
+        id
+      }
     }
     allIngredientTypes {
       id

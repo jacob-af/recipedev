@@ -23,7 +23,6 @@ const recipe = gql`
   }
 
   type RecipeResponse {
-    recipe: Recipe
     build: Build
     status: StatusMessage
   }

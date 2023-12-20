@@ -28,7 +28,7 @@ async function addRecipe(parent, args, context, info) {
     info
   );
 
-  return { recipe, build };
+  return { build, status };
 }
 
 async function addBuild(parent, args, context, info) {
@@ -63,15 +63,12 @@ async function addBuild(parent, args, context, info) {
       permission: "Owner"
     }
   });
-  //   const recipeBookBuild = await context.prisma.recipeBookBuild.create({
-  //     data: {
-  //         build: build.id,
-  //         recipeBook:
-  //     }
-  //   })
   return {
-    build: build,
-    status: `${build.buildName} Created, permission level ${buildUser.permission}`
+    build,
+    status: {
+      messsage: `${build.buildName} Created, permission level ${buildUser.permission}`,
+      code: "success"
+    }
   };
 }
 

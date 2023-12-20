@@ -7,9 +7,7 @@ import {
   Box,
   Grid,
   TextField,
-  Autocomplete,
-  Switch
-  //Checkbox
+  Autocomplete
 } from "@mui/material";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";

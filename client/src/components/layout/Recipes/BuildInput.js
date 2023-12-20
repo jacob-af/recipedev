@@ -7,15 +7,21 @@ import {
   MenuItem,
   CssBaseline
 } from "@mui/material";
-import { ingredientTypes, newRecipe } from "../../../state/User";
+import { ingredientTypes, ingredients, newBuild } from "../../../state/User";
 import { useReactiveVar } from "@apollo/client";
 
-function BuildInput(props) {
-  const touches = useReactiveVar(newRecipe);
+const addLabels = list => {
+  return list.map(item => {
+    return { ...item, label: item.name };
+  });
+};
+
+function BuildInput({ ingredientSelect, index, touch }) {
+  const touches = useReactiveVar(newBuild);
 
   const handleAmountChange = event => {
-    const touchArray = touches.map((touch, index) => {
-      if (index === props.index) {
+    const touchArray = touches.map((touch, i) => {
+      if (i === index) {
         return {
           ...touch,
           amount: parseFloat(event.target.value)
@@ -23,11 +29,11 @@ function BuildInput(props) {
       }
       return touch;
     });
-    newRecipe(touchArray);
+    newBuild(touchArray);
   };
   const handleUnitChange = event => {
-    const touchArray = touches.map((touch, index) => {
-      if (index === props.index) {
+    const touchArray = touches.map((touch, i) => {
+      if (i === index) {
         return {
           ...touch,
           unit: event.target.value
@@ -35,28 +41,32 @@ function BuildInput(props) {
       }
       return touch;
     });
-    newRecipe(touchArray);
+    newBuild(touchArray);
   };
-
   const handleIngredientChange = value => {
-    const touchArray = newRecipe().map((touch, index) => {
-      if (index === props.index) {
-        return {
-          ...touch,
-          ingredientType: value
-        };
+    const touchArray = newBuild().map((touch, i) => {
+      if (ingredientSelect) {
+        if (i === index) {
+          return {
+            ...touch,
+            ingredient: value,
+            ingredientType: value.ingredientType
+          };
+        } else if (i === index) {
+          return {
+            ...touch,
+            ingredientType: value
+          };
+        }
       }
       return touch;
     });
-    newRecipe(touchArray);
+    newBuild(touchArray);
   };
 
-  const ingredientTypeInput = ingredientTypes().map(ingredient => {
-    return {
-      ...ingredient,
-      label: ingredient.name
-    };
-  });
+  const ingredientTypeInput = addLabels(ingredientTypes());
+  const ingredientInput = addLabels(ingredients());
+
   return (
     <Grid container spacing={1}>
       <CssBaseline />
@@ -75,7 +85,7 @@ function BuildInput(props) {
         <Select
           id="outlined-basic"
           variant="outlined"
-          value={props.touch.unit}
+          value={touch.unit}
           onChange={handleUnitChange}
           label="Unit"
           name="unit"
@@ -95,14 +105,10 @@ function BuildInput(props) {
           isOptionEqualToValue={(option, value) => option.id === value.id}
           onChange={(event, newValue) => {
             handleIngredientChange(newValue);
-            console.log(newValue);
+            console.log(newValue, ingredientSelect);
           }}
-          id={`ingredient${props.index}`}
-          options={
-            !ingredientTypeInput
-              ? [{ label: "Loading...", id: 0 }]
-              : ingredientTypeInput
-          }
+          id={`ingredient${index}`}
+          options={ingredientSelect ? ingredientInput : ingredientTypeInput}
           renderInput={params => <TextField {...params} label="Ingredient" />}
         />
       </Grid>

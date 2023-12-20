@@ -1,6 +1,5 @@
 import * as React from "react";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import MuiAppBar from "@mui/material/AppBar";
@@ -53,6 +52,7 @@ const Drawer = styled(MuiDrawer, {
     },
     whiteSpace: "nowrap",
     width: drawerWidth,
+
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.easeInOut,
       duration: theme.transitions.duration.enteringScreen
@@ -77,11 +77,11 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 // TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
+const defaultTheme = createTheme({});
 
 export default function Dashboard() {
   const { data, loading, error } = useQuery(LOAD_ING);
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -95,7 +95,6 @@ export default function Dashboard() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: "flex", height: 1 }}>
-        <CssBaseline />
         <AppBar position="fixed" open={open}>
           <Toolbar
             sx={{
@@ -123,7 +122,7 @@ export default function Dashboard() {
               align="center"
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+              Back Pocket
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
@@ -146,8 +145,11 @@ export default function Dashboard() {
               <ChevronLeftIcon />
             </IconButton>
           </Toolbar>
-          <Divider />
-          <List component="nav">
+          {/* <Divider /> */}
+          <List
+            component="nav"
+            sx={{ bgcolor: "#000", color: "#FFF", height: 1 }}
+          >
             {mainListItems}
             <Divider sx={{ my: 1 }} />
             {secondaryListItems}
@@ -161,12 +163,17 @@ export default function Dashboard() {
                 ? theme.palette.grey[900]
                 : theme.palette.grey[900],
             flexGrow: 1,
+
             height: 1,
-            overflow: "auto"
+            overflow: "auto",
+            justifyContent: "center"
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4 }}>
+          <Container
+            maxWidth="lg"
+            sx={{ mt: 4, justifyContent: "center", display: "flex" }}
+          >
             <Outlet />
             <Copyright sx={{ pt: 4 }} />
           </Container>

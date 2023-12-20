@@ -25,9 +25,10 @@ function RecipeList() {
         borderColor: "#FFF",
         height: 1,
         width: 1,
+        maxWidth: 800,
         display: "flex",
         flexDirection: "column",
-        alignItems: "center"
+        justifyContent: "center"
       }}
     >
       <Fab
@@ -37,13 +38,13 @@ function RecipeList() {
       >
         +
       </Fab>
-      <Box sx={{ mt: 0, overflow: "auto", height: 1 }}>
-        {recipeStack.length > 0
-          ? recipeStack.map(b => {
-              return <Recipe recipe={b} key={b.recipeId} />;
-            })
-          : "you have no recipes"}
-      </Box>
+
+      {recipeStack.length > 0
+        ? recipeStack.map(b => {
+            return <Recipe recipe={b} key={b.recipeId} />;
+          })
+        : "you have no recipes"}
+
       <Outlet />
     </Box>
   );

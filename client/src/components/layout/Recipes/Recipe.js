@@ -20,63 +20,70 @@ function Recipe(props) {
   };
 
   return (
-    <Grid
-      container
+    // <Grid
+    //   container
+    //   sx={{
+    //     border: 2,
+    //     borderColor: "orange",
+    //     borderRadius: 3,
+    //     width: 1,
+    //     my: 4
+    //   }}
+    // >
+    //   <Grid
+    //     item
+    //     sx={{
+    //       border: 1,
+    //       borderColor: "blue",
+    //       width: 1,
+    //       bgcolor: "blue",
+    //       display: "flex",
+    //       flexGrow: 1
+    //     }}
+    //   >
+    <Box
       sx={{
-        border: 2,
-        borderColor: "orange",
-        borderRadius: 3,
         width: 1,
-        my: 4
+        maxWidth: 700,
+        justifyContent: "center",
+        border: 2,
+        bgcolor: "#888",
+        borderColor: "silver",
+        flexDirection: "column",
+        p: 4,
+        my: 2,
+        mx: 2
       }}
     >
-      <Grid
-        item
-        sx={{
-          border: 1,
-          borderColor: "blue",
-          width: 1,
-          p: 4,
-          bgcolor: "white"
-        }}
+      <Typography component="h6" variant="h6" color="black" align="center">
+        {recipe.recipeName}
+      </Typography>
+      <Collapse in={viewDetail}>
+        <Typography>{recipe.history} HIIIIII</Typography>
+      </Collapse>
+
+      <Build builds={recipe.builds} viewDetail={viewDetail} />
+
+      <Button
+        onClick={handleChange}
+        sx={{ width: 1, justifyContent: "center", height: 8 }}
       >
-        <Box
-          sx={{
-            width: 1,
-            justifyContent: "center",
-            border: 2,
-            borderColor: "silver"
-          }}
+        <SvgIcon
+          viewBox="0 0 40 40"
+          width={1}
+          preserveAspectRatio="none"
+          sx={{ transform: "scale(18, 1.5)" }}
         >
-          <Typography component="h6" variant="h6" color="black" align="center">
-            {recipe.recipeName}
-          </Typography>
-          <Collapse in={viewDetail}>
-            <Typography>{recipe.history} HIIIIII</Typography>
-          </Collapse>
-
-          <Build builds={recipe.builds} viewDetail={viewDetail} />
-
-          <Button
-            onClick={handleChange}
-            sx={{ width: 1, justifyContent: "center", height: 8 }}
-          >
-            <SvgIcon
-              viewBox="0 0 40 40"
-              width={1}
-              preserveAspectRatio="none"
-              sx={{ transform: "scale(18, 1.5)" }}
-            >
-              {viewDetail ? (
-                <ExpandLess sx={{ color: "#000" }} />
-              ) : (
-                <ExpandMore sx={{ color: "#000" }} />
-              )}
-            </SvgIcon>
-          </Button>
-        </Box>
-      </Grid>
-    </Grid>
+          {viewDetail ? (
+            <ExpandLess sx={{ color: "#000" }} />
+          ) : (
+            <ExpandMore sx={{ color: "#000" }} />
+          )}
+        </SvgIcon>
+      </Button>
+    </Box>
+    //   </Grid>
+    // </Grid>
   );
 }
 

@@ -4,7 +4,6 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { Route, Routes } from "react-router-dom";
 import React from "react";
-import Landing from "./components/layout/Landing";
 import Dashboard from "./components/layout/Dashboard";
 import RecipeList from "./components/layout/Recipes/RecipeList";
 import RecipeBookList from "./components/layout/RecipeBooks/RecipeBookList";

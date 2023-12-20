@@ -62,7 +62,7 @@ function AddIngredient(props) {
       <Fab
         component={RouterLink}
         to="/recipe"
-        sx={{ position: "absolute", top: 45, right: -15 }}
+        sx={{ position: "fixed", top: 45, right: -15 }}
       >
         -
       </Fab>

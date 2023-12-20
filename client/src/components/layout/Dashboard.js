@@ -15,13 +15,16 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { mainListItems, secondaryListItems } from "./listItems";
+import { useQuery } from "@apollo/client";
+import { LOAD_ING } from "../../reducers/query";
+import { ingredients, ingredientTypes } from "../../state/User";
 
 import { Outlet } from "react-router-dom";
 import BottomNavBar from "./BottomNavBar";
 
 function Copyright(props) {}
 
-const drawerWidth = 200;
+const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: prop => prop !== "open"
@@ -45,23 +48,29 @@ const Drawer = styled(MuiDrawer, {
   shouldForwardProp: prop => prop !== "open"
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
-    position: "relative",
+    [theme.breakpoints.up("sm")]: {
+      position: "relative"
+    },
     whiteSpace: "nowrap",
     width: drawerWidth,
     transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
+      easing: theme.transitions.easing.easeInOut,
       duration: theme.transitions.duration.enteringScreen
     }),
     boxSizing: "border-box",
     ...(!open && {
       overflowX: "hidden",
       transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
+        easing: theme.transitions.easing.easeInOut,
         duration: theme.transitions.duration.leavingScreen
       }),
       width: theme.spacing(7),
+      [theme.breakpoints.only("xs")]: {
+        display: "none"
+      },
       [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9)
+        width: theme.spacing(9),
+        position: "relative"
       }
     })
   }
@@ -71,10 +80,17 @@ const Drawer = styled(MuiDrawer, {
 const defaultTheme = createTheme();
 
 export default function Dashboard() {
+  const { data, loading, error } = useQuery(LOAD_ING);
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error.message}`;
+  ingredientTypes(data.allIngredientTypes);
+  ingredients(
+    [...data.allIngredients].sort((a, b) => (a.name < b.name ? -1 : 1))
+  );
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -145,7 +161,7 @@ export default function Dashboard() {
                 ? theme.palette.grey[900]
                 : theme.palette.grey[900],
             flexGrow: 1,
-            height: "90ev",
+            height: 1,
             overflow: "auto"
           }}
         >

@@ -10,6 +10,12 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import { Link as RouterLink } from "react-router-dom";
 
 function BottomNavBar() {
+  const [value, setValue] = React.useState("home");
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <Paper
       sx={{
@@ -20,44 +26,67 @@ function BottomNavBar() {
         display: { sm: "none" }
       }}
       elevation={3}
-      z-index={5}
     >
       <BottomNavigation
-        showLabels
-        // value={value}
-        // onChange={(event, newValue) => {
-        //   setValue(newValue);
-        // }}
+        value={value}
+        onChange={handleChange}
+        sx={{
+          bgcolor: "#000",
+
+          "&& .Mui-selected": {
+            color: "orange"
+          }
+        }}
       >
         <BottomNavigationAction
           label="Home"
+          value="home"
           component={RouterLink}
           to="/"
           icon={<HomeIcon />}
+          sx={{
+            color: "#FFF"
+          }}
         />
         <BottomNavigationAction
           label="RecipeBooks"
+          value="recipeBooks"
           component={RouterLink}
           to="/recipeBook"
           icon={<MenuBookIcon />}
+          sx={{
+            color: "#FFF"
+          }}
         />
         <BottomNavigationAction
           label="Recipes"
+          value="recipes"
           component={RouterLink}
           to="/recipe"
           icon={<LocalBarIcon />}
+          sx={{
+            color: "#FFF"
+          }}
         />
         <BottomNavigationAction
           label="Inventory"
+          value="inventory"
           component={RouterLink}
           to="/inventory"
           icon={<LiquorIcon />}
+          sx={{
+            color: "#FFF"
+          }}
         />
         <BottomNavigationAction
           label="Crew"
+          value="crew"
           component={RouterLink}
           to="/crew"
           icon={<GroupsIcon />}
+          sx={{
+            color: "#FFF"
+          }}
         />
       </BottomNavigation>
     </Paper>

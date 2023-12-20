@@ -17,20 +17,20 @@ function RecipeBookList(props) {
     <Fragment>
       <Fab
         component={RouterLink}
-        to="/addRecipeBook"
-        sx={{ position: "absolute", top: 45, right: -15 }}
+        to="/addRecipe"
+        sx={{ position: "fixed", top: 45, right: -15 }}
       >
         +
       </Fab>
-      <Container sx={{ mt: 8, overflow: "auto", height: 1 }}>
+      <Box sx={{ overflow: "auto", p: 0, m: 0 }} className="RBLGirds">
         {recipeBookStack.map(b => {
           return (
             <Grid item md={6} key={b.id}>
               <Box
                 sx={{
                   position: "relative",
-                  p: { xs: 3, md: 6 },
-                  pr: { md: 0 }
+
+                  pr: 0
                 }}
               >
                 <Typography variant="h4" color="white" align="center">
@@ -51,7 +51,7 @@ function RecipeBookList(props) {
             </Grid>
           );
         })}
-      </Container>
+      </Box>
     </Fragment>
   );
 }

@@ -20,7 +20,7 @@ function Inventory() {
       <Fab
         component={RouterLink}
         to="/addIngredient"
-        sx={{ position: "absolute", top: 45, right: -15 }}
+        sx={{ position: "fixed", top: 45, right: -15 }}
       >
         +
       </Fab>

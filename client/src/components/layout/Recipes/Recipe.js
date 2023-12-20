@@ -1,13 +1,6 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import {
-  Typography,
-  Grid,
-  Box,
-  Button,
-  Collapse,
-  SvgIcon
-} from "@mui/material/";
+import { Typography, Box, Button, Collapse, SvgIcon } from "@mui/material/";
 import { ExpandMore, ExpandLess } from "@mui/icons-material/";
 import Build from "./Build";
 
@@ -20,27 +13,6 @@ function Recipe(props) {
   };
 
   return (
-    // <Grid
-    //   container
-    //   sx={{
-    //     border: 2,
-    //     borderColor: "orange",
-    //     borderRadius: 3,
-    //     width: 1,
-    //     my: 4
-    //   }}
-    // >
-    //   <Grid
-    //     item
-    //     sx={{
-    //       border: 1,
-    //       borderColor: "blue",
-    //       width: 1,
-    //       bgcolor: "blue",
-    //       display: "flex",
-    //       flexGrow: 1
-    //     }}
-    //   >
     <Box
       sx={{
         width: 1,
@@ -82,8 +54,6 @@ function Recipe(props) {
         </SvgIcon>
       </Button>
     </Box>
-    //   </Grid>
-    // </Grid>
   );
 }
 

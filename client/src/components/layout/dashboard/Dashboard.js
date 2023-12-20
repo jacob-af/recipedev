@@ -15,8 +15,8 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { mainListItems, secondaryListItems } from "./listItems";
 import { useQuery } from "@apollo/client";
-import { LOAD_ING } from "../../reducers/query";
-import { ingredients, ingredientTypes } from "../../state/User";
+import { LOAD_ING } from "../../../reducers/query";
+import { ingredients, ingredientTypes } from "../../../state/User";
 
 import { Outlet } from "react-router-dom";
 import BottomNavBar from "./BottomNavBar";

@@ -13,33 +13,33 @@ import { Link as RouterLink } from "react-router-dom";
 
 export const mainListItems = (
   <React.Fragment>
-    <ListItemButton component={RouterLink} to="/">
+    <ListItemButton component={RouterLink} to="/" sx={{ color: "#FFF" }}>
       <ListItemIcon>
-        <DashboardIcon />
+        <HomeIcon sx={{ color: "#FFF" }} />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
     </ListItemButton>
     <ListItemButton component={RouterLink} to="recipe">
       <ListItemIcon>
-        <LocalBarIcon />
+        <LocalBarIcon sx={{ color: "#FFF" }} />
       </ListItemIcon>
       <ListItemText primary="Recipes" />
     </ListItemButton>
     <ListItemButton component={RouterLink} to="recipeBook">
       <ListItemIcon>
-        <MenuBookIcon />
+        <MenuBookIcon sx={{ color: "#FFF" }} />
       </ListItemIcon>
       <ListItemText primary="RecipeBooks" />
     </ListItemButton>
     <ListItemButton component={RouterLink} to="inventory">
       <ListItemIcon>
-        <LiquorIcon />
+        <LiquorIcon sx={{ color: "#FFF" }} />
       </ListItemIcon>
       <ListItemText primary="Inventory" />
     </ListItemButton>
     <ListItemButton component={RouterLink} to="crew">
       <ListItemIcon>
-        <GroupsIcon />
+        <GroupsIcon sx={{ color: "#FFF" }} />
       </ListItemIcon>
       <ListItemText primary="Crew" />
     </ListItemButton>
@@ -48,24 +48,28 @@ export const mainListItems = (
 
 export const secondaryListItems = (
   <React.Fragment>
-    <ListSubheader component="div" inset>
-      Saved reports
+    <ListSubheader
+      component="div"
+      inset
+      sx={{ color: "#FFF", bgcolor: "#000" }}
+    >
+      Recent:
     </ListSubheader>
     <ListItemButton>
       <ListItemIcon>
-        <HomeIcon />
+        <DashboardIcon sx={{ color: "#FFF" }} />
       </ListItemIcon>
       <ListItemText primary="Current month" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <HomeIcon />
+        <DashboardIcon sx={{ color: "#FFF" }} />
       </ListItemIcon>
       <ListItemText primary="Last quarter" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <HomeIcon />
+        <DashboardIcon sx={{ color: "#FFF" }} />
       </ListItemIcon>
       <ListItemText primary="Year-end sale" />
     </ListItemButton>

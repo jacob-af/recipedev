@@ -6,7 +6,7 @@ import Collapse from "@mui/material/Collapse";
 //import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import { useReactiveVar } from "@apollo/client";
-import { alertMessage } from "../../state/User";
+import { alertMessage } from "../../../state/User";
 
 export default function AlertDisplay() {
   const [open, setOpen] = React.useState(false);

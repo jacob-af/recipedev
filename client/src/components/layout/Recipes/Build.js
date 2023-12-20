@@ -29,17 +29,16 @@ export default function Build({ builds, viewDetail }) {
   };
 
   return (
-    <Box sx={{ alignItems: "center", width: 1, bgcolor: "#888" }}>
-      <Paper
-        square
-        elevation={0}
-        sx={{
-          display: "flex",
-          justifyContent: "center"
-        }}
-      >
-        <Typography align="center">{builds[activeStep].buildName}</Typography>
-      </Paper>
+    <Box
+      sx={{
+        alignItems: "center",
+        width: 1,
+        bgcolor: "#888",
+        justifyContent: "center"
+      }}
+    >
+      <Typography align="center">{builds[activeStep].buildName}</Typography>
+
       {builds.length === 1 ? (
         ""
       ) : (

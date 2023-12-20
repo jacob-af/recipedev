@@ -166,13 +166,18 @@ export default function Dashboard() {
 
             height: 1,
             overflow: "auto",
-            justifyContent: "center"
+            justifyContent: "center",
+            pr: { xs: 0, sm: "72px" }
           }}
         >
           <Toolbar />
           <Container
             maxWidth="lg"
-            sx={{ mt: 4, justifyContent: "center", display: "flex" }}
+            sx={{
+              mt: 4,
+              justifyContent: "center",
+              display: "flex"
+            }}
           >
             <Outlet />
             <Copyright sx={{ pt: 4 }} />

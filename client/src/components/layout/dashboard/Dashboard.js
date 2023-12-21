@@ -167,7 +167,8 @@ export default function Dashboard() {
             height: 1,
             overflow: "auto",
             justifyContent: "center",
-            pr: { xs: 0, sm: "72px" }
+            pr: { xs: 0, sm: "72px" },
+            pb: { xs: "56px", sm: 0 }
           }}
         >
           <Toolbar />

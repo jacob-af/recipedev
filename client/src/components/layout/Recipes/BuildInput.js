@@ -7,7 +7,11 @@ import {
   MenuItem,
   CssBaseline
 } from "@mui/material";
-import { ingredientTypes, ingredients, newBuild } from "../../../state/User";
+import {
+  ingredientTypes,
+  ingredients,
+  newBuildSpec
+} from "../../../state/User";
 import { useReactiveVar } from "@apollo/client";
 
 const addLabels = list => {
@@ -17,7 +21,7 @@ const addLabels = list => {
 };
 
 function BuildInput({ ingredientSelect, index, touch }) {
-  const touches = useReactiveVar(newBuild);
+  const touches = useReactiveVar(newBuildSpec);
 
   const handleAmountChange = event => {
     const touchArray = touches.map((touch, i) => {
@@ -29,7 +33,7 @@ function BuildInput({ ingredientSelect, index, touch }) {
       }
       return touch;
     });
-    newBuild(touchArray);
+    newBuildSpec(touchArray);
   };
   const handleUnitChange = event => {
     const touchArray = touches.map((touch, i) => {
@@ -41,10 +45,10 @@ function BuildInput({ ingredientSelect, index, touch }) {
       }
       return touch;
     });
-    newBuild(touchArray);
+    newBuildSpec(touchArray);
   };
   const handleIngredientChange = value => {
-    const touchArray = newBuild().map((touch, i) => {
+    const touchArray = newBuildSpec().map((touch, i) => {
       if (ingredientSelect) {
         if (i === index) {
           return {
@@ -61,7 +65,7 @@ function BuildInput({ ingredientSelect, index, touch }) {
       }
       return touch;
     });
-    newBuild(touchArray);
+    newBuildSpec(touchArray);
   };
 
   const ingredientTypeInput = addLabels(ingredientTypes());
@@ -101,6 +105,7 @@ function BuildInput({ ingredientSelect, index, touch }) {
       <Grid item xs={6}>
         <Autocomplete
           required
+          freeSolo
           disablePortal
           isOptionEqualToValue={(option, value) => option.id === value.id}
           onChange={(event, newValue) => {
@@ -109,7 +114,9 @@ function BuildInput({ ingredientSelect, index, touch }) {
           }}
           id={`ingredient${index}`}
           options={ingredientSelect ? ingredientInput : ingredientTypeInput}
-          renderInput={params => <TextField {...params} label="Ingredient" />}
+          renderInput={params => (
+            <TextField {...params} label="Ingredient" variation="standat" />
+          )}
         />
       </Grid>
     </Grid>

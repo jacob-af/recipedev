@@ -14,11 +14,11 @@ import BuildInput from "./BuildInput";
 import { useMutation, useReactiveVar } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 //import { Link as RouterLink } from "react-router-dom";
-import { newBuild, blankBuild } from "../../../state/User";
+import { newBuildSpec, blankBuild } from "../../../state/User";
 import { ADD_RECIPE } from "../../../reducers/mutations";
 
 function AddRecipe(props) {
-  const touches = useReactiveVar(newBuild);
+  const touches = useReactiveVar(newBuildSpec);
   const [addRecipe] = useMutation(ADD_RECIPE);
   const navigate = useNavigate();
   const [checked, setChecked] = useState(true);
@@ -26,7 +26,7 @@ function AddRecipe(props) {
   const handleChange = event => {
     console.log(checked);
     setChecked(event.target.checked);
-    newBuild(blankBuild);
+    newBuildSpec(blankBuild);
   };
 
   const handleSubmit = async event => {
@@ -68,7 +68,7 @@ function AddRecipe(props) {
       }
     ];
 
-    newBuild(rec);
+    newBuildSpec(rec);
   };
 
   return (

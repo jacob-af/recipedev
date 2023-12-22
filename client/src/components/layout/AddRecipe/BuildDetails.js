@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import Typography from "@mui/material/Typography";
+
 import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
 import Switch from "@mui/material/Switch";
 import Fab from "@mui/material/Fab";
-import FormControlLabel from "@mui/material/FormControlLabel";
+
 import { useReactiveVar } from "@apollo/client";
 import {
   newBuildSpec,
@@ -33,17 +32,18 @@ export default function BuildDetails() {
   const handleSpecChange = (value, field, index) => {
     const newTouch = {
       ...touches[index],
-      order: index,
       [field]: value
     };
-    const newArray = touches;
-    console.log(newArray, newTouch);
-    newArray.splice(index, 1, newTouch);
-    console.log(newArray);
-    newBuildSpec(newArray);
+
+    touches.splice(index, 1, newTouch);
+    newBuildSpec(touches);
   };
 
-  const handleInputValueChange = (index, value) => {};
+  const removeTouch = index => {
+    touches.splice(index, 1);
+    console.log(touches);
+    newBuildSpec(touches);
+  };
 
   const addTouch = event => {
     const rec = [
@@ -61,7 +61,7 @@ export default function BuildDetails() {
 
   return (
     <React.Fragment>
-      <Grid container spacing={3}>
+      <Grid container spacing={1} alignItems="flex-end">
         <Grid item xs={12}>
           <Switch
             label="inventory toggle"
@@ -71,17 +71,15 @@ export default function BuildDetails() {
         </Grid>
         {touches.map((touch, index) => (
           <BuildInput
-            key={`buildInput${index}${touch.amount}${touch.unit}${touch.ingredientid}`}
+            key={`buildInput${touch.uniqueId}$`}
             index={index}
             touch={touch}
             handleChange={handleSpecChange}
+            removeTouch={removeTouch}
             options={options}
-            ingredientId={
-              checked ? touch.ingredient.id : touch.ingredientType.id
-            }
           />
         ))}
-        <Fab onClick={addTouch}>-</Fab>
+        <Fab onClick={() => addTouch()}>-</Fab>
       </Grid>
     </React.Fragment>
   );

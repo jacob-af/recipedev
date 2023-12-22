@@ -5,10 +5,12 @@ import {
   Autocomplete,
   Select,
   MenuItem,
-  CssBaseline
+  CssBaseline,
+  FormControl,
+  IconButton
 } from "@mui/material";
-
-function BuildInput({ options, index, touch, handleChange }) {
+import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
+function BuildInput({ options, index, touch, handleChange, removeTouch }) {
   return (
     <React.Fragment>
       <Grid item xs={2}>
@@ -25,23 +27,25 @@ function BuildInput({ options, index, touch, handleChange }) {
           }}
         />
       </Grid>
-      <Grid item xs={3}>
-        <Select
-          variant="standard"
-          value={touch.unit}
-          onChange={event => {
-            handleChange(event.target.value, "unit", index);
-          }}
-          label="Unit"
-          name="unit"
-          sx={{ width: 40 }}
-          renderInput={value => <TextField value={value} variant="standard" />}
-        >
-          <MenuItem value={"ml"}>ml</MenuItem>
-          <MenuItem value={"oz"}>oz</MenuItem>
-          <MenuItem value={"L"}>L</MenuItem>
-          <MenuItem value={"dsh"}>dsh</MenuItem>
-        </Select>
+      <Grid item xs={2}>
+        <FormControl>
+          <Select
+            variant="standard"
+            defaultValue={touch.unit}
+            onChange={event => {
+              handleChange(event.target.value, "unit", index);
+            }}
+            label="Unit"
+            name="unit"
+            sx={{ width: 60 }}
+          >
+            <MenuItem value={"ml"}>ml</MenuItem>
+            <MenuItem value={"oz"}>oz</MenuItem>
+            <MenuItem value={"L"}>L</MenuItem>
+            <MenuItem value={"dsh"}>dsh</MenuItem>
+          </Select>
+        </FormControl>
+
         {/* </FormControl> */}
       </Grid>
       <Grid item xs={7}>
@@ -64,6 +68,11 @@ function BuildInput({ options, index, touch, handleChange }) {
             />
           )}
         />
+      </Grid>
+      <Grid item xs={1}>
+        <IconButton onClick={() => removeTouch(index)}>
+          <DoNotDisturbOnIcon />
+        </IconButton>
       </Grid>
     </React.Fragment>
   );

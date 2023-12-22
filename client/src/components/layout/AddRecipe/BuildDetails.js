@@ -42,7 +42,7 @@ export default function BuildDetails() {
   const removeTouch = index => {
     touches.splice(index, 1);
     console.log(touches);
-    newBuildSpec(touches);
+    newBuildSpec([...touches]);
   };
 
   const addTouch = event => {
@@ -71,7 +71,7 @@ export default function BuildDetails() {
         </Grid>
         {touches.map((touch, index) => (
           <BuildInput
-            key={`buildInput${touch.uniqueId}$`}
+            key={`buildInput${touch.order}_${index}`}
             index={index}
             touch={touch}
             handleChange={handleSpecChange}

@@ -25,6 +25,7 @@ function BuildInput({ options, index, touch, handleChange, removeTouch }) {
           onChange={event => {
             handleChange(event.target.value, "amount", index);
           }}
+          inputProps={{ step: ".25" }}
         />
       </Grid>
       <Grid item xs={2}>
@@ -53,12 +54,13 @@ function BuildInput({ options, index, touch, handleChange, removeTouch }) {
           id="ingredient"
           required
           disablePortal
-          isOptionEqualToValue={(option, value) => option.id === value.id}
+          isOptionEqualToValue={(option, value) => option.id === value.id || {}}
           onChange={(event, newValue) => {
             handleChange(newValue, "ingredient", index);
           }}
+          value={touch.ingredient || {}}
           options={options}
-          getOptionLabel={option => option.name}
+          getOptionLabel={option => (option.name ? option.name : "")}
           renderInput={params => (
             <TextField
               {...params}

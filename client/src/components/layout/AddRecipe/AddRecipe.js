@@ -14,24 +14,9 @@ import Review from "./Review";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { ADD_RECIPE } from "../../../reducers/mutations";
-import { newBuildSpec, newBuildInfo, blankBuild } from "../../../state/User";
+import { newBuildSpec, newBuildInfo } from "../../../state/User";
 
 const steps = ["", "Build Details", "Build Instructions", "Review"];
-
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <RecipeSelect />;
-    case 1:
-      return <BuildDetails />;
-    case 2:
-      return <BuildInstructions />;
-    case 3:
-      return <Review />;
-    default:
-      throw new Error("Unknown step");
-  }
-}
 
 export default function Checkout() {
   const buildInfo = newBuildInfo();
@@ -63,6 +48,32 @@ export default function Checkout() {
     });
     console.log(response);
     navigate("/recipe");
+  };
+
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return <RecipeSelect handleChange={handleChange} />;
+      case 1:
+        return <BuildDetails />;
+      case 2:
+        return <BuildInstructions handleChange={handleChange} />;
+      case 3:
+        return <Review />;
+      default:
+        throw new Error("Unknown step");
+    }
+  }
+
+  const handleChange = event => {
+    event.preventDefault();
+    console.log(event);
+    const newInfo = {
+      ...buildInfo,
+      [event.target.name]: event.target.value
+    };
+    console.log(newInfo);
+    newBuildInfo({ ...newInfo });
   };
 
   const handleNext = () => {

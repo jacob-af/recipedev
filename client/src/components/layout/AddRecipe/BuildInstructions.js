@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 
-export default function BuildInstructions() {
+export default function BuildInstructions({ handleChange }) {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -18,6 +18,7 @@ export default function BuildInstructions() {
             label="Glassware"
             name="glassware"
             variant="standard"
+            onChange={e => handleChange(e)}
           />
         </Grid>
         <Grid item xs={6}>
@@ -28,6 +29,7 @@ export default function BuildInstructions() {
             label="Ice"
             name="ice"
             variant="standard"
+            onChange={e => handleChange(e)}
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -39,6 +41,7 @@ export default function BuildInstructions() {
             variant="standard"
             multiline
             rows={4}
+            onChange={e => handleChange(e)}
           />
         </Grid>
       </Grid>

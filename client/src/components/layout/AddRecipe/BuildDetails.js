@@ -20,7 +20,7 @@ export default function BuildDetails() {
 
   const handleSetChange = event => {
     console.log(checked);
-    newBuildSpec(blankBuild);
+    newBuildSpec([blankBuild(0), blankBuild(1)]);
     if (checked) {
       setOptions(ingredientTypes());
     } else {
@@ -36,7 +36,7 @@ export default function BuildDetails() {
     };
 
     touches.splice(index, 1, newTouch);
-    newBuildSpec(touches);
+    newBuildSpec([...touches]);
   };
 
   const removeTouch = index => {
@@ -46,16 +46,7 @@ export default function BuildDetails() {
   };
 
   const addTouch = event => {
-    const rec = [
-      ...touches,
-      {
-        order: touches.length,
-        ingredientType: {},
-        ingredient: {},
-        amount: 0,
-        unit: "oz"
-      }
-    ];
+    const rec = [...touches, blankBuild(touches.length)];
     newBuildSpec(rec);
   };
 

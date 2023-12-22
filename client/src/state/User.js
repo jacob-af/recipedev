@@ -18,6 +18,6 @@ export const recipeBookData = cache.makeVar();
 export const ingredientTypes = cache.makeVar([]);
 export const ingredients = cache.makeVar([]);
 export const alertMessage = cache.makeVar();
-export const newBuildInfo = cache.makeVar({});
+export const newBuildInfo = cache.makeVar({ history: "", ice: "" });
 export const newBuildSpec = cache.makeVar([blankBuild(0), blankBuild(1)]);
 export const newIngredient = cache.makeVar();

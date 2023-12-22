@@ -13,7 +13,7 @@ const addLabels = list => {
   });
 };
 
-export default function RecipeSelect() {
+export default function RecipeSelect({ handleChange }) {
   const recipeList = addLabels(recipeData());
 
   const handleRecipeChange = value => {
@@ -29,7 +29,7 @@ export default function RecipeSelect() {
       <Typography variant="h6" gutterBottom textAlign="center">
         Create New Drink Recipe
       </Typography>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} alignItems="center" justifyContent={"center"}>
         <Grid item xs={12} sm={6}>
           <TextField
             required
@@ -38,38 +38,31 @@ export default function RecipeSelect() {
             name="name"
             fullWidth
             variant="standard"
+            onChange={e => handleChange(e)}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12}>
           <TextField
+            defaultValue={newBuildInfo().history}
             id="history"
             label="Notes (optional)"
             name="history"
             multiline
-            rows={4}
+            rows={5}
             fullWidth
             variant="standard"
+            onChange={e => handleChange(e)}
           />
         </Grid>
-        <Grid
-          item
-          xs={5}
-          sx={{ justifyContent: "center", alignContent: "center" }}
-        >
+        <Grid item xs={5}>
           <Divider sx={{ border: 1 }} />
         </Grid>
-        <Grid
-          item
-          xs={2}
-          sx={{ justifyContent: "center", alignContent: "center" }}
-        >
-          <Typography variant="subtitle1">Or</Typography>
+        <Grid item xs={2}>
+          <Typography variant="subtitle1" textAlign="center">
+            Or
+          </Typography>
         </Grid>
-        <Grid
-          item
-          xs={5}
-          sx={{ justifyContent: "center", alignContent: "center" }}
-        >
+        <Grid item xs={5}>
           <Divider sx={{ border: 1 }} />
         </Grid>
       </Grid>
@@ -91,6 +84,17 @@ export default function RecipeSelect() {
             renderInput={params => (
               <TextField {...params} label="Recipe Name" variant="standard" />
             )}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            id="name"
+            label="New Build Name"
+            name="buildName"
+            fullWidth
+            variant="standard"
+            onChange={e => handleChange(e)}
           />
         </Grid>
       </Grid>

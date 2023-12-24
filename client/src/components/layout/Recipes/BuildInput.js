@@ -110,7 +110,6 @@ function BuildInput({ ingredientSelect, index, touch }) {
           isOptionEqualToValue={(option, value) => option.id === value.id}
           onChange={(event, newValue) => {
             handleIngredientChange(newValue);
-            console.log(newValue, ingredientSelect);
           }}
           id={`ingredient${index}`}
           options={ingredientSelect ? ingredientInput : ingredientTypeInput}

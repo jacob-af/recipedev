@@ -23,7 +23,6 @@ function AddIngredient(props) {
   const handleSubmit = async event => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    console.log(formData.get("name"));
     try {
       const response = await addIngredient({
         variables: {

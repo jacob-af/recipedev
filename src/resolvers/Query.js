@@ -10,6 +10,22 @@ function allRecipes(parent, args, context) {
   return context.prisma.recipe.findMany({});
 }
 
+async function userBuilds(parent, args, context) {
+  const buildList = await context.prisma.buildUser.findMany({
+    where: { userId: args.userId || context.userId }
+  });
+  const builds = await buildList.map(async buildId => {
+    const build = await context.prisma.build.findUnique({
+      where: { id: buildId.buildId }
+    });
+    return {
+      ...build,
+      permission: buildId.permission
+    };
+  });
+  return builds;
+}
+
 function allRecipeBooks(parent, args, context) {
   return context.prisma.recipeBook.findMany({});
 }
@@ -138,6 +154,7 @@ export default {
   allRecipeBookUsers,
   allTouches,
   allBuilds,
+  userBuilds,
   allRecipeBooks,
   completeBuild,
   userRecipeBook

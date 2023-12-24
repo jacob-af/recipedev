@@ -13,8 +13,8 @@ function RecipeList() {
   });
   if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
-  buildData(data.completeBuild);
-  recipeData(data.completeBuild.reduce(restructure, []));
+  buildData(data.userBuilds);
+  recipeData(data.userBuilds.reduce(restructure, []));
   const recipeStack = recipeData();
 
   return (

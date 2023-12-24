@@ -105,3 +105,37 @@ export const ADD_BUILD = gql`
     }
   }
 `;
+
+export const EDIT_BUILD = gql`
+  mutation EditBuild(
+    $recipeId: String
+    $buildName: String
+    $instructions: String
+    $glassware: String
+    $ice: String
+    $touchArray: [TouchInput]
+    $buildId: String
+    $permission: Permission
+  ) {
+    editBuild(
+      recipeId: $recipeId
+      buildId: $buildId
+      buildName: $buildName
+      instructions: $instructions
+      glassware: $glassware
+      ice: $ice
+      permission: $permission
+      touchArray: $touchArray
+    ) {
+      build {
+        id
+        buildName
+      }
+      permission
+      status {
+        code
+        message
+      }
+    }
+  }
+`;

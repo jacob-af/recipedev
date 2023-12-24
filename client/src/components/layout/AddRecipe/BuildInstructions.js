@@ -39,7 +39,7 @@ export default function BuildInstructions({ handleChange, buildInfo }) {
         <Grid item xs={12} md={6}>
           <TextField
             fullWidth
-            value={buildInfo.instructions}
+            value={buildInfo.instructions || ""}
             id="instructions"
             label="Instructions"
             name="instructions"

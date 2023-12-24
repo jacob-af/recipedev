@@ -20,13 +20,15 @@ export const ingredients = cache.makeVar([]);
 export const alertMessage = cache.makeVar();
 export const newBuildInfo = cache.makeVar({
   recipeName: "",
+  recipeId: "",
   about: "",
-  recipeInfo: {},
-  buildName: "",
-  glassware: "",
+  buildName: ""
+});
+export const newRecipeInfo = cache.makeVar({
   ice: "",
+  glassware: "",
   instructions: "",
   notes: ""
 });
-export const newBuildSpec = cache.makeVar([blankTouch(0), blankTouch(1)]);
+export const touches = cache.makeVar([blankTouch(0), blankTouch(1)]);
 export const newIngredient = cache.makeVar();

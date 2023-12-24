@@ -36,7 +36,7 @@ export const LOAD_ING = gql`
   }
 `;
 
-export const LOAD_BUILDS = gql`
+export const LOAD_COMPBUILDS = gql`
   query CompleteBuild($userId: String) {
     completeBuild(userId: $userId) {
       buildName
@@ -66,6 +66,42 @@ export const LOAD_BUILDS = gql`
       about
       recipeId
       recipeName
+    }
+  }
+`;
+
+export const LOAD_BUILDS = gql`
+  query Query($userId: String) {
+    userBuilds(userId: $userId) {
+      id
+      buildName
+      recipe {
+        id
+        name
+        about
+      }
+      instructions
+      notes
+      glassware
+      ice
+      version
+      permission
+      touch {
+        order
+        amount
+        unit
+        ingredientType {
+          id
+          name
+          description
+        }
+        version
+        ingredient {
+          id
+          name
+          description
+        }
+      }
     }
   }
 `;

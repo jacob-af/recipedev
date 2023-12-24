@@ -28,7 +28,7 @@ async function createBuild(
     const {
       buildUser: { permission }
     } = await editBuildPermission(context, build.id, userId, "Owner");
-    console.log(permission);
+
     return {
       build,
       permission,
@@ -224,7 +224,7 @@ async function deleteBuildPermission(context, buildId, userId) {
         }
       }
     });
-    console.log(buildUser);
+
     return {
       buildUser,
       status: {

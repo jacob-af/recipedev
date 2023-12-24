@@ -31,7 +31,7 @@ import {
 
 const steps = ["", "Build Details", "Build Instructions", "Review"];
 
-export default function Checkout() {
+export default function AddRecipe() {
   const recipeList = useReactiveVar(recipeData);
 
   const [recipeInfo, setRecipeInfo] = React.useState({
@@ -188,7 +188,6 @@ export default function Checkout() {
   const handleIngredientOptionChange = () => {
     if (ingredientOptions) {
       const newTouches = touches.map(touch => {
-        console.log(touch);
         return { ...touch, ingredient: touch.ingredient.ingredientType };
       });
 

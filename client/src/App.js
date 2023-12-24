@@ -8,6 +8,7 @@ import Dashboard from "./components/layout/dashboard/Dashboard.js";
 import RecipeList from "./components/layout/Recipes/RecipeList";
 //import AddRecipe from "./components/layout/Recipes/AddRecipe";
 import AddRecipe from "./components/layout/AddRecipe/AddRecipe.js";
+import EditRecipe from "./components/layout/AddRecipe/EditRecipe.js";
 import RecipeBookList from "./components/layout/RecipeBooks/RecipeBookList";
 import Inventory from "./components/layout/Inventory/Inventory";
 import AddIngredient from "./components/layout/Inventory/AddIngredient.js";
@@ -32,6 +33,7 @@ function App() {
             <Route path="recipe">
               <Route index element={<RecipeList />} />
               <Route path="add" element={<AddRecipe />} />
+              <Route path="edit" element={<EditRecipe />} />
             </Route>
             <Route exact path="inventory" element={<Inventory />} />
             <Route exact path="addingredient" element={<AddIngredient />} />

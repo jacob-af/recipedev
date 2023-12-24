@@ -8,6 +8,7 @@ const query = gql`
     allIngredientTypes: [IngredientType]
     allIngredients(userId: String): [Ingredient]
     allRecipeBooks: [RecipeBook]
+    userBuilds(userId: String): [Build]
     allBuilds: [Build]
     allTouches: [Touch]
     allRecipeBookUsers: [RecipeBookUser]

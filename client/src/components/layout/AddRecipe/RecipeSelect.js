@@ -6,23 +6,29 @@ import TextField from "@mui/material/TextField";
 //import Checkbox from "@mui/material/Checkbox";
 import { Autocomplete, Divider } from "@mui/material";
 import { recipeData, newBuildInfo } from "../../../state/User";
+import { useReactiveVar } from "@apollo/client";
 
-const addLabels = list => {
-  return list.map(item => {
-    return { ...item, label: item.recipeName };
-  });
-};
+export default function RecipeSelect({
+  handleRecipeChange,
+  handleAboutChange,
+  recipeInfo,
+  recipeList
+}) {
+  //const recipeList = recipeData();
+  //const buildInfo = useReactiveVar(newBuildInfo);
 
-export default function RecipeSelect({ handleChange }) {
-  const recipeList = addLabels(recipeData());
-
-  const handleRecipeChange = value => {
-    console.log(value);
-    newBuildInfo({
-      ...newBuildInfo,
-      recipeId: value.recipeId
-    });
-  };
+  //   const handleRecipeChange = value => {
+  //     console.log(recipeList);
+  //     if (recipeList.findIndex(a => a === value) === -1) {
+  //       console.log("p");
+  //     } else {
+  //       console.log("W");
+  //     }
+  //     newBuildInfo({
+  //       ...newBuildInfo,
+  //       recipeInfo: value
+  //     });
+  //   };
 
   return (
     <React.Fragment>
@@ -30,74 +36,73 @@ export default function RecipeSelect({ handleChange }) {
         Create New Drink Recipe
       </Typography>
       <Grid container spacing={3} alignItems="center" justifyContent={"center"}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="name"
-            label="Recipe Name"
-            name="name"
-            fullWidth
-            variant="standard"
-            onChange={e => handleChange(e)}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            defaultValue={newBuildInfo().history}
-            id="history"
-            label="Notes (optional)"
-            name="history"
-            multiline
-            rows={5}
-            fullWidth
-            variant="standard"
-            onChange={e => handleChange(e)}
-          />
-        </Grid>
-        <Grid item xs={5}>
-          <Divider sx={{ border: 1 }} />
-        </Grid>
-        <Grid item xs={2}>
-          <Typography variant="subtitle1" textAlign="center">
-            Or
-          </Typography>
-        </Grid>
-        <Grid item xs={5}>
-          <Divider sx={{ border: 1 }} />
-        </Grid>
-      </Grid>
-
-      <Typography variant="h6" gutterBottom textAlign="center">
-        Enter New Build for an Existing Cocktail
-      </Typography>
-      <Grid container spacing={3}>
         <Grid item xs={12}>
           <Autocomplete
             required
             disablePortal
+            freeSolo
             options={recipeList}
+            value={recipeInfo || {}}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             onChange={(event, newValue) => {
               handleRecipeChange(newValue);
-              console.log(newValue);
             }}
+            getOptionLabel={option =>
+              option.recipeName ? option.recipeName : ""
+            }
             renderInput={params => (
               <TextField {...params} label="Recipe Name" variant="standard" />
             )}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="name"
-            label="New Build Name"
-            name="buildName"
-            fullWidth
-            variant="standard"
-            onChange={e => handleChange(e)}
-          />
-        </Grid>
+        {recipeInfo.new ? (
+          <React.Fragment>
+            <Grid item xs={12}>
+              <Typography variant="body1" gutterBottom textAlign="center">
+                Please enter a brief description of your new cocktail:
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                defaultValue={recipeInfo.about}
+                id="about"
+                label="About"
+                name="about"
+                multiline
+                rows={5}
+                fullWidth
+                variant="standard"
+                onChange={e => handleAboutChange(e)}
+              />
+            </Grid>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <Grid item xs={12}>
+              <Typography variant="body1" gutterBottom textAlign="center">
+                A recipe with this name already exists: please give a name to
+                your build:
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                required
+                id="name"
+                defaultValue={recipeInfo.buildName}
+                label="New Build Name"
+                name="buildName"
+                fullWidth
+                variant="standard"
+                onChange={e => handleAboutChange(e)}
+              />
+            </Grid>
+          </React.Fragment>
+        )}
       </Grid>
+
+      <Typography variant="h6" gutterBottom textAlign="center">
+        Enter New Build for an Existing Cocktail
+      </Typography>
     </React.Fragment>
   );
 }

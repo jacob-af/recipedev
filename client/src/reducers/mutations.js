@@ -42,8 +42,7 @@ export const ADD_SPEC_ING = gql`
 export const ADD_RECIPE = gql`
   mutation AddRecipe(
     $name: String
-    $origin: String
-    $history: String
+    $about: String
     $buildName: String
     $instructions: String
     $glassware: String
@@ -52,17 +51,56 @@ export const ADD_RECIPE = gql`
   ) {
     addRecipe(
       name: $name
-      origin: $origin
-      history: $history
+      about: $about
       buildName: $buildName
       instructions: $instructions
       glassware: $glassware
       ice: $ice
       touchArray: $touchArray
     ) {
-      recipe {
+      build {
         id
-        name
+        buildName
+      }
+      status {
+        code
+        message
+      }
+    }
+  }
+`;
+
+export const ADD_BUILD = gql`
+  mutation AddBuild(
+    $recipeId: String
+    $buildName: String
+    $instructions: String
+    $glassware: String
+    $ice: String
+    $touchArray: [TouchInput]
+  ) {
+    addBuild(
+      recipeId: $recipeId
+      buildName: $buildName
+      instructions: $instructions
+      glassware: $glassware
+      ice: $ice
+      touchArray: $touchArray
+    ) {
+      build {
+        id
+        buildName
+        touch {
+          id
+          ingredient {
+            name
+          }
+        }
+      }
+      permission
+      status {
+        code
+        message
       }
     }
   }

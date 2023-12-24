@@ -183,8 +183,7 @@ async function completeBuilds(buildIds, context) {
     return {
       ...build,
       recipeName: recipe.name,
-      recipeOrigin: recipe.origin,
-      recipeHistory: recipe.history,
+      about: recipe.about,
       completeTouch: touches,
       permission: buildId.permission
     };

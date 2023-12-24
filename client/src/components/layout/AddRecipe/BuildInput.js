@@ -5,12 +5,19 @@ import {
   Autocomplete,
   Select,
   MenuItem,
-  CssBaseline,
   FormControl,
   IconButton
 } from "@mui/material";
 import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
-function BuildInput({ options, index, touch, handleChange, removeTouch }) {
+function BuildInput({
+  options,
+  index,
+  touch,
+  handleTouchChange,
+  handleIngredientChange,
+  removeTouch,
+  checked
+}) {
   return (
     <React.Fragment>
       <Grid item xs={2}>
@@ -23,7 +30,7 @@ function BuildInput({ options, index, touch, handleChange, removeTouch }) {
           type="number"
           variant="standard"
           onChange={event => {
-            handleChange(event.target.value, "amount", index);
+            handleTouchChange("amount", event.target.value, index);
           }}
           inputProps={{ step: ".25" }}
         />
@@ -32,9 +39,9 @@ function BuildInput({ options, index, touch, handleChange, removeTouch }) {
         <FormControl>
           <Select
             variant="standard"
-            defaultValue={touch.unit}
+            value={touch.unit || ""}
             onChange={event => {
-              handleChange(event.target.value, "unit", index);
+              handleTouchChange("unit", event.target.value, index);
             }}
             label="Unit"
             name="unit"
@@ -54,12 +61,12 @@ function BuildInput({ options, index, touch, handleChange, removeTouch }) {
           id="ingredient"
           required
           disablePortal
+          options={options}
+          value={touch.ingredient || {}}
           isOptionEqualToValue={(option, value) => option.id === value.id || {}}
           onChange={(event, newValue) => {
-            handleChange(newValue, "ingredient", index);
+            handleIngredientChange(newValue, index);
           }}
-          value={touch.ingredient || {}}
-          options={options}
           getOptionLabel={option => (option.name ? option.name : "")}
           renderInput={params => (
             <TextField

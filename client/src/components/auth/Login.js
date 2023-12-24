@@ -35,7 +35,6 @@ function Copyright(props) {
 export default function LogIn() {
   const [loadUser] = useMutation(LOAD_USER);
   const navigate = useNavigate();
-  console.log("ding");
   const handleSubmit = async event => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);

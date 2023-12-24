@@ -31,7 +31,7 @@ function Recipe(props) {
         {recipe.recipeName}
       </Typography>
       <Collapse in={viewDetail}>
-        <Typography>{recipe.history} HIIIIII</Typography>
+        <Typography>{recipe.about} HIIIIII</Typography>
       </Collapse>
 
       <Build builds={recipe.builds} viewDetail={viewDetail} />

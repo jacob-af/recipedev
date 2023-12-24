@@ -1,6 +1,6 @@
 import { cache } from "../cache";
 
-export const blankBuild = order => {
+export const blankTouch = order => {
   return {
     order,
     ingredientType: {},
@@ -18,6 +18,15 @@ export const recipeBookData = cache.makeVar();
 export const ingredientTypes = cache.makeVar([]);
 export const ingredients = cache.makeVar([]);
 export const alertMessage = cache.makeVar();
-export const newBuildInfo = cache.makeVar({ history: "", ice: "" });
-export const newBuildSpec = cache.makeVar([blankBuild(0), blankBuild(1)]);
+export const newBuildInfo = cache.makeVar({
+  recipeName: "",
+  about: "",
+  recipeInfo: {},
+  buildName: "",
+  glassware: "",
+  ice: "",
+  instructions: "",
+  notes: ""
+});
+export const newBuildSpec = cache.makeVar([blankTouch(0), blankTouch(1)]);
 export const newIngredient = cache.makeVar();

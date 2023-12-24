@@ -6,10 +6,9 @@ const recipe = gql`
     createdAt: DateTimeResolver
     editedAt: DateTimeResolver
     name: String
-    origin: String
+    about: String
     createdBy: User
     editedBy: User
-    history: String
     build: [Build]
   }
 
@@ -18,7 +17,7 @@ const recipe = gql`
     recipeName: String
     recipeOrigin: String
     recipeCreatedById: String
-    recipeHistory: String
+    about: String
     builds: CompleteBuild
   }
 
@@ -30,9 +29,7 @@ const recipe = gql`
   type Mutation {
     addRecipe(
       name: String
-      origin: String
-      createdById: String
-      history: String
+      about: String
       buildName: String
       instructions: String
       glassware: String

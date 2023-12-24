@@ -4,52 +4,25 @@ import Grid from "@mui/material/Grid";
 import Switch from "@mui/material/Switch";
 import Fab from "@mui/material/Fab";
 
-import { useReactiveVar } from "@apollo/client";
-import {
-  newBuildSpec,
-  blankBuild,
-  ingredientTypes,
-  ingredients
-} from "../../../state/User";
+// import { useReactiveVar } from "@apollo/client";
+// import {
+//   newBuildSpec,
+//   blankTouch,
+//   ingredientTypes,
+//   ingredients
+// } from "../../../state/User";
 import BuildInput from "../AddRecipe/BuildInput";
 
-export default function BuildDetails() {
-  const touches = useReactiveVar(newBuildSpec);
-  const [checked, setChecked] = useState(true);
-  const [options, setOptions] = useState(ingredients());
-
-  const handleSetChange = event => {
-    console.log(checked);
-    newBuildSpec([blankBuild(0), blankBuild(1)]);
-    if (checked) {
-      setOptions(ingredientTypes());
-    } else {
-      setOptions(ingredients());
-    }
-    setChecked(event.target.checked);
-  };
-
-  const handleSpecChange = (value, field, index) => {
-    const newTouch = {
-      ...touches[index],
-      [field]: value
-    };
-
-    touches.splice(index, 1, newTouch);
-    newBuildSpec([...touches]);
-  };
-
-  const removeTouch = index => {
-    touches.splice(index, 1);
-    console.log(touches);
-    newBuildSpec([...touches]);
-  };
-
-  const addTouch = event => {
-    const rec = [...touches, blankBuild(touches.length)];
-    newBuildSpec(rec);
-  };
-
+export default function BuildDetails({
+  touches,
+  options,
+  checked,
+  handleTouchChange,
+  handleAddTouch,
+  handleRemoveTouch,
+  handleIngredientChange,
+  handleOptionChange
+}) {
   return (
     <React.Fragment>
       <Grid container spacing={1} alignItems="flex-end">
@@ -57,7 +30,7 @@ export default function BuildDetails() {
           <Switch
             label="inventory toggle"
             checked={checked}
-            onChange={handleSetChange}
+            onChange={() => handleOptionChange()}
           />
         </Grid>
         {touches.map((touch, index) => (
@@ -65,12 +38,14 @@ export default function BuildDetails() {
             key={`buildInput${touch.order}_${index}`}
             index={index}
             touch={touch}
-            handleChange={handleSpecChange}
-            removeTouch={removeTouch}
+            handleTouchChange={handleTouchChange}
+            handleIngredientChange={handleIngredientChange}
+            removeTouch={handleRemoveTouch}
             options={options}
+            checked={checked}
           />
         ))}
-        <Fab onClick={() => addTouch()}>-</Fab>
+        <Fab onClick={() => handleAddTouch()}>-</Fab>
       </Grid>
     </React.Fragment>
   );

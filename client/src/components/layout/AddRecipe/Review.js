@@ -5,41 +5,55 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Grid from "@mui/material/Grid";
 import { newBuildSpec, newBuildInfo } from "../../../state/User";
+import { useReactiveVar } from "@apollo/client";
+import zIndex from "@mui/material/styles/zIndex";
 
-export default function Review() {
+export default function Review({ recipeInfo, touches, buildInfo }) {
+  // const buildSpec = useReactiveVar(newBuildSpec);
+  // const buildInfo = useReactiveVar(newBuildInfo);
+
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        Order summary
+        {recipeInfo.recipeName}
+      </Typography>
+      <Typography variant="h6" gutterBottom>
+        {recipeInfo.buildName}
+      </Typography>
+      <Typography variant="body2" gutterBottom>
+        {buildInfo.about}
       </Typography>
       <List disablePadding>
-        {newBuildSpec().map(touch => (
-          <ListItem key={touch.name} sx={{ py: 1, px: 0 }}>
+        {touches.map((touch, index) => (
+          <ListItem key={`review${index}`} sx={{ py: 1, px: 0 }}>
             <ListItemText
               primary={touch.ingredient.name}
-              secondary={touch.amount}
+              secondary={touch.unit}
             />
-            <Typography variant="body2">{touch.unit}</Typography>
+            <Typography variant="body2">{touch.amount}</Typography>
           </ListItem>
         ))}
         <ListItem sx={{ py: 1, px: 0 }}>
-          <ListItemText primary="Total" />
+          <ListItemText primary="Glassware" />
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-            $34.06
+            {buildInfo.glassware}
           </Typography>
         </ListItem>
-      </List>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}></Typography>
-          <Typography gutterBottom></Typography>
-          <Typography gutterBottom>{newBuildInfo.history}</Typography>
-        </Grid>
-        <Grid item container direction="column" xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-            total cost
+        <ListItem sx={{ py: 1, px: 0 }}>
+          <ListItemText primary="Ice" />
+          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+            {buildInfo.ice}
           </Typography>
-        </Grid>
+        </ListItem>
+        <ListItemText
+          primary="Instructions"
+          secondary={buildInfo.instructions}
+        />
+      </List>
+      <Grid item container direction="column" xs={12} sm={6}>
+        <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+          total cost
+        </Typography>
       </Grid>
     </React.Fragment>
   );

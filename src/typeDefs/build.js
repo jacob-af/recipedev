@@ -53,7 +53,7 @@ const build = gql`
     recipeName: String
     recipeOrigin: String
     recipeCreatedBy: User
-    recipeHistory: String
+    about: String
     notes: String
     glassware: String
     ice: String

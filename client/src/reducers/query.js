@@ -24,6 +24,8 @@ export const LOAD_ING = gql`
       description
       ingredientType {
         id
+        name
+        description
       }
     }
     allIngredientTypes {
@@ -61,10 +63,9 @@ export const LOAD_BUILDS = gql`
       instructions
       notes
       permission
-      recipeHistory
+      about
       recipeId
       recipeName
-      recipeOrigin
     }
   }
 `;

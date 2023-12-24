@@ -3,11 +3,10 @@ export function restructure(accumulator, currentvalue) {
     i => i.recipeId === currentvalue.recipeId
   );
   if (index === -1) {
-    //console.log(currentvalue, "beep");
     accumulator.push({
       recipeId: currentvalue.recipeId,
       recipeName: currentvalue.recipeName,
-      history: currentvalue.recipeHistory,
+      about: currentvalue.about,
       builds: [currentvalue]
     });
   } else {

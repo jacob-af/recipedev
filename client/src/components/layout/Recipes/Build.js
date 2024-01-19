@@ -1,15 +1,6 @@
 import * as React from "react";
-import { useTheme } from "@mui/material/styles";
-import {
-  Box,
-  Grid,
-  MobileStepper,
-  Paper,
-  Typography,
-  Button,
-  Collapse,
-  IconButton
-} from "@mui/material";
+//import { useTheme } from "@mui/material/styles";
+import { Grid, Typography, Collapse, IconButton } from "@mui/material";
 
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
@@ -19,7 +10,7 @@ import { newBuildInfo, newRecipeInfo, touches } from "../../../state/User";
 
 export default function Build({ builds, viewDetail }) {
   const navigate = useNavigate();
-  const theme = useTheme();
+
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {

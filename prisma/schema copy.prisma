@@ -1,0 +1,422 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+///User
+///-Profile
+///-RecipeBook
+/// * UserRecipeBook
+/// * RecipeBooksBuild
+///--Build
+/// * BuildUser
+///---Recipe M-1
+/// * RecipeBookBuild
+///---Touch 
+///----IngredientType
+///-Inventory
+/// * InventoryUser
+///--Storage
+/// * InventoryStorage
+/// * IgredientStorage
+/// * StorageUser
+///---Ingredient
+///-Crew
+/// * UserCrew
+
+model User {
+  id                   String                 @id @default(uuid())
+  userName             String                 @db.VarChar(255)
+  firstName            String?                @db.VarChar(25)
+  lastName             String?                @db.VarChar(50)
+  dateJoined           DateTime               @default(now())
+  lastEdited           DateTime               @default(now())
+  email                String                 @unique @db.VarChar(100)
+  password             String                 @db.VarChar(255)
+  profile              Profile?
+  recipeBookUser       RecipeBookUser[]
+  recipeBook           RecipeBook[]
+  recipeBookEditedBy   RecipeBook[]           @relation("recipeBookEditedById")
+  recipe               Recipe[]
+  recipeEditedBy       Recipe[]               @relation("recipeEditedById")
+  buildUser            BuildUser[]
+  build                Build[]
+  buildEditedBy        Build[]                @relation("buildEditedById")
+  archivedBuild        ArchivedBuild[]
+  crewUser             CrewUser[]
+  crew                 Crew[]
+  crewEditedBy         Crew[]                 @relation("crewEditedById")
+  ingredient           Ingredient[]
+  ingredientPreference IngredientPreference[]
+  ingredientUser       IngredientUser[]
+  storageUser          StorageUser[]
+  storage              Storage[]
+  storageEditedBy      Storage[]              @relation("storageEditedById")
+  inventory            Inventory[]            @relation("inventoryCreatedById")
+  inventoryEditedBy    Inventory[]            @relation("inventoryEditedById")
+  inventoryUser        InventoryUser[]
+  followedBy           Follow[]               @relation("followedBy")
+  following            Follow[]               @relation("following")
+}
+
+model Follow {
+  followedBy   User   @relation("followedBy", fields: [followedById], references: [id])
+  followedById String
+  following    User   @relation("following", fields: [followingId], references: [id])
+  followingId  String
+  relationship String
+
+  @@id([followingId, followedById])
+}
+
+model Profile {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+  photo  String
+}
+
+model RecipeBook {
+  id              String            @id @default(uuid())
+  name            String            @db.VarChar(255)
+  description     String?
+  createdAt       DateTime          @default(now())
+  editedAt        DateTime          @default(now()) @updatedAt()
+  createdById     String?
+  editedById      String?
+  createdBy       User?             @relation(fields: [createdById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  editedBy        User?             @relation("recipeBookEditedById", fields: [editedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  recipeBookBuild RecipeBookBuild[]
+  recipeBookUser  RecipeBookUser[]
+  crewRecipeBook  CrewRecipeBook[]
+}
+
+model RecipeBookUser {
+  userId       String
+  recipeBookId String
+  recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user         User       @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  permission   String
+
+  @@id([userId, recipeBookId])
+}
+
+model Build {
+  id              String            @id @default(uuid())
+  buildName       String            @default("")
+  createdAt       DateTime          @default(now())
+  editedAt        DateTime          @default(now())
+  createdById     String?
+  editedById      String?
+  createdBy       User?             @relation(fields: [createdById], references: [id])
+  editedBy        User?             @relation("buildEditedById", fields: [editedById], references: [id])
+  recipe          Recipe?           @relation(fields: [recipeId], references: [id])
+  recipeId        String?
+  instructions    String?
+  notes           String?
+  glassware       String?           @db.VarChar()
+  ice             String?           @db.VarChar(100)
+  version         Int               @default(0)
+  touch           Touch[]
+  archivedBuild   ArchivedBuild[]
+  RecipeBookBuild RecipeBookBuild[]
+  buildUser       BuildUser[]
+  crewBuild       CrewBuild[]
+}
+
+model ArchivedBuild {
+  id            String          @id @default(uuid())
+  buildName     String          @default("")
+  createdAt     DateTime        @default(now())
+  createdById   String?
+  createdBy     User?           @relation(fields: [createdById], references: [id])
+  build         Build           @relation(fields: [buildId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  buildId       String
+  recipe        Recipe?         @relation(fields: [recipeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  recipeId      String?
+  instructions  String?
+  notes         String?
+  glassware     String?         @db.VarChar()
+  ice           String?         @db.VarChar(100)
+  version       Int
+  archivedTouch ArchivedTouch[]
+}
+
+model BuildUser {
+  userId     String
+  buildId    String
+  user       User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  build      Build? @relation(fields: [buildId], references: [id], onDelete: Cascade)
+  permission String
+
+  @@id([userId, buildId])
+}
+
+model Recipe {
+  id            String          @id @default(uuid())
+  createdAt     DateTime        @default(now())
+  editedAt      DateTime        @default(now())
+  name          String          @db.VarChar(255)
+  about         String?
+  createdBy     User?           @relation(fields: [createdById], references: [id])
+  createdById   String?
+  editedBy      User?           @relation("recipeEditedById", fields: [editedById], references: [id])
+  editedById    String?
+  build         Build[]
+  archivedBuild ArchivedBuild[]
+}
+
+model RecipeBookBuild {
+  buildId      String
+  recipeBookId String
+  recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  build        Build      @relation(fields: [buildId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+
+  @@id([buildId, recipeBookId])
+}
+
+model Touch {
+  id               String         @id @default(uuid())
+  build            Build          @relation(fields: [buildId], references: [id], onDelete: Cascade)
+  buildId          String
+  order            Int?
+  amount           Float?         @db.Real
+  unit             String?        @db.VarChar(50)
+  ingredientTypeId String
+  ingredientType   IngredientType @relation(fields: [ingredientTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ingredientId     String?
+  ingredient       Ingredient?    @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  version          Int?           @default(0)
+}
+
+model ArchivedTouch {
+  id               String         @id @default(uuid())
+  archivedBuild    ArchivedBuild  @relation(fields: [archivedBuildId], references: [id], onDelete: Cascade)
+  archivedBuildId  String
+  order            Int?
+  amount           Float?         @db.Real
+  unit             String?        @db.VarChar(50)
+  ingredientTypeId String
+  ingredientType   IngredientType @relation(fields: [ingredientTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ingredientId     String?
+  ingredient       Ingredient?    @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  version          Int?
+}
+
+model IngredientType {
+  id                   String                 @id @default(uuid())
+  name                 String
+  description          String?
+  touch                Touch[]
+  archivedTouch        ArchivedTouch[]
+  ingredient           Ingredient[]
+  ingredientPreference IngredientPreference[]
+}
+
+model Ingredient {
+  id                   String                 @id @default(uuid())
+  dateCreated          DateTime               @default(now())
+  createdBy            User?                  @relation(fields: [createdById], references: [id])
+  createdById          String?
+  ingredientTypeId     String?
+  ingredientType       IngredientType?        @relation(fields: [ingredientTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  name                 String                 @default("") @db.VarChar(255)
+  description          String
+  price                Float?                 @db.Real
+  amount               Float?                 @db.Real
+  unit                 String?
+  source               String?
+  touch                Touch[]
+  archivedTouch        ArchivedTouch[]
+  ingredientStorage    IngredientStorage[]
+  ingredientUser       IngredientUser[]
+  ingredientPreference IngredientPreference[] @relation("userSpecPreference")
+  crewIngredient       CrewIngredient[]
+  inventoryIngredient  InventoryIngredient[]
+}
+
+model IngredientUser {
+  ingredientId String
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  permission   String
+
+  @@id([ingredientId, userId])
+}
+
+model IngredientPreference {
+  ingredientTypeId String
+  ingredientType   IngredientType @relation(fields: [ingredientTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ingredientId     String
+  ingredient       Ingredient     @relation("userSpecPreference", fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([ingredientTypeId, ingredientId])
+}
+
+model InventoryIngredient {
+  ingredientId String
+  inventoryId  String
+  inventory    Inventory  @relation(fields: [inventoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  permission   String
+
+  @@id([ingredientId, inventoryId])
+}
+
+model Inventory {
+  id                  String                @id @default(uuid())
+  name                String                @db.VarChar(255)
+  description         String
+  createdAt           DateTime              @default(now())
+  editedAt            DateTime              @default(now())
+  createdById         String
+  editedById          String
+  createdBy           User?                 @relation("inventoryCreatedById", fields: [createdById], references: [id])
+  editedBy            User?                 @relation("inventoryEditedById", fields: [editedById], references: [id])
+  inventoryStorage    InventoryStorage[]
+  inventoryUser       InventoryUser[]
+  crewInventory       CrewInventory[]
+  inventoryIngredient InventoryIngredient[]
+}
+
+model InventoryUser {
+  userId      String
+  inventoryId String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  inventory   Inventory @relation(fields: [inventoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  permission  String
+
+  @@id([userId, inventoryId])
+}
+
+model Storage {
+  id                String              @id @default(uuid())
+  name              String              @db.VarChar(255)
+  description       String              @default("") @db.VarChar(255)
+  createdAt         DateTime            @default(now())
+  editedAt          DateTime            @default(now())
+  createdById       String
+  editedById        String
+  createdBy         User?               @relation(fields: [createdById], references: [id])
+  editedBy          User?               @relation("storageEditedById", fields: [editedById], references: [id])
+  inventoryStorage  InventoryStorage[]
+  ingredientStorage IngredientStorage[]
+  storageUser       StorageUser[]
+  crewStorage       CrewStorage[]
+}
+
+model InventoryStorage {
+  inventoryId String
+  storageId   String
+  storage     Storage   @relation(fields: [storageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  inventory   Inventory @relation(fields: [inventoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([inventoryId, storageId])
+}
+
+model IngredientStorage {
+  ingredientId String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  storageId    String
+  Storage      Storage    @relation(fields: [storageId], references: [id])
+  quantity     Float?
+
+  @@id([ingredientId, storageId])
+}
+
+model StorageUser {
+  userId     String
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  storageId  String
+  Storage    Storage @relation(fields: [storageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  permission String
+
+  @@id([userId, storageId])
+}
+
+model Crew {
+  id             String           @id @default(uuid())
+  name           String
+  description    String
+  createdAt      DateTime         @default(now())
+  editedAt       DateTime         @default(now()) @updatedAt()
+  createdById    String
+  editedById     String
+  createdBy      User?            @relation(fields: [createdById], references: [id])
+  editedBy       User?            @relation("crewEditedById", fields: [editedById], references: [id])
+  crewUser       CrewUser[]
+  crewInventory  CrewInventory[]
+  crewStorage    CrewStorage[]
+  crewIngredient CrewIngredient[]
+  crewRecipeBook CrewRecipeBook[]
+  crewBuild      CrewBuild[]
+}
+
+model CrewUser {
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  crewId     String
+  crew       Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  permission String
+
+  @@id([userId, crewId])
+}
+
+model CrewInventory {
+  inventoryId String
+  inventory   Inventory @relation(fields: [inventoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  crewId String
+  crew   Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([inventoryId, crewId])
+}
+
+model CrewStorage {
+  storageId String
+  storage   Storage @relation(fields: [storageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  crewId String
+  crew   Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([storageId, crewId])
+}
+
+model CrewIngredient {
+  ingredientId String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  crewId String
+  crew   Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([ingredientId, crewId])
+}
+
+model CrewRecipeBook {
+  recipeBookId String
+  recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  crewId String
+  crew   Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([recipeBookId, crewId])
+}
+
+model CrewBuild {
+  buildId String
+  build   Build  @relation(fields: [buildId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  crewId String
+  crew   Crew   @relation(fields: [crewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([buildId, crewId])
+}

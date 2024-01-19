@@ -4,9 +4,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Grid from "@mui/material/Grid";
-import { newBuildSpec, newBuildInfo } from "../../../state/User";
-import { useReactiveVar } from "@apollo/client";
-import zIndex from "@mui/material/styles/zIndex";
+// import { newBuildSpec, newBuildInfo } from "../../../state/User";
+// import { useReactiveVar } from "@apollo/client";
 
 export default function Review({ recipeInfo, touches, buildInfo }) {
   // const buildSpec = useReactiveVar(newBuildSpec);

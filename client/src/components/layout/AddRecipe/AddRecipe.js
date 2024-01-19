@@ -12,13 +12,13 @@ import BuildDetails from "./BuildDetails";
 import BuildInstructions from "./BuildInstructions";
 import Review from "./Review";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useReactiveVar } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { ADD_RECIPE, ADD_BUILD } from "../../../reducers/mutations";
 import {
-  newBuildSpec,
-  newBuildInfo,
+  //   newBuildSpec,
+  //   newBuildInfo,
   blankTouch,
-  recipeData,
+  buildData,
   ingredientTypes,
   ingredients
 } from "../../../state/User";
@@ -27,12 +27,13 @@ import {
   fieldChange,
   touchChange,
   ingredientChange
-} from "./utils";
+} from "./RecipeFunctions";
+import { restructure } from "../../../utils";
 
 const steps = ["", "Build Details", "Build Instructions", "Review"];
 
 export default function AddRecipe() {
-  const recipeList = useReactiveVar(recipeData);
+  const recipeList = buildData().reduce(restructure, []);
 
   const [recipeInfo, setRecipeInfo] = React.useState({
     recipeName: "",

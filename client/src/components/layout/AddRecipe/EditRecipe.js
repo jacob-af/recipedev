@@ -2,17 +2,14 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
-// import Stepper from "@mui/material/Stepper";
-// import Step from "@mui/material/Step";
-// import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import RecipeSelect from "./RecipeSelect";
+
 import BuildDetails from "./BuildDetails";
 import BuildInstructions from "./BuildInstructions";
 import Review from "./Review";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useReactiveVar } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { EDIT_BUILD } from "../../../reducers/mutations";
 import { LOAD_BUILDS } from "../../../reducers/query";
 import {
@@ -20,23 +17,15 @@ import {
   newBuildInfo,
   newRecipeInfo,
   blankTouch,
-  recipeData,
   ingredientTypes,
   ingredients
 } from "../../../state/User";
-import {
-  recipeChange,
-  fieldChange,
-  touchChange,
-  ingredientChange
-} from "./utils";
+import { fieldChange, touchChange, ingredientChange } from "./RecipeFunctions";
 
 const steps = ["Build Details", "Build Instructions", "Review"];
 
 export default function EditRecipe() {
-  const recipeList = useReactiveVar(recipeData);
-
-  const [recipeInfo, setRecipeInfo] = React.useState(newRecipeInfo());
+  const [recipeInfo] = React.useState(newRecipeInfo());
 
   const [buildInfo, setBuildInfo] = React.useState(newBuildInfo());
 
@@ -115,20 +104,6 @@ export default function EditRecipe() {
     console.log(response);
 
     return navigate("/recipe");
-  };
-
-  const handleRecipeChange = value => {
-    recipeChange(value, recipeList, setRecipeInfo);
-  };
-
-  const handleFieldChange = event => {
-    event.preventDefault();
-    fieldChange(
-      event.target.name,
-      event.target.value,
-      recipeInfo,
-      setRecipeInfo
-    );
   };
 
   const handleBuildChange = event => {

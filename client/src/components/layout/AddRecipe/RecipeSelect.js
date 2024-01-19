@@ -2,11 +2,9 @@ import * as React from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-//import FormControlLabel from "@mui/material/FormControlLabel";
-//import Checkbox from "@mui/material/Checkbox";
-import { Autocomplete, Divider } from "@mui/material";
-import { recipeData, newBuildInfo } from "../../../state/User";
-import { useReactiveVar } from "@apollo/client";
+import { Autocomplete } from "@mui/material";
+// import { recipeData, newBuildInfo } from "../../../state/User";
+// import { useReactiveVar } from "@apollo/client";
 
 export default function RecipeSelect({
   handleRecipeChange,
@@ -14,22 +12,6 @@ export default function RecipeSelect({
   recipeInfo,
   recipeList
 }) {
-  //const recipeList = recipeData();
-  //const buildInfo = useReactiveVar(newBuildInfo);
-
-  //   const handleRecipeChange = value => {
-  //     console.log(recipeList);
-  //     if (recipeList.findIndex(a => a === value) === -1) {
-  //       console.log("p");
-  //     } else {
-  //       console.log("W");
-  //     }
-  //     newBuildInfo({
-  //       ...newBuildInfo,
-  //       recipeInfo: value
-  //     });
-  //   };
-
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom textAlign="center">

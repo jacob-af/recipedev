@@ -61,6 +61,11 @@ const ingredient = gql`
     description: String
   }
 
+  type ManyIngredientsTypeResponse {
+    ingredientTypes: [IngredientType]
+    status: StatusMessage
+  }
+
   type Mutation {
     addIngredientType(name: String, description: String): IngredientType!
 

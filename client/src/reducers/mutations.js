@@ -39,6 +39,15 @@ export const ADD_SPEC_ING = gql`
   }
 `;
 
+export const ADD_MANY_TYPES = gql`
+  mutation AddManyIngredientTypes($dat: [IngredientTypeInput]) {
+    addManyIngredientTypes(dat: $dat) {
+      code
+      message
+    }
+  }
+`;
+
 export const ADD_RECIPE = gql`
   mutation AddRecipe(
     $name: String

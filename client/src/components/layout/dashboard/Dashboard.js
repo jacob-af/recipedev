@@ -14,9 +14,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { mainListItems, secondaryListItems } from "./listItems";
-import { useQuery } from "@apollo/client";
-import { LOAD_ING } from "../../../reducers/query";
-import { ingredients, ingredientTypes } from "../../../state/User";
+//import { useQuery } from "@apollo/client";
+//import { LOAD_ING } from "../../../reducers/query";
+//import { ingredients, ingredientTypes } from "../../../state/User";
 
 import { Outlet } from "react-router-dom";
 import BottomNavBar from "./BottomNavBar";
@@ -80,17 +80,17 @@ const Drawer = styled(MuiDrawer, {
 const defaultTheme = createTheme({});
 
 export default function Dashboard() {
-  const { data, loading, error } = useQuery(LOAD_ING);
+  //const { data, loading, error } = useQuery(LOAD_ING);
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
   };
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error.message}`;
-  ingredientTypes(data.allIngredientTypes);
-  ingredients(
-    [...data.allIngredients].sort((a, b) => (a.name < b.name ? -1 : 1))
-  );
+  // if (loading) return "Loading...";
+  // if (error) return `Error! ${error.message}`;
+  // ingredientTypes(data.allIngredientTypes);
+  // ingredients(
+  //   [...data.allIngredientTypes].sort((a, b) => (a.name < b.name ? -1 : 1))
+  // );
 
   return (
     <ThemeProvider theme={defaultTheme}>

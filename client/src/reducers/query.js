@@ -18,18 +18,7 @@ export const LOAD_USER = gql`
 
 export const LOAD_ING = gql`
   query AllIngredients {
-    allIngredients {
-      id
-      name
-      description
-      ingredientType {
-        id
-        name
-        description
-      }
-    }
     allIngredientTypes {
-      id
       name
       description
     }

@@ -209,7 +209,7 @@ model ArchivedTouch {
 
 model IngredientType {
   id                   String                 @id @default(uuid())
-  name                 String
+  name                 String                 @unique
   description          String?
   touch                Touch[]
   archivedTouch        ArchivedTouch[]

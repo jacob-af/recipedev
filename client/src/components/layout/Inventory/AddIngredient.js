@@ -109,6 +109,11 @@ function AddIngredient(props) {
                 )}
               />
             </Grid>
+            <Grid item xs={12}>
+              <Typography component="h1" variant="h5">
+                {newIngredient.description}
+              </Typography>
+            </Grid>
             <Grid item xs={7}>
               <TextField
                 required

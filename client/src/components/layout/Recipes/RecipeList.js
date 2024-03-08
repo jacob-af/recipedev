@@ -43,7 +43,7 @@ function RecipeList() {
         ? recipeStack.map(b => {
             return <Recipe recipe={b} key={b.recipeId} />;
           })
-        : "you have no recipes"}
+        : "you have not a single recipe"}
 
       <Outlet />
     </Box>
